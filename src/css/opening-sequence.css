@@ -1,0 +1,160 @@
+/* ============================================================
+   OPENING SEQUENCE
+   Placeholder CSS animation — replaced by AI video at launch
+   ============================================================ */
+
+#opening-sequence {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  transition: opacity 1.4s cubic-bezier(0.25, 0.1, 0.1, 1);
+}
+
+#opening-sequence.is-fading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* === Clock placeholder (replaced by <video> when video is ready) === */
+.seq-clock {
+  position: relative;
+  width: min(280px, 55vw);
+  height: min(280px, 55vw);
+}
+
+.seq-clock svg {
+  width: 100%;
+  height: 100%;
+}
+
+.seq-ring-outer {
+  animation: none;
+}
+
+.seq-ring-inner {
+  transform-origin: 100px 100px;
+  animation: rotateCCW 18s linear infinite;
+}
+
+.seq-ring-mid {
+  transform-origin: 100px 100px;
+  animation: rotateCW 25s linear infinite;
+}
+
+/* When the real video replaces the clock SVG */
+#opening-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* === Brand text === */
+.seq-brand {
+  text-align: center;
+  opacity: 0;
+  animation: seqFadeUp 900ms 400ms var(--ease) forwards;
+}
+
+.seq-logo {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ivory);
+  letter-spacing: 0.06em;
+  display: block;
+}
+
+.seq-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--brass-dark);
+  letter-spacing: 0.12em;
+  margin-top: 0.4rem;
+  display: block;
+}
+
+/* === Skip button === */
+.seq-skip {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brass-dark);
+  border: 1px solid var(--brass-dark);
+  padding: 7px 16px;
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  animation: seqFadeIn 600ms 1200ms ease forwards;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+.seq-skip:hover {
+  color: var(--brass);
+  border-color: var(--brass);
+}
+
+/* === Progress bar === */
+.seq-progress {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 1px;
+  background: rgba(138, 110, 40, 0.2);
+}
+.seq-progress-fill {
+  height: 100%;
+  background: var(--brass);
+  width: 0%;
+  transition: width linear;
+}
+
+/* === Keyframes === */
+@keyframes rotateCCW {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+@keyframes rotateCW {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes seqFadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes seqFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* === Reduced motion: skip straight to content === */
+@media (prefers-reduced-motion: reduce) {
+  #opening-sequence {
+    display: none !important;
+  }
+}
+
+/* === Site content — hidden until sequence ends === */
+#site-content {
+  opacity: 0;
+  transition: opacity 1.4s cubic-bezier(0.25, 0.1, 0.1, 1);
+}
+#site-content.is-visible {
+  opacity: 1;
+}

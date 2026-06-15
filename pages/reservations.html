@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ethereal — Reservations. Book your table via Resy.">
+  <title>Reservations — Ethereal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/css/globals.css">
+  <link rel="stylesheet" href="/src/css/pages.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header id="site-header" class="is-scrolled" role="banner">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="Ethereal — homepage">eTHeReAL</a>
+      <button class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-links">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+      <nav id="nav-links" aria-label="Main navigation">
+        <ul role="list">
+          <li><a href="/pages/menu.html">Menu</a></li>
+          <li><a href="/pages/gallery.html">Gallery</a></li>
+          <li><a href="/pages/about.html">About Us</a></li>
+          <li><a href="/pages/shop.html">Shop</a></li>
+          <li><a href="/pages/careers.html">Careers</a></li>
+          <li><a href="/pages/contact.html">Contact</a></li>
+          <li><a href="/pages/reservations.html" class="nav-reserve" aria-current="page">Reserve</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div id="mobile-nav" role="dialog" aria-label="Navigation menu" aria-modal="true">
+    <a href="/pages/menu.html">Menu</a>
+    <a href="/pages/gallery.html">Gallery</a>
+    <a href="/pages/about.html">About Us</a>
+    <a href="/pages/shop.html">Shop</a>
+    <a href="/pages/careers.html">Careers</a>
+    <a href="/pages/contact.html">Contact</a>
+    <a href="/pages/reservations.html" class="mobile-reserve">Reserve a Table</a>
+  </div>
+
+  <main id="main-content">
+
+    <div class="page-header">
+      <span class="label">Reserve Your Table</span>
+      <h1>Reservations</h1>
+    </div>
+
+    <section class="section">
+      <div class="container">
+
+        <div class="resy-wrapper reveal">
+
+          <div class="resy-intro">
+            <span class="label" style="display:block; text-align:center;">Book via Resy</span>
+            <p class="content-ph">[ Reservation note — e.g., "We recommend reserving at least two weeks in advance for weekend dining. Walk-ins are welcome based on availability." ]</p>
+          </div>
+
+          <!-- Resy embed goes here -->
+          <!-- Replace the placeholder below with your Resy widget code -->
+          <!--
+          <script type="text/javascript"
+            src="https://widgets.resy.com/embed.js"
+            async=""
+            defer="">
+          </script>
+          <a href="https://resy.com/cities/[city]/[venue-slug]"
+             class="resy-button"
+             data-url="https://resy.com/cities/[city]/[venue-slug]"
+             data-notify-id="[notify-id]"
+             data-color-primary="#c4a440"
+             data-color-secondary="#0d0b09">
+            Make a Reservation
+          </a>
+          -->
+
+          <div style="text-align:center; padding:1rem 0;">
+            <a href="#" class="btn btn--filled" style="font-size:12px; padding:15px 36px;">
+              Make a Reservation on Resy
+            </a>
+            <p style="margin-top:1rem; font-family:var(--font-ui); font-size:9px; letter-spacing:0.14em; color:var(--brass-dark); text-transform:uppercase;">
+              Placeholder — replace with Resy widget when venue is live
+            </p>
+          </div>
+
+          <div class="resy-info-grid">
+            <div class="resy-info-item">
+              <h4>Hours</h4>
+              <p class="content-ph">[ Dinner: Tue – Sun<br>5pm – 11pm ]</p>
+            </div>
+            <div class="resy-info-item">
+              <h4>Party Size</h4>
+              <p class="content-ph">[ Up to 10 guests.<br>Larger parties: contact us. ]</p>
+            </div>
+            <div class="resy-info-item">
+              <h4>Dress Code</h4>
+              <p class="content-ph">[ Smart casual.<br>We welcome all. ]</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ornament reveal"><div class="ornament-glyph"></div></div>
+
+        <!-- Private Events -->
+        <div class="reveal" style="text-align:center; max-width:560px; margin:0 auto;">
+          <span class="label">Private Events</span>
+          <h2 class="section-heading" style="margin-bottom:1rem; font-size:clamp(1.5rem,3vw,2.2rem);">Host something<br>unforgettable.</h2>
+          <p class="body-text" style="margin-bottom:2rem;">
+            <span class="content-ph">[ Private dining note — e.g., "Ethereal offers exclusive private dining for special occasions, corporate events, and intimate celebrations." ]</span>
+          </p>
+          <a href="/pages/contact.html?subject=events" class="btn">Enquire About Private Events</a>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">eTHeReAL</a>
+          <p class="footer-tagline">Where time breathes.</p>
+          <div class="footer-social"><a href="#" aria-label="Instagram">Instagram</a></div>
+        </div>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <h3>Navigate</h3>
+          <ul role="list">
+            <li><a href="/pages/menu.html">Menu</a></li>
+            <li><a href="/pages/gallery.html">Gallery</a></li>
+            <li><a href="/pages/about.html">About Us</a></li>
+            <li><a href="/pages/shop.html">Shop</a></li>
+            <li><a href="/pages/careers.html">Careers</a></li>
+            <li><a href="/pages/contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="footer-visit">
+          <h3>Visit</h3>
+          <address>
+            <p class="content-ph">[ Address ]</p>
+            <p class="content-ph">[ City, State ]</p>
+          </address>
+          <p class="content-ph" style="margin-top:1rem;">[ Hours ]</p>
+        </div>
+        <div class="footer-contact">
+          <h3>Contact</h3>
+          <p><a href="mailto:#" class="content-ph">[ Email ]</a></p>
+          <p><a href="tel:#" class="content-ph">[ Phone ]</a></p>
+          <a href="/pages/reservations.html" class="footer-reserve-link">Reserve a Table</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Ethereal. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/src/js/main.js"></script>
+</body>
+</html>

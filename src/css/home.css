@@ -1,0 +1,281 @@
+/* ============================================================
+   HOME PAGE STYLES
+   ============================================================ */
+
+/* === Hero === */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('/src/assets/images/bg-brand.png');
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.18) saturate(0.6);
+  transform: scale(1.04);
+  transition: transform 12s ease-out;
+}
+
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(13,11,9,0.7) 100%),
+    linear-gradient(to bottom, rgba(13,11,9,0.4) 0%, transparent 40%, rgba(13,11,9,0.6) 100%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  padding: 0 1.5rem;
+  padding-top: var(--nav-height);
+}
+
+.hero-label {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: heroFadeUp 900ms 200ms var(--ease) forwards;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--ivory);
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: heroFadeUp 900ms 400ms var(--ease) forwards;
+}
+
+.hero-sub {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--ivory-dark);
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: heroFadeUp 900ms 600ms var(--ease) forwards;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: heroFadeUp 900ms 800ms var(--ease) forwards;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: heroFadeIn 900ms 1200ms ease forwards;
+}
+.hero-scroll span {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--brass-dark);
+}
+.hero-scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--brass-dark), transparent);
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 0.6; }
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: scaleY(1); transform-origin: top; }
+  50% { transform: scaleY(0.5); transform-origin: top; }
+}
+
+/* === About Teaser === */
+#about-teaser .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+
+.about-teaser-img {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+/* === Menu Teaser === */
+#menu-teaser {
+  text-align: center;
+}
+
+.dish-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 3rem;
+}
+
+.dish-card {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  background: rgba(196, 164, 64, 0.03);
+  border: 1px solid var(--brass-dark);
+}
+
+.dish-card-img {
+  width: 100%;
+  height: 70%;
+  overflow: hidden;
+}
+
+.dish-card-info {
+  padding: 1.25rem;
+  border-top: 1px solid var(--brass-dark);
+}
+.dish-card-info .label {
+  font-size: 9px;
+  margin-bottom: 0.4rem;
+}
+.dish-card-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--ivory);
+  margin-bottom: 0.3rem;
+}
+.dish-card-desc {
+  font-size: 13px;
+  color: var(--ivory-dark);
+  line-height: 1.6;
+}
+
+.menu-teaser-cta {
+  margin-top: 3rem;
+}
+
+/* === Gallery Teaser === */
+#gallery-teaser {
+  background: var(--shadow);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(2, 220px);
+  gap: 2px;
+  margin-top: 2.5rem;
+}
+
+.gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+.gallery-item:nth-child(2) { grid-column: span 2; }
+.gallery-item:nth-child(3) { grid-column: span 2; }
+.gallery-item:nth-child(4) { grid-column: span 1; }
+.gallery-item:nth-child(5) { grid-column: span 1; }
+.gallery-item:nth-child(6) { grid-column: span 2; }
+
+.gallery-item {
+  overflow: hidden;
+  position: relative;
+}
+.gallery-item .img-ph { min-height: 100%; height: 100%; }
+
+.gallery-teaser-cta {
+  text-align: center;
+  margin-top: 2.5rem;
+}
+
+/* === Reservations CTA === */
+#reservations-cta {
+  background:
+    linear-gradient(rgba(13,11,9,0.6), rgba(13,11,9,0.6)),
+    url('/src/assets/images/bg-brand.png') center / cover;
+  text-align: center;
+  padding: 120px 0;
+}
+
+#reservations-cta .section-heading {
+  margin-bottom: 1rem;
+}
+#reservations-cta .body-text {
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+}
+
+/* === Responsive === */
+@media (max-width: 900px) {
+  #about-teaser .container {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .about-teaser-img { aspect-ratio: 16 / 9; }
+
+  .dish-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .dish-card { aspect-ratio: 16 / 9; display: flex; }
+  .dish-card-img { width: 40%; height: 100%; }
+  .dish-card-info { flex: 1; border-top: none; border-left: 1px solid var(--brass-dark); }
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+  }
+  .gallery-item:nth-child(n) {
+    grid-column: span 1;
+    grid-row: span 1;
+    height: 200px;
+  }
+  .gallery-item:nth-child(1) {
+    grid-column: span 2;
+    height: 280px;
+  }
+}
+
+@media (max-width: 600px) {
+  .dish-card { flex-direction: column; aspect-ratio: auto; }
+  .dish-card-img { width: 100%; height: 200px; }
+  .dish-card-info { border-left: none; border-top: 1px solid var(--brass-dark); }
+
+  .hero-ctas { flex-direction: column; align-items: center; }
+  .hero-ctas .btn { width: 100%; max-width: 280px; text-align: center; }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+  .gallery-item:nth-child(n) {
+    grid-column: span 1;
+    height: 220px;
+  }
+}

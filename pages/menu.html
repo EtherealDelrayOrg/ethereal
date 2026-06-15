@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ethereal — The Menu. Explore our curated tasting experience, powered by Toast.">
+  <title>Menu — Ethereal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/css/globals.css">
+  <link rel="stylesheet" href="/src/css/pages.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header id="site-header" class="is-scrolled" role="banner">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="Ethereal — homepage">eTHeReAL</a>
+      <button class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-links">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+      <nav id="nav-links" aria-label="Main navigation">
+        <ul role="list">
+          <li><a href="/pages/menu.html" aria-current="page">Menu</a></li>
+          <li><a href="/pages/gallery.html">Gallery</a></li>
+          <li><a href="/pages/about.html">About Us</a></li>
+          <li><a href="/pages/shop.html">Shop</a></li>
+          <li><a href="/pages/careers.html">Careers</a></li>
+          <li><a href="/pages/contact.html">Contact</a></li>
+          <li><a href="/pages/reservations.html" class="nav-reserve">Reserve</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div id="mobile-nav" role="dialog" aria-label="Navigation menu" aria-modal="true">
+    <a href="/pages/menu.html">Menu</a>
+    <a href="/pages/gallery.html">Gallery</a>
+    <a href="/pages/about.html">About Us</a>
+    <a href="/pages/shop.html">Shop</a>
+    <a href="/pages/careers.html">Careers</a>
+    <a href="/pages/contact.html">Contact</a>
+    <a href="/pages/reservations.html" class="mobile-reserve">Reserve a Table</a>
+  </div>
+
+  <main id="main-content">
+
+    <div class="page-header">
+      <span class="label">Dining at Ethereal</span>
+      <h1>The Menu</h1>
+    </div>
+
+    <section class="section">
+      <div class="container">
+
+        <div class="text-block reveal" style="max-width:580px; margin:0 auto 4rem; text-align:center;">
+          <p class="body-text content-ph">[ Menu introduction — e.g., "Our menu changes with the seasons, guided by what is grown nearby and what the moment calls for." ]</p>
+        </div>
+
+        <!-- Toast embed goes here -->
+        <!-- Replace the placeholder below with your Toast Tab embed code -->
+        <!-- Format: <iframe src="https://www.toasttab.com/[your-slug]/v3" ...> -->
+        <div class="menu-embed-wrapper reveal">
+          <div class="menu-embed-placeholder">
+            <span class="label" style="display:block; text-align:center;">Online Menu &amp; Ordering</span>
+            <p>
+              The menu will appear here via Toast Tab.<br>
+              Add your Toast restaurant slug to wire it up.
+            </p>
+            <p style="margin-top:1.5rem; font-size:13px; color:var(--brass-dark); font-family:var(--font-ui); letter-spacing:0.1em;">
+              PLACEHOLDER — REPLACE WITH TOAST EMBED
+            </p>
+            <!-- When ready, replace this entire div with:
+            <iframe
+              src="https://www.toasttab.com/[your-slug]/v3"
+              width="100%"
+              height="900"
+              style="border:none; display:block;"
+              title="Ethereal — Menu &amp; Online Ordering"
+              loading="lazy"
+            ></iframe>
+            -->
+          </div>
+        </div>
+
+        <div class="ornament reveal"><div class="ornament-glyph"></div></div>
+
+        <div class="reveal" style="text-align:center;">
+          <p class="body-text" style="margin-bottom:2rem;">
+            <span class="content-ph">[ Dietary note — e.g., "Please inform your server of any dietary restrictions or allergies." ]</span>
+          </p>
+          <a href="/pages/reservations.html" class="btn">Reserve a Table</a>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">eTHeReAL</a>
+          <p class="footer-tagline">Where time breathes.</p>
+          <div class="footer-social"><a href="#" aria-label="Instagram">Instagram</a></div>
+        </div>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <h3>Navigate</h3>
+          <ul role="list">
+            <li><a href="/pages/menu.html">Menu</a></li>
+            <li><a href="/pages/gallery.html">Gallery</a></li>
+            <li><a href="/pages/about.html">About Us</a></li>
+            <li><a href="/pages/shop.html">Shop</a></li>
+            <li><a href="/pages/careers.html">Careers</a></li>
+            <li><a href="/pages/contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="footer-visit">
+          <h3>Visit</h3>
+          <address>
+            <p class="content-ph">[ Address ]</p>
+            <p class="content-ph">[ City, State ]</p>
+          </address>
+          <p class="content-ph" style="margin-top:1rem;">[ Hours ]</p>
+        </div>
+        <div class="footer-contact">
+          <h3>Contact</h3>
+          <p><a href="mailto:#" class="content-ph">[ Email ]</a></p>
+          <p><a href="tel:#" class="content-ph">[ Phone ]</a></p>
+          <a href="/pages/reservations.html" class="footer-reserve-link">Reserve a Table</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Ethereal. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/src/js/main.js"></script>
+</body>
+</html>

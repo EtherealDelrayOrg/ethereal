@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ethereal — Our story, our team, and the philosophy behind the restaurant.">
+  <title>About Us — Ethereal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/css/globals.css">
+  <link rel="stylesheet" href="/src/css/pages.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header id="site-header" class="is-scrolled" role="banner">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="Ethereal — homepage">eTHeReAL</a>
+      <button class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-links">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+      <nav id="nav-links" aria-label="Main navigation">
+        <ul role="list">
+          <li><a href="/pages/menu.html">Menu</a></li>
+          <li><a href="/pages/gallery.html">Gallery</a></li>
+          <li><a href="/pages/about.html" aria-current="page">About Us</a></li>
+          <li><a href="/pages/shop.html">Shop</a></li>
+          <li><a href="/pages/careers.html">Careers</a></li>
+          <li><a href="/pages/contact.html">Contact</a></li>
+          <li><a href="/pages/reservations.html" class="nav-reserve">Reserve</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div id="mobile-nav" role="dialog" aria-label="Navigation menu" aria-modal="true">
+    <a href="/pages/menu.html">Menu</a>
+    <a href="/pages/gallery.html">Gallery</a>
+    <a href="/pages/about.html">About Us</a>
+    <a href="/pages/shop.html">Shop</a>
+    <a href="/pages/careers.html">Careers</a>
+    <a href="/pages/contact.html">Contact</a>
+    <a href="/pages/reservations.html" class="mobile-reserve">Reserve a Table</a>
+  </div>
+
+  <main id="main-content">
+
+    <div class="page-header">
+      <span class="label">Our Story</span>
+      <h1>About Ethereal</h1>
+    </div>
+
+    <!-- Story Section -->
+    <section class="section" aria-labelledby="story-heading">
+      <div class="container">
+        <div class="two-col reveal">
+          <div class="text-block">
+            <span class="label">The Beginning</span>
+            <h2 class="section-heading" id="story-heading">A place born<br>from devotion.</h2>
+            <div class="ornament"><div class="ornament-glyph"></div></div>
+            <p class="body-text content-ph">[ Founding story — How and why Ethereal was created. Who had the vision, what inspired the concept, what feeling they wanted to give guests. 2–3 paragraphs. ]</p>
+            <p class="body-text content-ph" style="margin-top:1.2rem;">[ Second paragraph continuing the story — the space, the neighborhood, the first days. ]</p>
+            <p class="body-text content-ph" style="margin-top:1.2rem;">[ Third paragraph — the philosophy in one clear statement. ]</p>
+          </div>
+          <div class="img-wrap img-wrap--portrait reveal" data-delay="100">
+            <div class="img-ph" style="height:100%; min-height:500px;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg>
+              <span>Portrait — Restaurant interior or founding moment</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Philosophy Section -->
+    <section class="section section--deep" aria-labelledby="philosophy-heading">
+      <div class="container">
+        <div class="reveal" style="text-align:center; max-width:680px; margin:0 auto 4rem;">
+          <span class="label">Philosophy</span>
+          <h2 class="section-heading" id="philosophy-heading">What we believe.</h2>
+        </div>
+        <div class="values-grid">
+          <div class="value-card reveal" data-delay="0">
+            <h3>Slowness</h3>
+            <p class="content-ph">[ Value description — e.g., "We believe the best things take time. Each dish is a meditation on patience." ]</p>
+          </div>
+          <div class="value-card reveal" data-delay="100">
+            <h3>Craft</h3>
+            <p class="content-ph">[ Value description — e.g., "Every element of the dining experience is made by hand, with intention." ]</p>
+          </div>
+          <div class="value-card reveal" data-delay="200">
+            <h3>Place</h3>
+            <p class="content-ph">[ Value description — e.g., "We are rooted in this city, this season, this moment." ]</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="section" aria-labelledby="team-heading">
+      <div class="container">
+        <div class="reveal" style="max-width:640px; margin-bottom:3rem;">
+          <span class="label">The Team</span>
+          <h2 class="section-heading" id="team-heading">The hands<br>behind it all.</h2>
+        </div>
+        <div class="team-grid">
+          <article class="team-member reveal" data-delay="0">
+            <div class="team-member-img">
+              <div class="img-ph" style="height:100%; min-height:380px;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+                <span>Chef portrait</span>
+              </div>
+            </div>
+            <h3 class="content-ph">[ Executive Chef Name ]</h3>
+            <p class="role">Executive Chef</p>
+            <p class="content-ph">[ Chef biography — background, training, culinary philosophy, what drives them. 3–5 sentences. ]</p>
+          </article>
+          <article class="team-member reveal" data-delay="150">
+            <div class="team-member-img">
+              <div class="img-ph" style="height:100%; min-height:380px;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+                <span>Team member portrait</span>
+              </div>
+            </div>
+            <h3 class="content-ph">[ Team Member Name ]</h3>
+            <p class="role content-ph">[ Role — e.g., Sommelier / Pastry Chef / General Manager ]</p>
+            <p class="content-ph">[ Bio — background and what they bring to Ethereal. ]</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Image break -->
+    <div class="reveal" style="width:100%; height:clamp(300px,40vw,520px); overflow:hidden;">
+      <div class="img-ph" style="height:100%;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg>
+        <span>Full-width — Restaurant atmosphere / dining room</span>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <section class="section" aria-labelledby="about-cta-heading">
+      <div class="container">
+        <div class="reveal" style="text-align:center; max-width:560px; margin:0 auto;">
+          <h2 class="section-heading" id="about-cta-heading">Come and<br>stay a while.</h2>
+          <p class="body-text" style="margin:1.5rem 0 2.5rem;">
+            <span class="content-ph">[ CTA copy — e.g., "A table at Ethereal is a gift of time. We look forward to sharing it with you." ]</span>
+          </p>
+          <a href="/pages/reservations.html" class="btn btn--filled">Reserve a Table</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">eTHeReAL</a>
+          <p class="footer-tagline">Where time breathes.</p>
+          <div class="footer-social"><a href="#" aria-label="Instagram">Instagram</a></div>
+        </div>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <h3>Navigate</h3>
+          <ul role="list">
+            <li><a href="/pages/menu.html">Menu</a></li>
+            <li><a href="/pages/gallery.html">Gallery</a></li>
+            <li><a href="/pages/about.html">About Us</a></li>
+            <li><a href="/pages/shop.html">Shop</a></li>
+            <li><a href="/pages/careers.html">Careers</a></li>
+            <li><a href="/pages/contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="footer-visit">
+          <h3>Visit</h3>
+          <address>
+            <p class="content-ph">[ Address ]</p>
+            <p class="content-ph">[ City, State ]</p>
+          </address>
+          <p class="content-ph" style="margin-top:1rem;">[ Hours ]</p>
+        </div>
+        <div class="footer-contact">
+          <h3>Contact</h3>
+          <p><a href="mailto:#" class="content-ph">[ Email ]</a></p>
+          <p><a href="tel:#" class="content-ph">[ Phone ]</a></p>
+          <a href="/pages/reservations.html" class="footer-reserve-link">Reserve a Table</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Ethereal. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/src/js/main.js"></script>
+</body>
+</html>

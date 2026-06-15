@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ethereal — A fine dining restaurant where time breathes. Reservations, menu, and more.">
+  <title>Ethereal — Where Time Breathes</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/src/css/globals.css">
+  <link rel="stylesheet" href="/src/css/opening-sequence.css">
+  <link rel="stylesheet" href="/src/css/home.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ── Opening Sequence ─────────────────────────────── -->
+  <div id="opening-sequence" role="presentation" aria-hidden="true">
+
+    <!-- CSS clock placeholder — replaced by <video> when AI video is ready -->
+    <div class="seq-clock">
+      <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Outer ring -->
+        <circle class="seq-ring-outer" cx="100" cy="100" r="96" stroke="#8a6e28" stroke-width="1"/>
+        <circle cx="100" cy="100" r="90" stroke="#c4a440" stroke-width="1.5"/>
+        <!-- Rotating dashed inner ring -->
+        <circle class="seq-ring-inner" cx="100" cy="100" r="70" stroke="#8a6e28" stroke-width="0.75" stroke-dasharray="4 8"/>
+        <!-- Counter-rotating mid ring -->
+        <circle class="seq-ring-mid" cx="100" cy="100" r="52" stroke="#8a6e28" stroke-width="0.5" stroke-dasharray="2 6"/>
+        <!-- Tick marks at 12, 3, 6, 9 -->
+        <line x1="100" y1="10" x2="100" y2="20" stroke="#c4a440" stroke-width="1.5"/>
+        <line x1="190" y1="100" x2="180" y2="100" stroke="#c4a440" stroke-width="1.5"/>
+        <line x1="100" y1="190" x2="100" y2="180" stroke="#c4a440" stroke-width="1.5"/>
+        <line x1="10" y1="100" x2="20" y2="100" stroke="#c4a440" stroke-width="1.5"/>
+        <!-- Minor ticks -->
+        <line x1="150" y1="13.4" x2="146" y2="20.3" stroke="#8a6e28" stroke-width="0.75"/>
+        <line x1="186.6" y1="50" x2="179.7" y2="54" stroke="#8a6e28" stroke-width="0.75"/>
+        <line x1="186.6" y1="150" x2="179.7" y2="146" stroke="#8a6e28" stroke-width="0.75"/>
+        <line x1="150" y1="186.6" x2="146" y2="179.7" stroke="#8a6e28" stroke-width="0.75"/>
+        <line x1="50" y1="186.6" x2="54" y2="179.7" stroke="#8a6e28" stroke-width="0.75"/>
+        <line x1="13.4" y1="150" x2="20.3" y2="146" stroke="#8a6e28" stroke-width="0.75"/>
+        <line x1="13.4" y1="50" x2="20.3" y2="54" stroke="#8a6e28" stroke-width="0.75"/>
+        <line x1="50" y1="13.4" x2="54" y2="20.3" stroke="#8a6e28" stroke-width="0.75"/>
+        <!-- Center -->
+        <circle cx="100" cy="100" r="5" fill="#c4a440"/>
+        <circle cx="100" cy="100" r="2.5" fill="#0d0b09"/>
+      </svg>
+    </div>
+
+    <div class="seq-brand">
+      <span class="seq-logo">eTHeReAL</span>
+      <span class="seq-tagline">where time breathes.</span>
+    </div>
+
+    <button class="seq-skip" aria-label="Skip opening sequence">Skip</button>
+
+    <div class="seq-progress" role="progressbar" aria-label="Loading" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+      <div class="seq-progress-fill"></div>
+    </div>
+
+  </div>
+  <!-- /Opening Sequence -->
+
+  <!-- ── Site Content ──────────────────────────────────── -->
+  <div id="site-content" aria-hidden="true">
+
+    <!-- NAV -->
+    <header id="site-header" class="nav-hidden" role="banner">
+      <div class="nav-inner">
+        <a href="/" class="nav-logo" aria-label="Ethereal — homepage">eTHeReAL</a>
+
+        <button class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-links">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+
+        <nav id="nav-links" aria-label="Main navigation">
+          <ul role="list">
+            <li><a href="/pages/menu.html">Menu</a></li>
+            <li><a href="/pages/gallery.html">Gallery</a></li>
+            <li><a href="/pages/about.html">About Us</a></li>
+            <li><a href="/pages/shop.html">Shop</a></li>
+            <li><a href="/pages/careers.html">Careers</a></li>
+            <li><a href="/pages/contact.html">Contact</a></li>
+            <li><a href="/pages/reservations.html" class="nav-reserve">Reserve</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Mobile Nav Overlay -->
+    <div id="mobile-nav" role="dialog" aria-label="Navigation menu" aria-modal="true">
+      <a href="/pages/menu.html">Menu</a>
+      <a href="/pages/gallery.html">Gallery</a>
+      <a href="/pages/about.html">About Us</a>
+      <a href="/pages/shop.html">Shop</a>
+      <a href="/pages/careers.html">Careers</a>
+      <a href="/pages/contact.html">Contact</a>
+      <a href="/pages/reservations.html" class="mobile-reserve">Reserve a Table</a>
+    </div>
+
+    <main id="main-content">
+
+      <!-- ── Hero ─────────────────────────────────────── -->
+      <section id="hero" aria-labelledby="hero-title">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="hero-vignette" aria-hidden="true"></div>
+        <div class="hero-content">
+          <span class="hero-label">Fine Dining · Est. 2026</span>
+          <h1 class="hero-title" id="hero-title">Where time<br>breathes.</h1>
+          <p class="hero-sub">An intimate dining experience shaped<br>by the poetry of slow time.</p>
+          <div class="hero-ctas">
+            <a href="/pages/reservations.html" class="btn btn--filled">Reserve a Table</a>
+            <a href="/pages/menu.html" class="btn btn--ghost">View the Menu</a>
+          </div>
+        </div>
+        <div class="hero-scroll" aria-hidden="true">
+          <span>Discover</span>
+          <div class="hero-scroll-line"></div>
+        </div>
+      </section>
+
+      <!-- ── About Teaser ──────────────────────────────── -->
+      <section id="about-teaser" class="section" aria-labelledby="about-teaser-heading">
+        <div class="container">
+          <div class="reveal">
+            <span class="label">About Ethereal</span>
+          </div>
+          <div class="reveal" style="display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center;" data-delay="0">
+            <div class="text-block">
+              <h2 class="section-heading" id="about-teaser-heading">A place<br>out of time.</h2>
+              <div class="ornament"><div class="ornament-glyph"></div></div>
+              <p class="body-text content-ph">[ Restaurant story — to be provided by client. A short, evocative paragraph about the founding vision, the space, and the philosophy behind Ethereal. ]</p>
+              <p class="body-text content-ph" style="margin-top:1rem;">[ Second paragraph — chef's vision or the dining philosophy. ]</p>
+              <a href="/pages/about.html" class="btn" style="margin-top:2rem;">Our Story</a>
+            </div>
+            <div class="about-teaser-img">
+              <div class="img-ph" style="aspect-ratio:4/5;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8.5" cy="14.5" r="1.5"/></svg>
+                <span>Photo — restaurant interior</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Menu Teaser ───────────────────────────────── -->
+      <section id="menu-teaser" class="section section--deep" aria-labelledby="menu-teaser-heading">
+        <div class="container">
+          <div class="reveal"><span class="label">The Menu</span></div>
+          <h2 class="section-heading reveal" id="menu-teaser-heading">Curated with intention.</h2>
+
+          <div class="dish-grid">
+            <article class="dish-card reveal" data-delay="0">
+              <div class="dish-card-img">
+                <div class="img-ph" style="height:100%;">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="14.5" r="1.5"/><path d="M21 15l-5-5-4 4"/></svg>
+                  <span>Dish photo</span>
+                </div>
+              </div>
+              <div class="dish-card-info">
+                <span class="label">First Course</span>
+                <h3 class="dish-card-name content-ph">[ Dish name ]</h3>
+                <p class="dish-card-desc content-ph">[ Dish description — ingredients and preparation. ]</p>
+              </div>
+            </article>
+
+            <article class="dish-card reveal" data-delay="100">
+              <div class="dish-card-img">
+                <div class="img-ph" style="height:100%;">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="14.5" r="1.5"/><path d="M21 15l-5-5-4 4"/></svg>
+                  <span>Dish photo</span>
+                </div>
+              </div>
+              <div class="dish-card-info">
+                <span class="label">Main Course</span>
+                <h3 class="dish-card-name content-ph">[ Dish name ]</h3>
+                <p class="dish-card-desc content-ph">[ Dish description — ingredients and preparation. ]</p>
+              </div>
+            </article>
+
+            <article class="dish-card reveal" data-delay="200">
+              <div class="dish-card-img">
+                <div class="img-ph" style="height:100%;">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="14.5" r="1.5"/><path d="M21 15l-5-5-4 4"/></svg>
+                  <span>Dish photo</span>
+                </div>
+              </div>
+              <div class="dish-card-info">
+                <span class="label">Dessert</span>
+                <h3 class="dish-card-name content-ph">[ Dish name ]</h3>
+                <p class="dish-card-desc content-ph">[ Dish description — ingredients and preparation. ]</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="menu-teaser-cta reveal">
+            <a href="/pages/menu.html" class="btn">Explore the Full Menu</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Gallery Teaser ────────────────────────────── -->
+      <section id="gallery-teaser" class="section" aria-labelledby="gallery-teaser-heading">
+        <div class="container">
+          <div class="reveal"><span class="label">Gallery</span></div>
+          <h2 class="section-heading reveal" id="gallery-teaser-heading">The world<br>we've built.</h2>
+          <div class="gallery-grid reveal">
+            <div class="gallery-item"><div class="img-ph"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg><span>Featured photo</span></div></div>
+            <div class="gallery-item"><div class="img-ph"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg><span>Interior photo</span></div></div>
+            <div class="gallery-item"><div class="img-ph"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg><span>Dish photo</span></div></div>
+            <div class="gallery-item"><div class="img-ph"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg><span>Ambiance photo</span></div></div>
+            <div class="gallery-item"><div class="img-ph"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg><span>Detail photo</span></div></div>
+            <div class="gallery-item"><div class="img-ph"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg><span>Event photo</span></div></div>
+          </div>
+          <div class="gallery-teaser-cta reveal">
+            <a href="/pages/gallery.html" class="btn btn--ghost">View All Photos</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Reservations CTA ──────────────────────────── -->
+      <section id="reservations-cta" aria-labelledby="res-cta-heading">
+        <div class="container">
+          <div class="reveal">
+            <span class="label" style="justify-content:center; text-align:center; display:block;">Reservations</span>
+            <h2 class="section-heading" id="res-cta-heading" style="text-align:center; margin-bottom:1rem;">Reserve your table.</h2>
+            <p class="body-text" style="max-width:480px; margin:0 auto 2.5rem; text-align:center;">
+              <span class="content-ph">[ Reservation note — e.g., "We recommend booking at least two weeks in advance for weekend dining." ]</span>
+            </p>
+            <div style="text-align:center;">
+              <a href="/pages/reservations.html" class="btn btn--filled">Make a Reservation</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ── Footer ────────────────────────────────────── -->
+    <footer id="site-footer" role="contentinfo">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="/" class="footer-logo">eTHeReAL</a>
+            <p class="footer-tagline">Where time breathes.</p>
+            <div class="footer-social">
+              <a href="#" aria-label="Instagram">Instagram</a>
+            </div>
+          </div>
+          <nav class="footer-nav" aria-label="Footer navigation">
+            <h3>Navigate</h3>
+            <ul role="list">
+              <li><a href="/pages/menu.html">Menu</a></li>
+              <li><a href="/pages/gallery.html">Gallery</a></li>
+              <li><a href="/pages/about.html">About Us</a></li>
+              <li><a href="/pages/shop.html">Shop</a></li>
+              <li><a href="/pages/careers.html">Careers</a></li>
+              <li><a href="/pages/contact.html">Contact</a></li>
+            </ul>
+          </nav>
+          <div class="footer-visit">
+            <h3>Visit</h3>
+            <address>
+              <p class="content-ph">[ Address ]</p>
+              <p class="content-ph">[ City, State ]</p>
+            </address>
+            <p class="content-ph" style="margin-top:1rem;">[ Hours ]</p>
+          </div>
+          <div class="footer-contact">
+            <h3>Contact</h3>
+            <p><a href="mailto:#" class="content-ph">[ Email address ]</a></p>
+            <p><a href="tel:#" class="content-ph">[ Phone number ]</a></p>
+            <a href="/pages/reservations.html" class="footer-reserve-link">Reserve a Table</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 Ethereal. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+  <!-- /site-content -->
+
+  <script src="/src/js/opening-sequence.js"></script>
+  <script src="/src/js/main.js"></script>
+</body>
+</html>

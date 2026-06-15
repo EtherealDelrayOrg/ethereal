@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ethereal — Enter the Clock</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dim: #7a6030;
+    --bg: #0a0806;
+    --fog: rgba(201,168,76,0.06);
+    --cream: #f5ead8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    cursor: default;
+  }
+
+  /* ── STARS ── */
+  #stars {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  }
+  .star {
+    position: absolute; border-radius: 50%;
+    background: white; opacity: 0;
+    animation: twinkle var(--d, 3s) var(--delay, 0s) infinite;
+  }
+  @keyframes twinkle {
+    0%,100%{opacity:0} 50%{opacity:var(--op,0.7)}
+  }
+
+  /* ── PARTICLES / DUST ── */
+  #dust { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+  .dust {
+    position: absolute; border-radius: 50%;
+    background: var(--gold-light);
+    animation: floatDust var(--fd, 8s) var(--fd-delay, 0s) infinite ease-in-out;
+    opacity: 0;
+  }
+  @keyframes floatDust {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    20%  { opacity: 0.4; }
+    80%  { opacity: 0.2; }
+    100% { transform: translateY(-80px) translateX(var(--dx, 20px)); opacity: 0; }
+  }
+
+  /* ── SCENE ── */
+  #scene {
+    position: relative; width: 100vw; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+  }
+
+  /* ── AMBIENT GLOW ── */
+  .ambient {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .ambient-center {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.1);opacity:0.7} }
+
+  /* ── CLOCK WRAPPER ── */
+  #clock-wrapper {
+    position: relative;
+    width: 460px; height: 460px;
+    cursor: pointer;
+  }
+
+  /* ── ART DECO OUTER ROTATING RING ── */
+  .gear-ring {
+    position: absolute;
+    border-radius: 50%;
+    animation: rotateCW var(--speed, 20s) linear infinite;
+  }
+  /* Sawtooth deco ring - Art Deco stepped teeth */
+  .gear-outer {
+    inset: -38px;
+    --speed: 40s;
+    background:
+      repeating-conic-gradient(
+        var(--gold-dim) 0deg 4deg,
+        transparent 4deg 10deg
+      );
+    mask: radial-gradient(transparent 84%, black 84.5%, black 91%, transparent 91.5%);
+    -webkit-mask: radial-gradient(transparent 84%, black 84.5%, black 91%, transparent 91.5%);
+    opacity: 0.7;
+  }
+  /* Diamond-notch band */
+  .gear-mid {
+    inset: -14px;
+    --speed: 28s;
+    animation-direction: reverse;
+    background:
+      repeating-conic-gradient(
+        rgba(201,168,76,0.55) 0deg 3deg,
+        transparent 3deg 7.5deg
+      );
+    mask: radial-gradient(transparent 88%, black 88.5%, black 93%, transparent 93.5%);
+    -webkit-mask: radial-gradient(transparent 88%, black 88.5%, black 93%, transparent 93.5%);
+  }
+  /* Fine-tooth inner bezel ring */
+  .gear-inner {
+    inset: 18px;
+    --speed: 60s;
+    background:
+      repeating-conic-gradient(
+        rgba(201,168,76,0.3) 0deg 2deg,
+        transparent 2deg 5deg
+      );
+    mask: radial-gradient(transparent 90%, black 90.5%, black 95%, transparent 95.5%);
+    -webkit-mask: radial-gradient(transparent 90%, black 90.5%, black 95%, transparent 95.5%);
+  }
+  @keyframes rotateCW { to { transform: rotate(360deg); } }
+
+  /* ── ART DECO CLOCK FACE ── */
+  #clock-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #080603;
+    border: none;
+    box-shadow:
+      0 0 0 2px var(--gold-dim),
+      0 0 0 5px #080603,
+      0 0 0 7px var(--gold-dim),
+      0 0 0 11px #080603,
+      0 0 0 13px rgba(201,168,76,0.35),
+      0 0 60px rgba(201,168,76,0.25),
+      inset 0 0 80px rgba(0,0,0,0.9);
+    overflow: visible;
+    transition: box-shadow 0.5s;
+  }
+  #clock-wrapper:hover #clock-face {
+    box-shadow:
+      0 0 0 2px var(--gold),
+      0 0 0 5px #080603,
+      0 0 0 7px var(--gold),
+      0 0 0 11px #080603,
+      0 0 0 13px rgba(201,168,76,0.5),
+      0 0 100px rgba(201,168,76,0.45),
+      inset 0 0 80px rgba(0,0,0,0.9);
+  }
+
+  /* SVG face drawn in JS */
+  #clock-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  /* Clock hands — Art Deco spade/arrow style via SVG */
+  #hands-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  @keyframes rotateSecond { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+  @keyframes rotateMinute { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+  @keyframes rotateHour   { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+  /* ── ART DECO CORNER ORNAMENTS ── */
+  .small-gear {
+    position: absolute;
+    width: 64px; height: 64px;
+    animation: rotateCW var(--gs, 6s) linear infinite;
+    opacity: 0.5;
+  }
+  .small-gear svg { width: 100%; height: 100%; }
+  .sg1 { top: 30px; left: 30px; --gs: 12s; }
+  .sg2 { top: 82px; left: 82px; --gs: 7s; animation-direction: reverse; width:40px; height:40px; }
+  .sg3 { top: 30px; right: 30px; --gs: 14s; animation-direction: reverse; }
+  .sg4 { top: 82px; right: 82px; --gs: 7s; width:40px; height:40px; }
+  .sg5 { bottom: 30px; left: 50px; --gs: 10s; animation-direction: reverse; }
+  .sg6 { bottom: 30px; right: 50px; --gs: 8s; }
+
+  /* ── CLICK HINT ── */
+  #hint {
+    position: absolute;
+    bottom: -60px;
+    left: 50%; transform: translateX(-50%);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    animation: hintPulse 2.5s ease-in-out infinite;
+    white-space: nowrap;
+  }
+  @keyframes hintPulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+  /* ── TITLE ── */
+  #title {
+    position: absolute;
+    top: 50px; left: 50%; transform: translateX(-50%);
+    text-align: center;
+    pointer-events: none;
+  }
+  #title h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: clamp(28px, 4vw, 52px);
+    letter-spacing: 0.4em;
+    background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dim) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+  }
+  #title p {
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--gold-dim);
+    margin-top: 6px;
+  }
+
+  /* ── DOOR OPEN ANIMATION ── */
+  #clock-face.opening {
+    animation: doorOpen 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  @keyframes doorOpen {
+    0%  { transform: perspective(800px) rotateY(0deg); box-shadow: 0 0 0 6px rgba(201,168,76,0.25), 0 0 80px rgba(201,168,76,0.4), inset 0 0 60px rgba(0,0,0,0.8); }
+    50% { transform: perspective(800px) rotateY(-40deg); box-shadow: 0 0 60px rgba(201,168,76,0.8), inset 0 0 60px rgba(201,168,76,0.2); }
+    100%{ transform: perspective(800px) rotateY(-70deg); box-shadow: 0 0 120px rgba(201,168,76,1); }
+  }
+
+  /* ── BIRDS ── */
+  .bird {
+    position: fixed;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0;
+    animation: birdFly var(--bt, 4s) var(--bd, 0s) cubic-bezier(0.15, 0.8, 0.35, 1) forwards;
+    transform-origin: center center;
+    filter: drop-shadow(0 4px 18px var(--bird-glow, rgba(8,145,178,0.5)));
+  }
+  @keyframes birdFly {
+    0%   { opacity: 0;   transform: scale(0.05) rotate(var(--br, 0deg)); }
+    10%  { opacity: 0.9; transform: scale(1.05) rotate(calc(var(--br,0deg)*0.2)); }
+    85%  { opacity: 0.85; }
+    100% { opacity: 0;   transform: scale(0.7) translateX(var(--bx,200px)) translateY(var(--by,-300px)) rotate(var(--br2,10deg)); }
+  }
+
+  /* ── LIGHT BURST ── */
+  #light-burst {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(201,168,76,0.4) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 45;
+    opacity: 0;
+  }
+  #light-burst.active {
+    animation: burst 1.5s ease-out forwards;
+  }
+  @keyframes burst {
+    0%  { opacity: 0; transform: scale(0.5); }
+    30% { opacity: 1; transform: scale(1); }
+    100%{ opacity: 0; transform: scale(1.5); }
+  }
+
+  /* ── MENU OVERLAY ── */
+  #menu-overlay {
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at 50% 50%,
+      rgba(10,8,6,0.97) 30%, rgba(6,5,4,0.99) 100%);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+  }
+  #menu-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* ── MENU CLOCK PORTAL ── */
+  #menu-portal {
+    position: relative;
+    width: 580px;
+    text-align: center;
+  }
+
+  .portal-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.3);
+    animation: rotateCW var(--pr, 20s) linear infinite;
+  }
+  .portal-ring::before {
+    content: '';
+    position: absolute; inset: -8px;
+    border-radius: 50%;
+    background: repeating-conic-gradient(
+      rgba(201,168,76,0.2) 0deg 6deg,
+      transparent 6deg 14deg
+    );
+    mask: radial-gradient(transparent 80%, black 80%);
+    -webkit-mask: radial-gradient(transparent 80%, black 80%);
+  }
+  .pr1 { inset: -60px; --pr: 30s; }
+  .pr2 { inset: -30px; --pr: 20s; animation-direction: reverse; border-color: rgba(201,168,76,0.5); }
+
+  #menu-circle {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    background: radial-gradient(circle at 40% 35%,
+      #1a1408 0%, #0a0806 70%, #050403 100%);
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    box-shadow:
+      0 0 0 6px rgba(201,168,76,0.1),
+      0 0 80px rgba(201,168,76,0.3),
+      inset 0 0 80px rgba(0,0,0,0.9);
+    overflow: visible;
+  }
+
+  #menu-inner {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 60px;
+    overflow: hidden;
+  }
+
+  .menu-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(18px, 3vw, 26px);
+    letter-spacing: 0.3em;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+
+  .menu-divider {
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 4px 0;
+  }
+
+  .menu-item {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(14px, 2vw, 20px);
+    font-style: italic;
+    letter-spacing: 0.15em;
+    color: var(--cream);
+    cursor: pointer;
+    position: relative;
+    padding: 4px 20px;
+    transition: color 0.3s, transform 0.3s;
+    opacity: 0;
+    transform: translateY(20px);
+    text-decoration: none;
+    display: block;
+  }
+  .menu-item.shown {
+    animation: fadeUp 0.5s var(--mi-delay, 0s) ease forwards;
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .menu-item::before {
+    content: '✦';
+    position: absolute;
+    left: 0; top: 50%; transform: translateY(-50%);
+    color: var(--gold);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 10px;
+  }
+  .menu-item:hover {
+    color: var(--gold-light);
+    transform: translateX(8px);
+  }
+  .menu-item:hover::before { opacity: 1; }
+
+  #close-btn {
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--gold-dim);
+    background: var(--bg);
+    color: var(--gold);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+    font-family: 'Cinzel', serif;
+    z-index: 110;
+  }
+  #close-btn:hover {
+    background: var(--gold);
+    color: var(--bg);
+    box-shadow: 0 0 20px var(--gold);
+  }
+
+  /* floating birds inside menu */
+  .menu-bird {
+    position: absolute;
+    opacity: 0.55;
+    font-size: 14px;
+    pointer-events: none;
+    animation: menuBirdFloat var(--mb, 8s) ease-in-out infinite alternate;
+  }
+  @keyframes menuBirdFloat {
+    0%   { transform: translateX(0) translateY(0) rotate(0deg); }
+    100% { transform: translateX(var(--mx, 30px)) translateY(var(--my, -20px)) rotate(10deg); }
+  }
+
+  /* ── SCROLL FEATHERS decorative ── */
+  .decor-line {
+    position: absolute;
+    width: 120px; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div id="stars"></div>
+
+<!-- Dust particles -->
+<div id="dust"></div>
+
+<!-- Light burst on open -->
+<div id="light-burst"></div>
+
+<!-- Scene -->
+<div id="scene">
+  <div class="ambient ambient-center"></div>
+
+  <!-- Title -->
+  <div id="title">
+    <h1>Æ T H E R E A L</h1>
+    <p>where time breathes</p>
+  </div>
+
+  <!-- Corner small gears -->
+  <div class="small-gear sg1"></div>
+  <div class="small-gear sg2"></div>
+  <div class="small-gear sg3"></div>
+  <div class="small-gear sg4"></div>
+  <div class="small-gear sg5"></div>
+  <div class="small-gear sg6"></div>
+
+  <!-- Main Clock -->
+  <div id="clock-wrapper" onclick="openClock()">
+    <div class="gear-ring gear-outer"></div>
+    <div class="gear-ring gear-mid"></div>
+    <div class="gear-ring gear-inner"></div>
+
+    <div id="clock-face">
+      <svg id="clock-svg" viewBox="0 0 460 460" xmlns="http://www.w3.org/2000/svg"></svg>
+      <svg id="hands-svg" viewBox="0 0 460 460" xmlns="http://www.w3.org/2000/svg">
+        <g id="hour-group"  style="transform-origin:230px 230px">
+          <!-- Art Deco hour hand: stepped spade shape -->
+          <polygon id="hour-hand-shape"
+            points="230,110 238,175 234,230 226,230 222,175"
+            fill="url(#handGrad)" />
+          <polygon points="230,105 236,130 230,140 224,130"
+            fill="#f0d080"/>
+        </g>
+        <g id="min-group" style="transform-origin:230px 230px">
+          <!-- Art Deco minute hand: long tapered arrow -->
+          <polygon id="min-hand-shape"
+            points="230,82 235,155 232,230 228,230 225,155"
+            fill="url(#handGrad)" />
+          <polygon points="230,78 234,100 230,112 226,100"
+            fill="#f5ead8"/>
+        </g>
+        <g id="sec-group" style="transform-origin:230px 230px">
+          <!-- Seconds: thin needle + counterweight -->
+          <rect x="229" y="88" width="2" height="148" rx="1" fill="#e85d24"/>
+          <rect x="228" y="238" width="4" height="30" rx="2" fill="#e85d24" opacity="0.7"/>
+        </g>
+        <!-- Center cap: Art Deco diamond -->
+        <polygon points="230,220 238,230 230,240 222,230" fill="#f0d080" stroke="#c9a84c" stroke-width="1"/>
+        <circle cx="230" cy="230" r="4" fill="#0a0806"/>
+        <defs>
+          <linearGradient id="handGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#7a6030"/>
+            <stop offset="40%" stop-color="#f0d080"/>
+            <stop offset="100%" stop-color="#c9a84c"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <div id="hint">— touch to enter —</div>
+  </div>
+</div>
+
+<!-- Menu overlay -->
+<div id="menu-overlay">
+  <div id="menu-portal">
+    <div class="portal-ring pr1"></div>
+    <div class="portal-ring pr2"></div>
+
+    <div id="menu-circle">
+      <div id="menu-inner">
+        <div class="menu-title">E T H E R E A L</div>
+        <div class="menu-divider"></div>
+
+        <a class="menu-item" href="#">Menu</a>
+        <a class="menu-item" href="#">Reservations</a>
+        <a class="menu-item" href="#">Shop</a>
+        <a class="menu-item" href="#">Our Story</a>
+        <a class="menu-item" href="#">Gallery</a>
+        <a class="menu-item" href="#">Contact</a>
+
+        <div class="menu-divider"></div>
+
+        <!-- floating decorative birds inside -->
+        <span class="menu-bird" style="top:10%;left:8%;--mb:7s;--mx:20px;--my:-15px;font-size:28px;">🦚</span>
+        <span class="menu-bird" style="top:65%;right:6%;--mb:9s;--mx:-25px;--my:-20px;font-size:24px;">🦢</span>
+        <span class="menu-bird" style="bottom:15%;left:14%;--mb:6s;--mx:15px;--my:10px;font-size:22px;">🦚</span>
+      </div>
+    </div>
+
+    <button id="close-btn" onclick="closeMenu()">✕</button>
+  </div>
+</div>
+
+<script>
+  // ── STARS ──
+  const starsEl = document.getElementById('stars');
+  for(let i=0; i<120; i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random()*2+0.5;
+    s.style.cssText = `
+      width:${sz}px; height:${sz}px;
+      top:${Math.random()*100}%; left:${Math.random()*100}%;
+      --d:${2+Math.random()*5}s; --delay:${Math.random()*5}s; --op:${0.3+Math.random()*0.7};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // ── DUST ──
+  const dustEl = document.getElementById('dust');
+  for(let i=0; i<30; i++){
+    const d = document.createElement('div');
+    d.className = 'dust';
+    const sz = Math.random()*3+1;
+    d.style.cssText = `
+      width:${sz}px; height:${sz}px;
+      bottom:${Math.random()*40}%; left:${20+Math.random()*60}%;
+      --fd:${5+Math.random()*8}s; --fd-delay:${Math.random()*8}s;
+      --dx:${-30+Math.random()*60}px;
+    `;
+    dustEl.appendChild(d);
+  }
+
+  // ── ART DECO CORNER ORNAMENT SVGs ──
+  const gearSVG = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="32" r="28" fill="none" stroke="#7a6030" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="22" fill="none" stroke="#c9a84c" stroke-width="0.8" stroke-dasharray="4 2"/>
+    <circle cx="32" cy="32" r="14" fill="none" stroke="#7a6030" stroke-width="1"/>
+    ${Array.from({length:16},(_,i)=>{
+      const a=i*22.5*Math.PI/180;
+      const x1=32+22*Math.cos(a), y1=32+22*Math.sin(a);
+      const x2=32+28*Math.cos(a), y2=32+28*Math.sin(a);
+      return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#c9a84c" stroke-width="1.5"/>`;
+    }).join('')}
+    ${Array.from({length:8},(_,i)=>{
+      const a=(i*45+22.5)*Math.PI/180;
+      const cx=32+18*Math.cos(a), cy=32+18*Math.sin(a);
+      return `<polygon points="${cx},${cy-4} ${cx+3},${cy} ${cx},${cy+4} ${cx-3},${cy}" fill="#c9a84c" opacity="0.7"/>`;
+    }).join('')}
+    <circle cx="32" cy="32" r="4" fill="#c9a84c" opacity="0.8"/>
+  </svg>`;
+  document.querySelectorAll('.small-gear').forEach(g => g.innerHTML = gearSVG);
+
+  // ── ART DECO CLOCK FACE SVG ──
+  const svg = document.getElementById('clock-svg');
+  const cx = 230, cy = 230, R = 230;
+  let face = `<defs>
+    <radialGradient id="facebg" cx="42%" cy="38%">
+      <stop offset="0%" stop-color="#18130a"/>
+      <stop offset="60%" stop-color="#0c0906"/>
+      <stop offset="100%" stop-color="#050403"/>
+    </radialGradient>
+    <clipPath id="faceClip"><circle cx="230" cy="230" r="228"/></clipPath>
+  </defs>`;
+
+  // Base fill
+  face += `<circle cx="230" cy="230" r="228" fill="url(#facebg)"/>`;
+
+  // ── SUNBURST RAYS (Art Deco signature) ──
+  for(let i=0;i<72;i++){
+    const a = i*5*Math.PI/180;
+    const isMain = i%5===0;
+    const r1 = isMain ? 80 : 100;
+    const r2 = isMain ? 170 : 150;
+    const x1=(cx+r1*Math.cos(a)).toFixed(1), y1=(cy+r1*Math.sin(a)).toFixed(1);
+    const x2=(cx+r2*Math.cos(a)).toFixed(1), y2=(cy+r2*Math.sin(a)).toFixed(1);
+    face += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${isMain?'#7a6030':'#3a2e18'}" stroke-width="${isMain?1:0.5}" opacity="${isMain?0.8:0.4}" clip-path="url(#faceClip)"/>`;
+  }
+
+  // ── STEPPED CONCENTRIC RINGS (Art Deco layered bezels) ──
+  const rings = [
+    {r:220, sw:1.5, col:'#7a6030', op:0.9},
+    {r:212, sw:0.5, col:'#c9a84c', op:0.5},
+    {r:205, sw:2,   col:'#c9a84c', op:0.7},
+    {r:198, sw:0.5, col:'#7a6030', op:0.5},
+    {r:185, sw:0.5, col:'#7a6030', op:0.3},
+    {r:78,  sw:1,   col:'#c9a84c', op:0.5},
+    {r:70,  sw:0.5, col:'#7a6030', op:0.4},
+  ];
+  rings.forEach(({r,sw,col,op})=>{
+    face += `<circle cx="230" cy="230" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" opacity="${op}"/>`;
+  });
+
+  // ── HOUR MARKERS — Art Deco diamond + double-bar style ──
+  for(let i=0;i<12;i++){
+    const a = (i/12)*2*Math.PI - Math.PI/2;
+    const isQuarter = i%3===0;
+    const mr = 192;
+
+    if(isQuarter){
+      // Large stepped diamond marker
+      const dmx = cx + mr*Math.cos(a), dmy = cy + mr*Math.sin(a);
+      const perpA = a + Math.PI/2;
+      // outer diamond
+      const d = 9, d2 = 5;
+      const pts = [
+        [dmx+Math.cos(a)*d, dmy+Math.sin(a)*d],
+        [dmx+Math.cos(perpA)*d2, dmy+Math.sin(perpA)*d2],
+        [dmx-Math.cos(a)*d, dmy-Math.sin(a)*d],
+        [dmx-Math.cos(perpA)*d2, dmy-Math.sin(perpA)*d2],
+      ];
+      face += `<polygon points="${pts.map(p=>p.map(v=>v.toFixed(1)).join(',')).join(' ')}" fill="#c9a84c" opacity="0.95"/>`;
+      // inner diamond
+      const pts2 = [
+        [dmx+Math.cos(a)*4, dmy+Math.sin(a)*4],
+        [dmx+Math.cos(perpA)*2.5, dmy+Math.sin(perpA)*2.5],
+        [dmx-Math.cos(a)*4, dmy-Math.sin(a)*4],
+        [dmx-Math.cos(perpA)*2.5, dmy-Math.sin(perpA)*2.5],
+      ];
+      face += `<polygon points="${pts2.map(p=>p.map(v=>v.toFixed(1)).join(',')).join(' ')}" fill="#0c0906"/>`;
+    } else {
+      // Double-bar minute-hour marker
+      const x1=(cx+(mr-5)*Math.cos(a)).toFixed(1), y1=(cy+(mr-5)*Math.sin(a)).toFixed(1);
+      const x2=(cx+(mr+5)*Math.cos(a)).toFixed(1), y2=(cy+(mr+5)*Math.sin(a)).toFixed(1);
+      const perpA = a + Math.PI/2;
+      const off = 3;
+      // two parallel lines
+      [1,-1].forEach(s=>{
+        const ox=(Math.cos(perpA)*off*s), oy=(Math.sin(perpA)*off*s);
+        face += `<line x1="${(+x1+ox).toFixed(1)}" y1="${(+y1+oy).toFixed(1)}" x2="${(+x2+ox).toFixed(1)}" y2="${(+y2+oy).toFixed(1)}" stroke="#c9a84c" stroke-width="1.2" opacity="0.8"/>`;
+      });
+    }
+  }
+
+  // ── MINUTE DOTS — small squares rotated 45° ──
+  for(let i=0;i<60;i++){
+    if(i%5===0) continue; // skip hour positions
+    const a=(i/60)*2*Math.PI - Math.PI/2;
+    const mr=197;
+    const mx=(cx+mr*Math.cos(a)).toFixed(1), my=(cy+mr*Math.sin(a)).toFixed(1);
+    const deg=(i/60*360-90);
+    face += `<rect x="${(+mx-1).toFixed(1)}" y="${(+my-1).toFixed(1)}" width="2" height="2" fill="#7a6030" opacity="0.7" transform="rotate(${deg} ${mx} ${my})"/>`;
+  }
+
+  // ── ROMAN NUMERALS — Cinzel, spaced on inner ring ──
+  const romans = ['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
+  const nr = 158;
+  romans.forEach((n,i)=>{
+    const a=(i/12)*2*Math.PI - Math.PI/2;
+    const nx=(cx+nr*Math.cos(a)).toFixed(1), ny=(cy+nr*Math.sin(a)).toFixed(1);
+    face += `<text x="${nx}" y="${ny}" text-anchor="middle" dominant-baseline="central"
+      font-family="Cinzel,serif" font-size="14" fill="#c9a84c" opacity="0.9"
+      letter-spacing="1">${n}</text>`;
+  });
+
+  // ── INNER ART DECO SUNBURST MEDALLION ──
+  // 8-pointed star center ornament
+  const starPts = Array.from({length:16},(_,i)=>{
+    const a=i*22.5*Math.PI/180 - Math.PI/2;
+    const r2 = i%2===0 ? 36 : 20;
+    return `${(cx+r2*Math.cos(a)).toFixed(1)},${(cy+r2*Math.sin(a)).toFixed(1)}`;
+  }).join(' ');
+  face += `<polygon points="${starPts}" fill="none" stroke="#7a6030" stroke-width="0.8" opacity="0.6"/>`;
+
+  // Inner chevron fan (12 spokes from center)
+  for(let i=0;i<12;i++){
+    const a=(i/12)*2*Math.PI;
+    const x1=(cx+14*Math.cos(a)).toFixed(1), y1=(cy+14*Math.sin(a)).toFixed(1);
+    const x2=(cx+34*Math.cos(a)).toFixed(1), y2=(cy+34*Math.sin(a)).toFixed(1);
+    face += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#c9a84c" stroke-width="0.6" opacity="0.4"/>`;
+  }
+
+  svg.innerHTML = face;
+
+  // ── LIVE CLOCK HANDS ──
+  function updateHands(){
+    const now = new Date();
+    const s = now.getSeconds() + now.getMilliseconds()/1000;
+    const m = now.getMinutes() + s/60;
+    const h = (now.getHours() % 12) + m/60;
+    document.getElementById('hour-group').style.transform = `rotate(${h*30}deg)`;
+    document.getElementById('min-group').style.transform  = `rotate(${m*6}deg)`;
+    document.getElementById('sec-group').style.transform  = `rotate(${s*6}deg)`;
+  }
+  updateHands();
+  setInterval(updateHands, 50);
+
+  // ── OPEN CLOCK ──
+  let opened = false;
+  function openClock(){
+    if(opened) return;
+    opened = true;
+
+    const hint = document.getElementById('hint');
+    hint.style.opacity = '0';
+
+    // Door swing
+    const clockFace = document.getElementById('clock-face');
+    clockFace.classList.add('opening');
+
+    // Light burst
+    const burst = document.getElementById('light-burst');
+    burst.classList.add('active');
+
+    // Release birds
+    setTimeout(releaseBirds, 400);
+
+    // Show menu after birds have flown
+    setTimeout(showMenu, 1400);
+  }
+
+  // ── BIRDS — Detailed Realistic SVG Peacocks & Cranes ──
+
+  // Peacock: full fan tail, iridescent body, detailed feather ocelli
+  function makePeacockSVG(){
+    const defs = `<defs>
+      <radialGradient id="pbody" cx="40%" cy="35%"><stop offset="0%" stop-color="#4dd9c0"/><stop offset="50%" stop-color="#1a6b8a"/><stop offset="100%" stop-color="#0d3d52"/></radialGradient>
+      <radialGradient id="pneck" cx="50%" cy="30%"><stop offset="0%" stop-color="#5ee7d0"/><stop offset="100%" stop-color="#0e7490"/></radialGradient>
+      <radialGradient id="ptail" cx="50%" cy="100%" r="100%"><stop offset="0%" stop-color="#14532d"/><stop offset="40%" stop-color="#166534"/><stop offset="100%" stop-color="#052e16"/></radialGradient>
+      <radialGradient id="focellus" cx="50%" cy="50%"><stop offset="0%" stop-color="#38bdf8"/><stop offset="35%" stop-color="#1d4ed8"/><stop offset="65%" stop-color="#1e1b4b"/><stop offset="100%" stop-color="#0f172a"/></radialGradient>
+      <radialGradient id="foring" cx="50%" cy="50%"><stop offset="0%" stop-color="#86efac"/><stop offset="60%" stop-color="#16a34a"/><stop offset="100%" stop-color="#166534"/></radialGradient>
+      <linearGradient id="fshaft" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#bbf7d0"/><stop offset="100%" stop-color="#4ade80"/></linearGradient>
+      <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>`;
+
+    // Build 13 tail feathers in a fan
+    let feathers = '';
+    for(let f=0; f<13; f++){
+      const a = -90 + (f - 6) * 14;
+      const rad = a * Math.PI/180;
+      const len = 155 + (f===6?20:Math.abs(f-6)<3?10:0);
+      const ex = 220 + Math.cos(rad)*len;
+      const ey = 240 + Math.sin(rad)*len;
+      // shaft
+      feathers += `<line x1="220" y1="240" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="url(#fshaft)" stroke-width="1.2" opacity="0.7"/>`;
+      // barbs — thin lines branching off shaft
+      for(let b=1; b<=6; b++){
+        const t = b/7;
+        const bx = 220 + Math.cos(rad)*len*t;
+        const by = 240 + Math.sin(rad)*len*t;
+        const blen = 14*(1-Math.abs(t-0.6));
+        const brad = (rad + Math.PI/2);
+        feathers += `<line x1="${bx.toFixed(1)}" y1="${by.toFixed(1)}" x2="${(bx+Math.cos(brad)*blen).toFixed(1)}" y2="${(by+Math.sin(brad)*blen).toFixed(1)}" stroke="#22c55e" stroke-width="0.7" opacity="0.5"/>`;
+        feathers += `<line x1="${bx.toFixed(1)}" y1="${by.toFixed(1)}" x2="${(bx-Math.cos(brad)*blen).toFixed(1)}" y2="${(by-Math.sin(brad)*blen).toFixed(1)}" stroke="#22c55e" stroke-width="0.7" opacity="0.5"/>`;
+      }
+      // ocellus eye at tip
+      feathers += `<circle cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" r="11" fill="url(#foring)" filter="url(#glow)"/>`;
+      feathers += `<circle cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" r="7"  fill="url(#focellus)"/>`;
+      feathers += `<circle cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" r="3"  fill="#7dd3fc" opacity="0.9"/>`;
+      feathers += `<circle cx="${(ex+1.5).toFixed(1)}" cy="${(ey-1.5).toFixed(1)}" r="1.2" fill="white" opacity="0.7"/>`;
+    }
+
+    // Crest
+    let crest = '';
+    for(let c=0; c<7; c++){
+      const cx2 = 222 + (c-3)*4;
+      crest += `<line x1="${cx2}" y1="98" x2="${cx2+(c-3)*1.5}" y2="${78-Math.abs(c-3)*3}" stroke="#4ade80" stroke-width="1.2"/>`;
+      crest += `<ellipse cx="${cx2+(c-3)*1.5}" cy="${77-Math.abs(c-3)*3}" rx="3" ry="4.5" fill="#38bdf8" opacity="0.95"/>`;
+    }
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 420" width="340" height="320">
+      ${defs}
+      ${feathers}
+      <!-- wing overlay -->
+      <path d="M180 230 Q140 200 120 175 Q150 190 175 210 Q190 220 200 235 Z" fill="#0e7490" opacity="0.7"/>
+      <path d="M180 230 Q145 210 130 195 Q155 205 178 222 Z" fill="#22d3ee" opacity="0.4"/>
+      <!-- body -->
+      <ellipse cx="215" cy="238" rx="48" ry="34" fill="url(#pbody)"/>
+      <!-- belly sheen -->
+      <ellipse cx="210" cy="245" rx="30" ry="20" fill="#22d3ee" opacity="0.15"/>
+      <!-- wing closed -->
+      <path d="M215 220 Q255 195 275 180 Q265 210 248 228 Q235 238 218 240 Z" fill="#0c4a6e" opacity="0.85"/>
+      <path d="M215 220 Q252 200 268 188 Q260 215 244 230 Z" fill="#0ea5e9" opacity="0.3"/>
+      <!-- neck -->
+      <path d="M223 208 Q228 175 228 155 Q232 168 232 195 Q232 208 226 215 Z" fill="url(#pneck)"/>
+      <!-- neck scale lines -->
+      <path d="M225 205 Q229 195 229 185" stroke="#67e8f9" stroke-width="0.8" fill="none" opacity="0.6"/>
+      <path d="M225 195 Q230 185 230 175" stroke="#67e8f9" stroke-width="0.8" fill="none" opacity="0.6"/>
+      <!-- head -->
+      <ellipse cx="228" cy="145" rx="18" ry="16" fill="url(#pneck)"/>
+      <!-- face mask -->
+      <path d="M236 138 Q248 140 250 145 Q248 150 236 152 Z" fill="#0c4a6e" opacity="0.6"/>
+      <!-- eye ring -->
+      <circle cx="238" cy="142" r="8" fill="#0c4a6e"/>
+      <circle cx="238" cy="142" r="5.5" fill="#e0f2fe"/>
+      <circle cx="238" cy="142" r="3.5" fill="#1e293b"/>
+      <circle cx="239.5" cy="140.5" r="1.3" fill="white"/>
+      <!-- beak upper -->
+      <path d="M246 143 Q264 140 268 142 Q264 145 246 147 Z" fill="#d4a017"/>
+      <!-- beak lower -->
+      <path d="M246 147 Q262 145 265 147 Q260 151 246 149 Z" fill="#b8860b"/>
+      <!-- nostril -->
+      <ellipse cx="254" cy="143" rx="2" ry="1" fill="#92700a" opacity="0.7"/>
+      ${crest}
+      <!-- feet/legs -->
+      <line x1="205" y1="268" x2="196" y2="296" stroke="#5f6b3a" stroke-width="3.5"/>
+      <line x1="225" y1="268" x2="232" y2="296" stroke="#5f6b3a" stroke-width="3.5"/>
+      <line x1="196" y1="296" x2="186" y2="305" stroke="#5f6b3a" stroke-width="2.5"/>
+      <line x1="196" y1="296" x2="195" y2="308" stroke="#5f6b3a" stroke-width="2.5"/>
+      <line x1="196" y1="296" x2="204" y2="306" stroke="#5f6b3a" stroke-width="2.5"/>
+    </svg>`;
+  }
+
+  // Crane: wingspan, long neck, red crown, black & white plumage
+  function makeCraneSVG(){
+    const variant = Math.random() > 0.5;
+    const wingPrimary   = variant ? '#f8fafc' : '#e2e8f0';
+    const wingSecondary = variant ? '#94a3b8' : '#64748b';
+    const wingTip       = '#1e293b';
+    const bodyColor     = '#f1f5f9';
+    const neckColor     = '#f8fafc';
+    const crownColor    = '#dc2626';
+
+    const defs2 = `<defs>
+      <linearGradient id="cwingL" x1="100%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="${wingPrimary}"/>
+        <stop offset="60%" stop-color="${wingSecondary}"/>
+        <stop offset="100%" stop-color="${wingTip}"/>
+      </linearGradient>
+      <linearGradient id="cwingR" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="${wingPrimary}"/>
+        <stop offset="60%" stop-color="${wingSecondary}"/>
+        <stop offset="100%" stop-color="${wingTip}"/>
+      </linearGradient>
+      <radialGradient id="cbody" cx="45%" cy="40%">
+        <stop offset="0%" stop-color="#f8fafc"/>
+        <stop offset="100%" stop-color="#cbd5e1"/>
+      </radialGradient>
+      <filter id="cglow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>`;
+
+    // Left wing — large multi-layer
+    const lwing = `
+      <path d="M195 148 Q145 90 60 80 Q90 115 150 138 Q170 145 192 152 Z" fill="url(#cwingL)" opacity="0.95"/>
+      <path d="M193 152 Q148 105 75 100 Q105 128 158 148 Z" fill="${wingSecondary}" opacity="0.55"/>
+      <path d="M192 155 Q155 120 95 118 Q118 138 168 154 Z" fill="${wingTip}" opacity="0.3"/>
+      <!-- primary feather tips left -->
+      <path d="M60 80 Q45 95 50 112 Q65 95 75 88 Z" fill="${wingTip}"/>
+      <path d="M72 82 Q57 97 62 113 Q77 97 86 90 Z" fill="${wingTip}" opacity="0.8"/>
+      <path d="M84 86 Q70 102 76 118 Q90 102 98 95 Z" fill="${wingTip}" opacity="0.6"/>`;
+
+    // Right wing
+    const rwing = `
+      <path d="M265 148 Q315 90 400 80 Q370 115 310 138 Q290 145 268 152 Z" fill="url(#cwingR)" opacity="0.95"/>
+      <path d="M267 152 Q312 105 385 100 Q355 128 302 148 Z" fill="${wingSecondary}" opacity="0.55"/>
+      <path d="M268 155 Q305 120 365 118 Q342 138 292 154 Z" fill="${wingTip}" opacity="0.3"/>
+      <path d="M400 80 Q415 95 410 112 Q395 95 385 88 Z" fill="${wingTip}"/>
+      <path d="M388 82 Q403 97 398 113 Q383 97 374 90 Z" fill="${wingTip}" opacity="0.8"/>
+      <path d="M376 86 Q390 102 384 118 Q370 102 362 95 Z" fill="${wingTip}" opacity="0.6"/>`;
+
+    // Feather texture lines on wings
+    let flines = '';
+    for(let i=0;i<8;i++){
+      const t = 0.2 + i*0.09;
+      flines += `<line x1="${(195-t*130).toFixed(0)}" y1="${(148-t*60).toFixed(0)}" x2="${(192-t*110).toFixed(0)}" y2="${(155-t*45).toFixed(0)}" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>`;
+      flines += `<line x1="${(265+t*130).toFixed(0)}" y1="${(148-t*60).toFixed(0)}" x2="${(268+t*110).toFixed(0)}" y2="${(155-t*45).toFixed(0)}" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>`;
+    }
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 260" width="380" height="215">
+      ${defs2}
+      ${lwing}
+      ${rwing}
+      ${flines}
+      <!-- tail plumes -->
+      <path d="M198 178 Q175 195 158 205 Q172 190 192 182 Z" fill="${wingSecondary}" opacity="0.7"/>
+      <path d="M196 180 Q178 200 165 212 Q178 195 194 184 Z" fill="${wingTip}" opacity="0.4"/>
+      <!-- body -->
+      <ellipse cx="230" cy="162" rx="42" ry="26" fill="url(#cbody)"/>
+      <!-- body shading -->
+      <ellipse cx="235" cy="168" rx="30" ry="18" fill="#94a3b8" opacity="0.2"/>
+      <!-- neck — elegant S-curve -->
+      <path d="M248 148 Q262 120 268 95 Q272 70 280 52" stroke="${neckColor}" stroke-width="14" fill="none" stroke-linecap="round"/>
+      <path d="M248 148 Q262 120 268 95 Q272 70 280 52" stroke="${wingSecondary}" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.4"/>
+      <!-- neck black stripe -->
+      <path d="M256 130 Q268 108 272 85 Q275 65 282 50" stroke="#334155" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <!-- head -->
+      <ellipse cx="282" cy="44" rx="15" ry="13" fill="${neckColor}"/>
+      <!-- black mask through eye -->
+      <path d="M270 44 Q278 38 292 40 Q295 44 292 48 Q278 50 270 46 Z" fill="#1e293b"/>
+      <!-- red crown patch -->
+      <ellipse cx="280" cy="33" rx="9" ry="6" fill="${crownColor}" filter="url(#cglow)"/>
+      <!-- eye -->
+      <circle cx="288" cy="43" r="4.5" fill="#fef9c3"/>
+      <circle cx="288" cy="43" r="2.8" fill="#1c1917"/>
+      <circle cx="289" cy="42" r="1"   fill="white"/>
+      <!-- beak — long pointed -->
+      <path d="M296 42 Q328 40 336 42 Q328 45 296 46 Z" fill="#78716c"/>
+      <path d="M296 46 Q326 45 334 47 Q324 50 296 48 Z" fill="#57534e"/>
+      <!-- legs trailing behind in flight -->
+      <line x1="215" y1="184" x2="188" y2="235" stroke="#64748b" stroke-width="3"/>
+      <line x1="245" y1="184" x2="270" y2="238" stroke="#64748b" stroke-width="3"/>
+      <!-- toes -->
+      <line x1="188" y1="235" x2="175" y2="244" stroke="#64748b" stroke-width="2"/>
+      <line x1="188" y1="235" x2="187" y2="248" stroke="#64748b" stroke-width="2"/>
+      <line x1="188" y1="235" x2="200" y2="246" stroke="#64748b" stroke-width="2"/>
+    </svg>`;
+  }
+
+  const BIRD_MAKERS = [makePeacockSVG, makeCraneSVG, makePeacockSVG, makeCraneSVG, makePeacockSVG, makeCraneSVG, makePeacockSVG, makeCraneSVG];
+
+  function releaseBirds(){
+    const cx = window.innerWidth/2, cy = window.innerHeight/2;
+    BIRD_MAKERS.forEach((maker, i) => {
+      const bird = document.createElement('div');
+      bird.className = 'bird';
+      bird.innerHTML = maker();
+      const angle = (i / BIRD_MAKERS.length) * 2 * Math.PI - Math.PI/2 + (Math.random()-0.5)*0.5;
+      const dist = 420 + Math.random()*200;
+      const bx = Math.cos(angle)*dist;
+      const by = Math.sin(angle)*dist - 60;
+      const br  = (Math.random()-0.5)*20;
+      const br2 = (Math.random()-0.5)*30;
+      // peacock: teal glow; crane: soft white/silver glow
+      const isPeacock = maker === makePeacockSVG;
+      bird.style.cssText = `
+        left:${cx}px; top:${cy}px;
+        --bt:${3.2+Math.random()*1.8}s;
+        --bd:${i*0.18}s;
+        --bx:${bx}px; --by:${by}px;
+        --br:${br}deg; --br2:${br2}deg;
+        --bird-glow:${isPeacock ? '#0891b2' : '#e2e8f0'};
+        --bird-glow2:${isPeacock ? '#166534' : '#94a3b8'};
+        margin-left:-170px; margin-top:-130px;
+      `;
+      document.body.appendChild(bird);
+      setTimeout(()=>bird.remove(), 6000);
+    });
+  }
+
+  // ── SHOW MENU ──
+  function showMenu(){
+    const overlay = document.getElementById('menu-overlay');
+    overlay.classList.add('visible');
+    // stagger menu items
+    const items = overlay.querySelectorAll('.menu-item');
+    items.forEach((item, i) => {
+      item.style.setProperty('--mi-delay', `${0.1 + i*0.1}s`);
+      item.classList.add('shown');
+    });
+  }
+
+  // ── CLOSE MENU ──
+  function closeMenu(){
+    const overlay = document.getElementById('menu-overlay');
+    overlay.classList.remove('visible');
+
+    // reset items
+    const items = overlay.querySelectorAll('.menu-item');
+    items.forEach(item => {
+      item.classList.remove('shown');
+      item.style.opacity = '0';
+      item.style.transform = 'translateY(20px)';
+    });
+
+    // reset clock
+    const clockFace = document.getElementById('clock-face');
+    clockFace.classList.remove('opening');
+    clockFace.style.animation = 'none';
+    clockFace.offsetHeight; // reflow
+
+    const burst = document.getElementById('light-burst');
+    burst.classList.remove('active');
+
+    document.getElementById('hint').style.opacity = '1';
+    opened = false;
+  }
+</script>
+</body>
+</html>

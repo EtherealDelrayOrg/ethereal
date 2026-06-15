@@ -1,0 +1,598 @@
+/* ── COLOR PALETTE ──
+   Like a box of named paint cans. Every color used on the page is stored
+   here — change one value and it updates everywhere automatically. */
+:root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dim: #7a6030;
+    --bg: #080706;
+    --fog: rgba(201,168,76,0.06);
+    --cream: #f5ead8;
+    --copper: #b87333;
+    --copper-bright: #e8943a;
+    --copper-dark: #7a4a1e;
+    --rust: #8b3a1a;
+    --iron: #2a2520;
+    --iron-light: #3d3530;
+    --brass: #c9932a;
+    --steam: rgba(220,200,160,0.12);
+  }
+
+  /* Wipe the browser's built-in spacing so every element starts from zero. */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* The whole page canvas: near-black like a shuttered smithy, cream text,
+     elegant serif font. No scrollbars — the clock fills the entire screen. */
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    cursor: default;
+  }
+
+  /* ── STARS ──
+     120 tiny white dots scattered by JavaScript. CSS makes each one slowly
+     blink in and out at its own pace, like a real night sky. */
+  #stars {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  }
+  .star {
+    position: absolute; border-radius: 50%;
+    background: white; opacity: 0;
+    animation: twinkle var(--d, 3s) var(--delay, 0s) infinite;
+  }
+  @keyframes twinkle {
+    0%,100%{opacity:0} 50%{opacity:var(--op,0.7)}
+  }
+
+  /* ── PARTICLES / DUST ──
+     30 golden specks that drift upward like embers from a furnace.
+     Each floats at a random speed, brightens briefly, then fades away. */
+  #dust { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+  .dust {
+    position: absolute; border-radius: 50%;
+    background: var(--gold-light);
+    animation: floatDust var(--fd, 8s) var(--fd-delay, 0s) infinite ease-in-out;
+    opacity: 0;
+  }
+  @keyframes floatDust {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    20%  { opacity: 0.4; }
+    80%  { opacity: 0.2; }
+    100% { transform: translateY(-80px) translateX(var(--dx, 20px)); opacity: 0; }
+  }
+
+  /* ── SCENE ──
+     The main stage — a full-screen flex container that keeps the clock
+     perfectly centred no matter how big or small the screen is. */
+  #scene {
+    position: relative; width: 100vw; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+  }
+
+  /* ── AMBIENT GLOW ──
+     A big blurry golden circle sitting behind the clock, like candlelight
+     bleeding through frosted glass. It slowly breathes larger and smaller. */
+  .ambient {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .ambient-center {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.1);opacity:0.7} }
+
+  /* ── CLOCK WRAPPER ──
+     The invisible 500×500 box that holds the whole clock. It gets a warm
+     copper drop-shadow and turns into a pointer cursor to hint it's clickable. */
+  #clock-wrapper {
+    position: relative;
+    width: 500px; height: 500px;
+    cursor: pointer;
+    filter: drop-shadow(0 0 40px rgba(184,115,51,0.3)) drop-shadow(0 8px 32px rgba(0,0,0,0.8));
+  }
+
+  /* ── STEAM PUFF ANIMATION ──
+     Three overlapping smoke blobs that rise from the top pipe. Each starts
+     tiny and invisible, swells outward, then dissolves — like real steam. */
+  @keyframes steamPuff {
+    0%   { opacity:0; transform: scale(0.4) translateY(0); }
+    20%  { opacity:0.6; }
+    100% { opacity:0; transform: scale(2.2) translateY(-60px); }
+  }
+  .steam-puff {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(220,200,160,0.5) 0%, transparent 70%);
+    pointer-events: none;
+    animation: steamPuff 2.8s ease-out infinite;
+    width: 28px; height: 28px;
+  }
+  .sp1 { top: 30px; left: 42%; animation-delay: 0s; }
+  .sp2 { top: 24px; left: 48%; animation-delay: 0.9s; width:20px; height:20px; }
+  .sp3 { top: 28px; left: 54%; animation-delay: 1.7s; width:16px; height:16px; }
+
+  /* ── ROTATING GEAR RINGS ──
+     Three concentric rings that spin at different speeds around the clock face.
+     They are pure CSS gradients masked into a ring shape — no image files needed.
+       gear-outer : heavy toothed band, 22 s per turn (clockwise)
+       gear-mid   : copper bolt band,   35 s per turn (counter-clockwise)
+       gear-inner : fine brass ring,    55 s per turn (clockwise)              */
+  .gear-ring {
+    position: absolute;
+    border-radius: 50%;
+    animation: rotateCW var(--speed, 20s) linear infinite;
+  }
+
+  /* Main toothed gear — mechanical, heavy teeth */
+  .gear-outer {
+    inset: -46px;
+    --speed: 22s;
+    background:
+      repeating-conic-gradient(
+        #7a4a1e 0deg 5.5deg,
+        #2a2520 5.5deg 9deg,
+        #7a4a1e 9deg 11deg,
+        #2a2520 11deg 18deg
+      );
+    mask: radial-gradient(transparent 81%, black 81.5%, black 90%, transparent 90.5%);
+    -webkit-mask: radial-gradient(transparent 81%, black 81.5%, black 90%, transparent 90.5%);
+    opacity: 0.9;
+  }
+
+  /* Copper band with bolt pattern */
+  .gear-mid {
+    inset: -18px;
+    --speed: 35s;
+    animation-direction: reverse;
+    background:
+      repeating-conic-gradient(
+        #b87333 0deg 2deg,
+        #7a4a1e 2deg 4deg,
+        #b87333 4deg 5deg,
+        #7a4a1e 5deg 9deg
+      );
+    mask: radial-gradient(transparent 87%, black 87.5%, black 93.5%, transparent 94%);
+    -webkit-mask: radial-gradient(transparent 87%, black 87.5%, black 93.5%, transparent 94%);
+  }
+
+  /* Fine brass inner ring */
+  .gear-inner {
+    inset: 14px;
+    --speed: 55s;
+    background:
+      repeating-conic-gradient(
+        rgba(201,147,42,0.5) 0deg 1.5deg,
+        transparent 1.5deg 4.5deg
+      );
+    mask: radial-gradient(transparent 91%, black 91.5%, black 95.5%, transparent 96%);
+    -webkit-mask: radial-gradient(transparent 91%, black 91.5%, black 95.5%, transparent 96%);
+  }
+  @keyframes rotateCW { to { transform: rotate(360deg); } }
+
+  /* ── CLOCK FACE ──
+     The dark circular "door" of the clock. Its many box-shadow layers build up
+     the brass/iron bezel rings around the edge. Hovering makes the outer glow
+     brighter — the clock reacts to your presence before you even click. */
+  #clock-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 34%, #1c1610 0%, #100e09 45%, #080603 100%);
+    border: none;
+    box-shadow:
+      0 0 0 3px #3d2e14,
+      0 0 0 6px #1a1208,
+      0 0 0 9px #b87333,
+      0 0 0 13px #1a1208,
+      0 0 0 16px #7a4a1e,
+      0 0 0 20px #0a0806,
+      0 0 0 22px rgba(184,115,51,0.4),
+      0 0 80px rgba(184,115,51,0.2),
+      inset 0 0 100px rgba(0,0,0,0.95),
+      inset 0 2px 8px rgba(184,115,51,0.08);
+    overflow: visible;
+    transition: box-shadow 0.5s;
+  }
+  #clock-wrapper:hover #clock-face {
+    box-shadow:
+      0 0 0 3px #5a4520,
+      0 0 0 6px #1a1208,
+      0 0 0 9px #e8943a,
+      0 0 0 13px #1a1208,
+      0 0 0 16px #b87333,
+      0 0 0 20px #0a0806,
+      0 0 0 22px rgba(232,148,58,0.5),
+      0 0 120px rgba(184,115,51,0.4),
+      inset 0 0 100px rgba(0,0,0,0.95);
+  }
+
+  /* ── CLOCK FACE CANVAS ──
+     A transparent SVG that covers the whole face. JavaScript paints all the
+     decorative detail in here: rivets, stepped rings, tick marks, numerals. */
+  #clock-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  /* ── CLOCK HANDS CANVAS ──
+     Another transparent SVG, this one for the hour, minute, and second hands.
+     JavaScript reads the real time and rotates these every 50 ms. */
+  #hands-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  @keyframes rotateSecond { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+  @keyframes rotateMinute { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+  @keyframes rotateHour   { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+  /* ── CORNER GEAR ORNAMENTS ──
+     Six decorative gears tucked around the clock. They spin at different speeds
+     and alternate directions so they look like a real meshed gear train.
+     JavaScript generates all their SVG tooth/spoke artwork at page load. */
+  .small-gear {
+    position: absolute;
+    animation: rotateCW var(--gs, 6s) linear infinite;
+    opacity: 0.75;
+  }
+  .small-gear svg { width: 100%; height: 100%; }
+  .sg1 { width:80px; height:80px; top: 18px; left: 18px; --gs: 10s; }
+  .sg2 { width:52px; height:52px; top: 78px; left: 78px; --gs: 6s; animation-direction: reverse; }
+  .sg3 { width:80px; height:80px; top: 18px; right: 18px; --gs: 12s; animation-direction: reverse; }
+  .sg4 { width:52px; height:52px; top: 78px; right: 78px; --gs: 6s; }
+  .sg5 { width:70px; height:70px; bottom: 22px; left: 32px; --gs: 9s; animation-direction: reverse; }
+  .sg6 { width:70px; height:70px; bottom: 22px; right: 32px; --gs: 11s; }
+
+  /* ── PIPE CONNECTORS ──
+     Four short copper pipe stubs that poke out of each side of the clock,
+     each with a domed brass end-cap. Pure decoration — they sell the look. */
+  .pipe {
+    position: absolute;
+    background: linear-gradient(var(--pipe-dir, to bottom), #4a3018, #b87333, #7a4a1e);
+    border-radius: 3px;
+    opacity: 0.7;
+  }
+  .pipe-top    { top: -12px; left: 50%; transform: translateX(-50%); width: 18px; height: 28px; --pipe-dir: to bottom; }
+  .pipe-bottom { bottom: -12px; left: 50%; transform: translateX(-50%); width: 18px; height: 28px; --pipe-dir: to top; }
+  .pipe-left   { left: -12px; top: 50%; transform: translateY(-50%); width: 28px; height: 18px; --pipe-dir: to right; }
+  .pipe-right  { right: -12px; top: 50%; transform: translateY(-50%); width: 28px; height: 18px; --pipe-dir: to left; }
+  .pipe-cap {
+    position: absolute;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #e8943a, #7a4a1e);
+    border: 2px solid #5a3a18;
+    opacity: 0.8;
+  }
+  .pipe-cap-top    { top: -18px; left: 50%; transform: translateX(-50%); }
+  .pipe-cap-bottom { bottom: -18px; left: 50%; transform: translateX(-50%); }
+  .pipe-cap-left   { left: -18px; top: 50%; transform: translateY(-50%); }
+  .pipe-cap-right  { right: -18px; top: 50%; transform: translateY(-50%); }
+
+  /* ── CLICK HINT ──
+     The "— touch to enter —" label that gently pulses below the clock.
+     It disappears the moment the user clicks. */
+  #hint {
+    position: absolute;
+    bottom: -60px;
+    left: 50%; transform: translateX(-50%);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    animation: hintPulse 2.5s ease-in-out infinite;
+    white-space: nowrap;
+  }
+  @keyframes hintPulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+  /* ── LOGO & TITLE ──
+     The brand logo at the top of the screen. It pulses with a golden glow
+     like a sign in a candlelit window. The small tagline sits beneath it
+     in wide-spaced capital letters. */
+  #title {
+    position: absolute;
+    top: 38px; left: 50%; transform: translateX(-50%);
+    text-align: center;
+    pointer-events: none;
+    z-index: 3;
+  }
+  #title img.logo {
+    width: clamp(260px, 32vw, 480px);
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 0 18px rgba(201,168,76,0.45)) drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+    animation: logoPulse 4s ease-in-out infinite;
+  }
+  @keyframes logoPulse {
+    0%,100% { filter: drop-shadow(0 0 14px rgba(201,168,76,0.35)) drop-shadow(0 2px 6px rgba(0,0,0,0.8)); }
+    50%      { filter: drop-shadow(0 0 32px rgba(201,168,76,0.65)) drop-shadow(0 2px 8px rgba(0,0,0,0.8)); }
+  }
+  #title p {
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    color: var(--gold-dim);
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+
+  /* ── INNER GEAR SYSTEM ──
+     A hidden network of 9 interlocking gears inside the clock face.
+     Invisible by default (opacity 0). They fade IN when you hover the clock,
+     and snap OUT the instant you click — like machinery briefly glimpsed
+     before the door swings open. */
+  /* Individual gear spin animations — named so JS can set speed via style */
+  @keyframes igSpinCW  { to { transform: rotate(360deg);  } }
+  @keyframes igSpinCCW { to { transform: rotate(-360deg); } }
+
+  #inner-gears-svg { z-index: 3; }
+
+  /* Hover: reveal inner gears */
+  #clock-wrapper:hover #inner-gears-svg,
+  #clock-wrapper.touched #inner-gears-svg {
+    opacity: 1 !important;
+  }
+  /* Opening: fade inner gears out fast */
+  #clock-face.opening ~ * #inner-gears-svg,
+  #inner-gears-svg.dissolve {
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+  }
+
+  /* ── DOOR OPEN ANIMATION ──
+     When clicked, the clock face swings open like a heavy vault door in 3-D.
+     CSS perspective rotates it 70 degrees on the Y-axis, swinging the face
+     away to reveal the golden light and menu behind it. */
+  #clock-face.opening {
+    animation: doorOpen 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  @keyframes doorOpen {
+    0%  { transform: perspective(800px) rotateY(0deg); box-shadow: 0 0 0 6px rgba(201,168,76,0.25), 0 0 80px rgba(201,168,76,0.4), inset 0 0 60px rgba(0,0,0,0.8); }
+    50% { transform: perspective(800px) rotateY(-40deg); box-shadow: 0 0 60px rgba(201,168,76,0.8), inset 0 0 60px rgba(201,168,76,0.2); }
+    100%{ transform: perspective(800px) rotateY(-70deg); box-shadow: 0 0 120px rgba(201,168,76,1); }
+  }
+
+  /* ── BEZEL GEAR BURST ──
+     When the clock opens, 14 small gears fly off the rim like sparks.
+     Each one gets a unique position, direction, spin, size, and timing
+     set by JavaScript — so no two bursts ever look the same. */
+  .burst-gear {
+    position: fixed;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0;
+    transform-origin: center center;
+    animation: gearBurst var(--gb-t, 2.2s) var(--gb-d, 0s) cubic-bezier(0.15,0.85,0.3,1) forwards;
+  }
+  @keyframes gearBurst {
+    0%   { opacity:0; transform: translate(0,0) rotate(0deg) scale(0.2); }
+    8%   { opacity:1; }
+    70%  { opacity:0.85; }
+    100% { opacity:0; transform: translate(var(--gbx,200px), var(--gby,-200px)) rotate(var(--gbr,360deg)) scale(var(--gbs,0.4)); }
+  }
+
+  /* Accelerating spin on bezel gears when opening */
+  .gear-ring.turbo { animation-duration: 0.6s !important; }
+  .gear-ring.turbo-mid { animation-duration: 0.9s !important; }
+  .gear-ring.turbo-slow { animation-duration: 1.4s !important; }
+
+  /* ── LIGHT BURST ──
+     A full-screen golden flash that fires when the clock opens. It blooms
+     outward from the centre then fades to nothing. */
+  #light-burst {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(201,168,76,0.4) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 45;
+    opacity: 0;
+  }
+  #light-burst.active {
+    animation: burst 1.5s ease-out forwards;
+  }
+  @keyframes burst {
+    0%  { opacity: 0; transform: scale(0.5); }
+    30% { opacity: 1; transform: scale(1); }
+    100%{ opacity: 0; transform: scale(1.5); }
+  }
+
+  /* ── NAVIGATION MENU OVERLAY ──
+     A near-black full-screen panel that appears after the clock opens.
+     Invisible and unclickable by default; the "visible" class fades it in
+     and enables interaction with the menu links inside. */
+  #menu-overlay {
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at 50% 50%,
+      rgba(10,8,6,0.97) 30%, rgba(6,5,4,0.99) 100%);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+  }
+  #menu-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* ── MENU PORTAL ──
+     The circular menu widget in the centre of the overlay. Two rings slowly
+     orbit it to keep the steampunk feel going. Inside sits a dark circle
+     with a gold border holding the navigation links. */
+  #menu-portal {
+    position: relative;
+    width: 580px;
+    text-align: center;
+  }
+
+  .portal-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.3);
+    animation: rotateCW var(--pr, 20s) linear infinite;
+  }
+  .portal-ring::before {
+    content: '';
+    position: absolute; inset: -8px;
+    border-radius: 50%;
+    background: repeating-conic-gradient(
+      rgba(201,168,76,0.2) 0deg 6deg,
+      transparent 6deg 14deg
+    );
+    mask: radial-gradient(transparent 80%, black 80%);
+    -webkit-mask: radial-gradient(transparent 80%, black 80%);
+  }
+  .pr1 { inset: -60px; --pr: 30s; }
+  .pr2 { inset: -30px; --pr: 20s; animation-direction: reverse; border-color: rgba(201,168,76,0.5); }
+
+  #menu-circle {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    background: radial-gradient(circle at 40% 35%,
+      #1a1408 0%, #0a0806 70%, #050403 100%);
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    box-shadow:
+      0 0 0 6px rgba(201,168,76,0.1),
+      0 0 80px rgba(201,168,76,0.3),
+      inset 0 0 80px rgba(0,0,0,0.9);
+    overflow: visible;
+  }
+
+  #menu-inner {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 20px 60px 75px;
+    overflow: hidden;
+  }
+
+  .menu-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(18px, 3vw, 26px);
+    letter-spacing: 0.3em;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+
+  .menu-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 78%;
+    margin: 4px 0;
+    gap: 6px;
+  }
+
+  .menu-divider::before,
+  .menu-divider::after {
+    content: '';
+    flex: 1;
+    height: 0;
+    border-top: 1px solid rgba(201,147,42,0.9);
+    border-bottom: 2.5px solid rgba(201,147,42,0.55);
+    display: block;
+  }
+
+  .menu-divider-gem {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    box-shadow: 0 0 5px rgba(201,147,42,0.8);
+    flex-shrink: 0;
+  }
+
+  .menu-item {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(14px, 2vw, 20px);
+    font-style: italic;
+    letter-spacing: 0.15em;
+    color: var(--cream);
+    cursor: pointer;
+    position: relative;
+    padding: 4px 20px;
+    transition: color 0.3s, transform 0.3s;
+    opacity: 0;
+    transform: translateY(20px);
+    text-decoration: none;
+    display: block;
+  }
+  .menu-item.shown {
+    animation: fadeUp 0.5s var(--mi-delay, 0s) ease forwards;
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .menu-item::before {
+    content: '✦';
+    position: absolute;
+    left: 0; top: 50%; transform: translateY(-50%);
+    color: var(--gold);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 10px;
+  }
+  .menu-item:hover {
+    color: var(--gold-light);
+    transform: translateX(8px);
+  }
+  .menu-item:hover::before { opacity: 1; }
+
+  #close-btn {
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--gold-dim);
+    background: var(--bg);
+    color: var(--gold);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+    font-family: 'Cinzel', serif;
+    z-index: 110;
+  }
+  #close-btn:hover {
+    background: var(--gold);
+    color: var(--bg);
+    box-shadow: 0 0 20px var(--gold);
+  }
+
+
+
+  /* ── DECORATIVE DIVIDER LINE ──
+     A thin golden line that fades out at both ends, used as a separator
+     between the menu title and the navigation links. */
+  .decor-line {
+    position: absolute;
+    width: 120px; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+  }
