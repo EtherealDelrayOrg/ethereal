@@ -122,27 +122,27 @@
             <a href="/pages/menu.html" class="btn btn--ghost">View the Menu</a>
           </div>
         </div>
-        <div class="hero-scroll" aria-hidden="true">
-          <span>Discover</span>
-          <div class="hero-scroll-line"></div>
-        </div>
+        <button class="hero-scroll" aria-label="Scroll to discover" onclick="document.getElementById('about-teaser').scrollIntoView({behavior:'smooth'})">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <line x1="10" y1="2" x2="10" y2="14" stroke="currentColor" stroke-width="1"/>
+            <polyline points="5,10 10,15 15,10" stroke="currentColor" stroke-width="1" fill="none" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </section>
 
       <!-- ── About Teaser ──────────────────────────────── -->
       <section id="about-teaser" class="section" aria-labelledby="about-teaser-heading">
         <div class="container">
-          <div class="reveal">
-            <span class="label">About Ethereal</span>
-          </div>
-          <div class="reveal" style="display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center;" data-delay="0">
-            <div class="text-block">
+          <span class="label reveal">About Ethereal</span>
+          <div class="about-teaser-grid">
+            <div class="text-block reveal">
               <h2 class="section-heading" id="about-teaser-heading">A place<br>out of time.</h2>
               <div class="ornament"><div class="ornament-glyph"></div></div>
               <p class="body-text content-ph">[ Restaurant story — to be provided by client. A short, evocative paragraph about the founding vision, the space, and the philosophy behind Ethereal. ]</p>
               <p class="body-text content-ph" style="margin-top:1rem;">[ Second paragraph — chef's vision or the dining philosophy. ]</p>
               <a href="/pages/about.html" class="btn" style="margin-top:2rem;">Our Story</a>
             </div>
-            <div class="about-teaser-img">
+            <div class="about-teaser-img reveal" data-delay="150">
               <div class="img-ph" style="aspect-ratio:4/5;">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9l4-4 4 4 4-4 4 4"/><circle cx="8.5" cy="14.5" r="1.5"/></svg>
                 <span>Photo — restaurant interior</span>
