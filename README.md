@@ -4,20 +4,20 @@ Official website for **Ethereal**, a fine dining restaurant with a grand opening
 
 ## Project Overview
 
-A luxury, atmospheric web experience built around a cinematic opening sequence — an animated clockwork scene that transitions into the restaurant's full website. Dark, gothic-elegant aesthetic with a gold/copper palette.
+A luxury, atmospheric web experience built around a cinematic opening sequence — an animated clockwork scene that transitions into the restaurant's full website. Antiquarian Botanical aesthetic: aged museum print meets clockwork, with a brass/gold palette on deep ink.
 
 ## Pages
 
 | Page | Status | Notes |
 |------|--------|-------|
-| `/` | In progress | Landing + opening sequence |
-| `/menu` | Planned | Embedded Toast online ordering |
-| `/gallery` | Planned | Photo grid |
-| `/about` | Planned | Brand story |
-| `/shop` | Planned | Coming soon placeholder |
-| `/careers` | Planned | Static listings + contact form |
-| `/contact` | Planned | Map + contact details |
-| `/reservations` | Planned | Embedded Resy widget |
+| `/` | Built | Landing + opening sequence (CSS clock placeholder; AI video pending) |
+| `/menu` | Built | Toast embed placeholder (URL pending from client) |
+| `/gallery` | Built | Filterable photo grid (photography pending from client) |
+| `/about` | Built | Story, values, team bios (copy pending from client) |
+| `/shop` | Built | Coming soon placeholder with email capture |
+| `/careers` | Built | Job listings + general application CTA |
+| `/contact` | Built | Contact form, map placeholder (address/hours pending from client) |
+| `/reservations` | Built | Resy widget placeholder (venue slug pending from client) |
 
 ## Tech Stack
 
@@ -61,6 +61,7 @@ ethereal/
 │   ├── OPENING_SEQUENCE.md
 │   ├── INTEGRATIONS.md
 │   ├── CONTENT.md
+│   ├── DESIGN_SYSTEM.md
 │   └── QUESTIONS.md
 └── _reference/             # Client demo sketches — for inspiration only
     ├── html/

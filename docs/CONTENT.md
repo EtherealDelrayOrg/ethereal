@@ -17,7 +17,7 @@ Tracks what content exists, what's pending, and what needs to be provided by the
 | Logo (SVG) | ❓ | Need from client |
 | Brand colors (final) | 🔄 | Working from reference sketches; need confirmation |
 | Brand fonts (final) | 🔄 | Assuming Cinzel + Cormorant Garamond; confirm |
-| Favicon | ❓ | Derived from logo once received |
+| Favicon | ✅ | Inline SVG (brass clock circle on ink) — replace with logo-derived version when logo is received |
 | Tagline / brand copy | ❓ | "Where time breathes" from sketches — confirmed? |
 
 ---

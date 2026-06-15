@@ -25,7 +25,7 @@ Questions to resolve with the client and team before or during development. Go t
 - [ ] **Should the clock show real time?** The reference sketches had a working clock. Is that still the intent for the live site, or is it purely decorative?
 - [ ] **Should there be audio in the opening sequence?** Ambient tones, a clock mechanism sound, music? If yes, who provides it?
 - [ ] **Mobile opening sequence** — full video on mobile is heavy and iOS has autoplay restrictions. Do they want a simplified fallback on mobile, or skip the video sequence entirely on mobile?
-- [ ] **Should there be a "skip intro" button** for repeat visitors?
+- [x] **Should there be a "skip intro" button** for repeat visitors? — **Yes.** Built — appears 1.2s in, top-right corner.
 
 ---
 
