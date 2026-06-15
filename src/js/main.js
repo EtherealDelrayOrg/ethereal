@@ -113,10 +113,13 @@
 
   // ── Hero parallax bg (subtle) ─────────────────────────────
   const heroBg = document.querySelector('.hero-bg');
-  if (heroBg) {
+  const heroSection = document.getElementById('hero');
+  if (heroBg && heroSection) {
     window.addEventListener('scroll', () => {
-      const y = window.scrollY * 0.25;
-      heroBg.style.transform = `scale(1.04) translateY(${y}px)`;
+      const heroHeight = heroSection.offsetHeight;
+      if (window.scrollY > heroHeight) return;
+      const y = Math.min(window.scrollY * 0.18, 60);
+      heroBg.style.transform = `scale(1.06) translateY(${y}px)`;
     }, { passive: true });
   }
 

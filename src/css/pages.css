@@ -415,4 +415,21 @@
 @media (max-width: 600px) {
   .resy-wrapper { padding: 2.5rem 1.5rem; }
   .resy-info-grid { grid-template-columns: 1fr; }
+
+  /* Careers */
+  .job-listing { padding: 1.5rem 1.25rem; }
+  .job-listing-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+  .job-type { font-size: 8px; }
+  .careers-cta { padding: 2rem 1.25rem; }
+
+  /* Contact form */
+  .contact-grid { gap: 2rem; }
+
+  /* Values grid already 1-col at 700px, just ensure spacing */
+  .values-grid { gap: 1.5rem; }
+  .value-card { padding-top: 1.25rem; }
 }

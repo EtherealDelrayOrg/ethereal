@@ -54,11 +54,11 @@
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-size: clamp(2.8rem, 7.5vw, 7rem);
   font-weight: 300;
   font-style: italic;
   color: var(--ivory);
-  line-height: 1.05;
+  line-height: 1.02;
   margin-bottom: 1.5rem;
   opacity: 0;
   animation: heroFadeUp 900ms 400ms var(--ease) forwards;
