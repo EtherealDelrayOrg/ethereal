@@ -585,6 +585,10 @@ address { font-style: normal; }
     --nav-height: 64px;
   }
 
+  .nav-toggle { display: flex; }
+  #nav-links { display: none; }
+  #mobile-nav { display: flex; }
+
   .footer-grid {
     grid-template-columns: 1fr 1fr;
     gap: 2.5rem;
@@ -596,10 +600,6 @@ address { font-style: normal; }
   :root { --section-v: 48px; }
 
   .container { padding: 0 1.25rem; }
-
-  .nav-toggle { display: flex; }
-  #nav-links { display: none; }
-  #mobile-nav { display: flex; }
 
   .footer-grid {
     grid-template-columns: 1fr;
