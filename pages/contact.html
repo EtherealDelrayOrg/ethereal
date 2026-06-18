@@ -248,7 +248,7 @@
       // the click handler above works even if tiles fail to load).
       if (window.L) {
         const map = L.map('leaflet-map', {
-          center: [LAT, LNG], zoom: 16,
+          center: [LAT, LNG], zoom: 13,
           zoomControl: false, attributionControl: true,
           dragging: false, scrollWheelZoom: false, doubleClickZoom: false,
           boxZoom: false, keyboard: false, touchZoom: false, tap: false
@@ -272,7 +272,7 @@
         // Container is sized via CSS aspect-ratio; ensure Leaflet re-measures
         // once layout settles (and again after full load / any reflow).
         window.__ethMap = map;
-        const fix = function () { map.invalidateSize(); map.setView([LAT, LNG], 16); };
+        const fix = function () { map.invalidateSize(); map.setView([LAT, LNG], 13); };
         setTimeout(fix, 200);
         window.addEventListener('load', fix);
         if (window.ResizeObserver) {
