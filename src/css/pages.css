@@ -51,11 +51,13 @@
 .menu-embed-placeholder .label { justify-content: center; text-align: center; }
 .menu-embed-placeholder p {
   font-family: var(--font-display);
-  font-style: italic;
-  font-size: 15px;
+  font-size: 18px;
+  line-height: 1.7;
   color: var(--ivory-dark);
   margin-top: 1rem;
-  max-width: 420px;
+  max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ============================================================
@@ -109,9 +111,10 @@
   margin-bottom: 0.75rem;
 }
 .value-card p {
-  font-size: 15px;
+  font-family: var(--font-ui);
+  font-size: 15.5px;
   color: var(--ivory-dark);
-  line-height: 1.75;
+  line-height: 1.7;
 }
 
 .team-grid {
@@ -135,16 +138,18 @@
 }
 .team-member .role {
   font-family: var(--font-ui);
-  font-size: 10px;
-  letter-spacing: 0.15em;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--brass);
   margin-bottom: 1rem;
 }
 .team-member p {
-  font-size: 15px;
+  font-family: var(--font-ui);
+  font-size: 15.5px;
   color: var(--ivory-dark);
-  line-height: 1.75;
+  line-height: 1.7;
 }
 
 @media (max-width: 700px) {
@@ -181,6 +186,8 @@
 .coming-soon-content p {
   font-family: var(--font-display);
   font-style: italic;
+  font-size: 19px;
+  line-height: 1.7;
   color: var(--ivory-dark);
   margin-bottom: 2.5rem;
 }
@@ -224,25 +231,28 @@
 }
 .job-type {
   font-family: var(--font-ui);
-  font-size: 9px;
-  letter-spacing: 0.14em;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--brass);
   border: 1px solid var(--brass-dark);
-  padding: 4px 10px;
+  padding: 5px 11px;
   border-radius: 2px;
   white-space: nowrap;
 }
 .job-desc {
-  font-size: 15px;
+  font-family: var(--font-ui);
+  font-size: 15.5px;
   color: var(--ivory-dark);
-  line-height: 1.75;
+  line-height: 1.7;
   margin-bottom: 1.25rem;
 }
 .job-apply {
   font-family: var(--font-ui);
-  font-size: 10px;
-  letter-spacing: 0.14em;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--brass);
   transition: color var(--transition-fast);
@@ -264,7 +274,9 @@
   margin-bottom: 0.75rem;
 }
 .careers-cta p {
-  font-size: 15px;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.65;
   color: var(--ivory-dark);
   margin-bottom: 1.5rem;
 }
@@ -283,21 +295,24 @@
 
 .contact-block h3 {
   font-family: var(--font-ui);
-  font-size: 10px;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--brass);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.6rem;
 }
 .contact-block p,
 .contact-block a {
-  font-family: var(--font-display);
-  font-size: 17px;
-  color: var(--ivory-dark);
+  font-family: var(--font-ui);
+  font-size: 16.5px;
+  font-weight: 400;
+  color: var(--ivory);
   line-height: 1.7;
   transition: color var(--transition-fast);
 }
-.contact-block a:hover { color: var(--ivory); }
+.contact-block a { color: var(--ivory-dark); }
+.contact-block a:hover { color: var(--brass); }
 
 .contact-map {
   position: relative;
@@ -334,7 +349,7 @@
   background: rgba(10, 8, 7, 0.6);
   color: var(--brass-dark);
   font-family: var(--font-ui);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.02em;
 }
 .contact-map .leaflet-control-attribution a { color: var(--brass); }
@@ -366,20 +381,21 @@
     linear-gradient(to top, rgba(10, 8, 7, 0.92) 0%, rgba(10, 8, 7, 0.45) 32%, transparent 60%);
 }
 .contact-map-addr {
-  font-family: var(--font-display);
-  font-style: italic;
+  font-family: var(--font-ui);
+  font-weight: 500;
   font-size: 16px;
   line-height: 1.5;
   color: var(--ivory);
-  text-shadow: 0 1px 6px rgba(5, 4, 3, 0.9);
+  text-shadow: 0 1px 8px rgba(5, 4, 3, 0.95);
 }
 .contact-map-cta {
   font-family: var(--font-ui);
-  font-size: 10px;
-  letter-spacing: 0.18em;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--brass);
-  text-shadow: 0 1px 6px rgba(5, 4, 3, 0.9);
+  text-shadow: 0 1px 8px rgba(5, 4, 3, 0.95);
 }
 
 .contact-form { display: flex; flex-direction: column; gap: 1.25rem; }
@@ -391,10 +407,11 @@
 }
 .form-group label {
   font-family: var(--font-ui);
-  font-size: 10px;
-  letter-spacing: 0.16em;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--brass-dark);
+  color: var(--ivory-dark);
 }
 .form-group input,
 .form-group select,
@@ -402,9 +419,9 @@
   background: transparent;
   border: 1px solid var(--brass-dark);
   color: var(--ivory);
-  font-family: var(--font-display);
+  font-family: var(--font-ui);
   font-size: 16px;
-  padding: 12px 16px;
+  padding: 13px 16px;
   border-radius: 2px;
   outline: none;
   transition: border-color var(--transition-fast);
@@ -415,7 +432,7 @@
 .form-group input::placeholder,
 .form-group textarea::placeholder {
   color: var(--brass-dark);
-  font-style: italic;
+  font-style: normal;
 }
 .form-group select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a6e28' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
@@ -460,7 +477,8 @@
   font-family: var(--font-display);
   font-style: italic;
   color: var(--ivory-dark);
-  font-size: 17px;
+  font-size: 19px;
+  line-height: 1.7;
   margin-top: 1rem;
   max-width: 480px;
   margin-left: auto;
@@ -476,16 +494,18 @@
 }
 .resy-info-item h4 {
   font-family: var(--font-ui);
-  font-size: 9px;
-  letter-spacing: 0.18em;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--brass);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 .resy-info-item p {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 15px;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
   color: var(--ivory-dark);
 }
 
@@ -500,7 +520,7 @@
     align-items: flex-start;
     gap: 0.6rem;
   }
-  .job-type { font-size: 8px; }
+  .job-type { font-size: 10.5px; }
   .careers-cta { padding: 2rem 1.25rem; }
 
   /* Contact form */

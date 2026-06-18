@@ -92,33 +92,31 @@ Sampled from the built interior and the brand assets. The site is built on **war
 
 ## Typography
 
-The brand wordmark is **thin and geometric** (Art-Deco / Futura-adjacent, with the dotted `ė`). The UI layer echoes that geometry; the editorial layer stays in a romantic high-contrast serif that matches the carved-stone, classical opulence of the room.
+Two families with clear jobs: a romantic high-contrast serif for display and evocative prose, and a highly legible humanist sans for everything functional. **Legibility is non-negotiable — functional text is never below ~12px, and reading data (addresses, contacts, hours) sits at 16px+.** Cormorant's beauty lives at large sizes; small functional text belongs to the sans.
 
-### Display / Headings — **Cormorant Garamond**
-- Page titles, section headers, pull quotes, the tagline.
-- Weights: 300 (light italic for taglines & large display), 400, 600 (emphasis).
+### Display & Prose — **Cormorant Garamond** (serif)
+- Hero, page titles, section headings, large taglines, and *evocative* body/intro prose.
+- Weights: 300/400 (light italic for taglines & large display), 600 (emphasis).
 - Character: classical, high-contrast, calligraphic — matches the ornate, hand-built interior.
-- Sizes: 48–80px display, 28–36px section headers, 20–24px subheads.
+- Sizes: hero/page titles `clamp` up to ~7rem; section headings ~2–3.3rem; evocative body 18–21px, line-height ~1.8. Keep it large — don't set Cormorant small.
 
-### UI / Labels / Nav — **Jost**
-- Nav links, button labels, form labels, eyebrow labels, footer headings.
-- A geometric sans (Futura lineage) that mirrors the logo's letterforms.
-- Weights: 300 / 400. Never bold — keep it thin and quiet.
-- Always wide-tracked: `letter-spacing: 0.16em–0.25em`, uppercase for labels.
-- Sizes: 10–13px for nav/labels/buttons.
-- Replaces the previous Cinzel (engraved Roman caps) — Jost is closer to the actual brand voice and feels more contemporary-luxe.
+### Functional text & UI — **Hanken Grotesk** (humanist sans)
+- *Everything functional:* nav, eyebrow labels, buttons, **addresses, contacts, hours**, form fields + labels, footer data/nav, card metadata, dish/value/job descriptions.
+- A warm, highly legible humanist grotesque — far clearer at small sizes than a geometric face, and the right home for numerals (phone, address).
+- Weights: 400 (text/data), 500–600 (labels, buttons, nav emphasis).
+- Sizes: **data/body 15–16.5px** (line-height ~1.7); **labels/eyebrows/buttons/nav 12–13px** uppercase, tracking 0.12–0.18em. Never below 11px (tiny chips/attribution only).
+- Replaces the previous **Jost** — Jost's cold geometry read poorly for addresses/contacts and small functional text; Hanken Grotesk is warmer and far more legible while still pairing cleanly with the serif.
 
-### Body — **Cormorant Garamond Regular**
-- 16–19px, weight 400, line-height ~1.9. Generous and unhurried.
-- Never set body in Jost — it's a display/UI face only.
+> The brand *wordmark* is still thin/geometric (the logo image with its dotted `ė`); the UI type no longer needs to imitate it, since the logo carries that identity as an asset.
 
 ### Hierarchy Example
 ```
 [ė logo asset]              ← brand mark image
-where time breathes.        ← Cormorant Garamond 300 italic, --ivory-dark
-OUR STORY                   ← Jost 400, 11px, tracking 0.22em, --brass
-A restaurant out of time…   ← Cormorant Garamond 400, 18px, --ivory
-RESERVE A TABLE             ← Jost 400, 11px, tracking 0.18em (button)
+where time breathes.        ← Cormorant Garamond italic, ~17px, --ivory-dark
+GET IN TOUCH                ← Hanken Grotesk 500, 13px, tracking 0.18em, --brass
+A restaurant out of time…   ← Cormorant Garamond 400, ~20px, --ivory-dark
+324 NE 3rd Ave #1           ← Hanken Grotesk 400, 16.5px, --ivory
+RESERVE A TABLE             ← Hanken Grotesk 500, 13px, tracking 0.14em (button)
 ```
 
 ---
@@ -187,7 +185,8 @@ Imagery should look like the room: **warm, dark, candlelit, jewel-toned.**
 | Bright white or hard contrast | Breaks the nocturnal jewel-box mood |
 | Dusty/grey sage as "the green" | The signature green is warm forest emerald (velvet) |
 | Saturated or digital colors | Everything is aged, deep, and warm |
-| Bold/heavy UI type | UI is thin geometric (Jost), quiet and wide-tracked |
+| Functional text below ~12px | Hard to read; labels 12–13px, data 16px+ |
+| Light display serif for data | Addresses/contacts/numbers belong in the legible sans (Hanken), not Cormorant |
 | Rounded corners > 2–4px | Softens the architectural, hand-built precision |
 | Flat fills where light should pool | Use warm radial glows; light has a source here |
 | Animations under 400ms, bounce/spring | Too snappy/playful; the brand is still and certain |
