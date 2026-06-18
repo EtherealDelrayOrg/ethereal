@@ -31,8 +31,8 @@
   --amber:        #e0a85a;
 
   /* Text & light */
-  --ivory:        #efe6d2;
-  --ivory-dark:   #cbb893;
+  --ivory:        #f1e8d4;
+  --ivory-dark:   #dccaa2;  /* brightened for legibility on near-black */
 
   /* Legacy aliases (kept so older rules resolve to the new world) */
   --sage:         var(--emerald);
@@ -134,13 +134,13 @@ address { font-style: normal; }
 /* === TYPOGRAPHY UTILITIES === */
 .label {
   font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  color: var(--brass);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--brass-light);
   text-transform: uppercase;
   display: block;
-  margin-bottom: 1rem;
+  margin-bottom: 1.1rem;
 }
 
 .display-heading {
@@ -274,13 +274,13 @@ address { font-style: normal; }
 .content-ph {
   font-family: var(--font-display);
   font-style: italic;
-  font-size: 16.5px;
-  line-height: 1.6;
-  color: var(--brass-dark);
-  border-left: 2px solid var(--brass-dark);
-  padding: 0.4rem 0.75rem;
+  font-weight: 500;
+  font-size: clamp(17px, 1.4vw, 19px);
+  line-height: 1.65;
+  color: var(--ivory-dark);
+  border-left: 2px solid var(--brass);
+  padding: 0.3rem 0 0.3rem 1rem;
   margin: 0.75rem 0;
-  opacity: 0.75;
 }
 
 /* ============================================================
@@ -525,8 +525,9 @@ address { font-style: normal; }
 .footer-tagline {
   font-family: var(--font-display);
   font-style: italic;
-  font-size: 17px;
-  color: var(--ivory-dark);
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--ivory);
   margin-bottom: 1.5rem;
 }
 
