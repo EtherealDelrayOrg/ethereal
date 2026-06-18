@@ -300,40 +300,78 @@
 .contact-block a:hover { color: var(--ivory); }
 
 .contact-map {
+  position: relative;
   display: block;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   margin-top: 2rem;
   border: 1px solid var(--brass-dark);
   border-radius: 2px;
-  background:
-    radial-gradient(ellipse 70% 70% at 50% 40%, rgba(224, 168, 90, 0.08) 0%, transparent 70%),
-    var(--char);
-  transition: border-color var(--transition-fast), background var(--transition-fast);
+  background: var(--char);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
 }
-.contact-map:hover {
-  border-color: var(--brass);
-  background:
-    radial-gradient(ellipse 70% 70% at 50% 40%, rgba(224, 168, 90, 0.14) 0%, transparent 70%),
-    var(--char);
+.contact-map:focus-visible {
+  outline: 1.5px solid var(--brass);
+  outline-offset: 3px;
 }
-.contact-map-inner {
+
+/* Leaflet canvas — stylized warm/dark to match the jewel-box palette.
+   Selector is intentionally specific to beat Leaflet's .leaflet-container. */
+.contact-map .contact-map-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
   height: 100%;
+  z-index: 0;
+  background: var(--char);
+}
+.contact-map-canvas .leaflet-tile-pane {
+  filter: grayscale(0.55) sepia(0.45) brightness(0.62) contrast(1.05) hue-rotate(-8deg);
+}
+.contact-map .leaflet-container { background: var(--char); }
+.contact-map .leaflet-control-attribution {
+  background: rgba(10, 8, 7, 0.6);
+  color: var(--brass-dark);
+  font-family: var(--font-ui);
+  font-size: 9px;
+  letter-spacing: 0.02em;
+}
+.contact-map .leaflet-control-attribution a { color: var(--brass); }
+/* brand pin drop-shadow */
+.ethereal-pin svg { filter: drop-shadow(0 3px 5px rgba(5, 4, 3, 0.6)); }
+
+/* Warm wash + label overlay; never intercepts the card click */
+.contact-map-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 0.85rem;
+  justify-content: flex-end;
+  gap: 0.4rem;
   text-align: center;
-  padding: 1.5rem;
+  padding: 1.25rem;
+  background:
+    radial-gradient(ellipse 75% 55% at 50% 38%, transparent 40%, rgba(10, 8, 7, 0.35) 100%),
+    linear-gradient(to top, rgba(10, 8, 7, 0.92) 0%, rgba(10, 8, 7, 0.45) 32%, transparent 60%);
+  transition: background var(--transition-fast);
 }
-.contact-map-inner svg { color: var(--brass); opacity: 0.85; }
+.contact-map:hover { border-color: var(--brass); }
+.contact-map:hover .contact-map-overlay {
+  background:
+    radial-gradient(ellipse 75% 55% at 50% 38%, rgba(224, 168, 90, 0.10) 30%, rgba(10, 8, 7, 0.30) 100%),
+    linear-gradient(to top, rgba(10, 8, 7, 0.92) 0%, rgba(10, 8, 7, 0.45) 32%, transparent 60%);
+}
 .contact-map-addr {
   font-family: var(--font-display);
   font-style: italic;
   font-size: 16px;
   line-height: 1.5;
   color: var(--ivory);
+  text-shadow: 0 1px 6px rgba(5, 4, 3, 0.9);
 }
 .contact-map-cta {
   font-family: var(--font-ui);
@@ -341,6 +379,7 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--brass);
+  text-shadow: 0 1px 6px rgba(5, 4, 3, 0.9);
 }
 
 .contact-form { display: flex; flex-direction: column; gap: 1.25rem; }

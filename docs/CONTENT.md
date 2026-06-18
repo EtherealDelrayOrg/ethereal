@@ -104,7 +104,7 @@ Tracks what content exists, what's pending, and what needs to be provided by the
 | Email address | ✅ | info@etherealdelray.com (general + press + careers apply links) |
 | Hours of operation | ✅ | Mon–Sun, 4pm–11pm |
 | Social media links | ❓ | Instagram handle/URL still needed (placeholder in place) |
-| Map embed (Google Maps) | 🔄 | Clickable map card → Google Maps directions (keyless, works now). For a live embedded map, paste the official `/maps/embed?pb=…` iframe from Maps → Share → Embed. |
+| Map | ✅ | Stylized Leaflet/OpenStreetMap (no API key), warm-toned to match the brand. Click/tap opens the location in the device's native maps app — Apple Maps on Apple devices, Google Maps elsewhere. Coords: 26.4681625, -80.0703055. |
 
 ---
 
