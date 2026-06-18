@@ -325,7 +325,28 @@
   border-radius: 2px;
   background: var(--char);
   cursor: pointer;
+  isolation: isolate;            /* contain the duotone blend layers */
   transition: border-color var(--transition-fast);
+}
+
+/* Duotone over the grayscale tiles: highlights (streets/land) → warm gold,
+   shadows (water) → deep teal. Reads as gold land + teal sea (brand palette). */
+.contact-map::before,
+.contact-map::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.contact-map::before {          /* land / streets → warm gold */
+  background: #caa052;
+  mix-blend-mode: multiply;
+}
+.contact-map::after {           /* lift only the darkest areas (water) toward teal */
+  background: #16454e;
+  mix-blend-mode: screen;
+  opacity: 0.6;
 }
 .contact-map:focus-visible {
   outline: 1.5px solid var(--brass);
@@ -343,8 +364,8 @@
   background: var(--char);
 }
 .contact-map-canvas .leaflet-tile-pane {
-  /* warm the dark base toward brass/gold streets on near-black */
-  filter: sepia(0.65) saturate(1.5) hue-rotate(2deg) brightness(0.95) contrast(1.05);
+  /* clean grayscale base — the duotone color comes from the blend layers above */
+  filter: grayscale(1) contrast(1.05) brightness(1.18);
 }
 .contact-map .leaflet-container { background: var(--char); }
 .contact-map .leaflet-control-attribution {
