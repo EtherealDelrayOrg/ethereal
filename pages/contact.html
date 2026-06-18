@@ -67,33 +67,33 @@
             <div class="contact-block">
               <h3>Address</h3>
               <address>
-                <p class="content-ph">[ Street Address ]</p>
-                <p class="content-ph">[ City, State ZIP ]</p>
+                <p>324 NE 3rd Ave #1</p>
+                <p>Delray Beach, FL 33444</p>
               </address>
             </div>
 
             <div class="contact-block">
               <h3>Hours</h3>
-              <p class="content-ph">[ Monday – Friday: 5pm – 11pm ]</p>
-              <p class="content-ph">[ Saturday – Sunday: 4pm – 11pm ]</p>
+              <p>Monday – Sunday</p>
+              <p>4pm – 11pm</p>
             </div>
 
             <div class="contact-block">
               <h3>Reservations</h3>
               <p>
                 <a href="/pages/reservations.html">Book via Resy</a><br>
-                <span class="content-ph" style="font-size:14px;">[ Or call: (000) 000-0000 ]</span>
+                <span style="font-size:14px;">Or call <a href="tel:+15612702738">(561) 270-2738</a></span>
               </p>
             </div>
 
             <div class="contact-block">
               <h3>General Inquiries</h3>
-              <p><a href="mailto:#" class="content-ph">[ hello@ethereal.com ]</a></p>
+              <p><a href="mailto:info@etherealdelray.com">info@etherealdelray.com</a></p>
             </div>
 
             <div class="contact-block">
               <h3>Press &amp; Events</h3>
-              <p><a href="mailto:#" class="content-ph">[ press@ethereal.com ]</a></p>
+              <p><a href="mailto:info@etherealdelray.com">info@etherealdelray.com</a></p>
             </div>
 
             <div class="contact-block">
@@ -104,25 +104,23 @@
               </p>
             </div>
 
-            <!-- Map placeholder -->
-            <div class="contact-map">
-              <div class="img-ph" style="height:100%; min-height:260px;">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                <span>Google Maps embed</span>
-              </div>
-              <!-- When ready, replace with:
-              <iframe
-                src="https://www.google.com/maps/embed?pb=..."
-                width="100%"
-                height="100%"
-                style="border:0; display:block;"
-                allowfullscreen
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                title="Ethereal restaurant location"
-              ></iframe>
-              -->
-            </div>
+            <!-- Map — clickable card linking to Google Maps directions.
+                 To embed a live interactive map instead, replace the <a> below with the
+                 official iframe from Google Maps → Share → "Embed a map" (a /maps/embed?pb=… URL,
+                 which is the only keyless source Google permits to be framed). -->
+            <a
+              class="contact-map"
+              href="https://www.google.com/maps/search/?api=1&query=324%20NE%203rd%20Ave%20%231%2C%20Delray%20Beach%2C%20FL%2033444"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View Ethereal on Google Maps — 324 NE 3rd Ave #1, Delray Beach, FL 33444"
+            >
+              <span class="contact-map-inner">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                <span class="contact-map-addr">324 NE 3rd Ave #1<br>Delray Beach, FL 33444</span>
+                <span class="contact-map-cta">View on Google Maps →</span>
+              </span>
+            </a>
           </div>
 
           <!-- Contact Form -->
@@ -199,15 +197,15 @@
         <div class="footer-visit">
           <h3>Visit</h3>
           <address>
-            <p class="content-ph">[ Address ]</p>
-            <p class="content-ph">[ City, State ]</p>
+            <p>324 NE 3rd Ave #1</p>
+            <p>Delray Beach, FL 33444</p>
           </address>
-          <p class="content-ph" style="margin-top:1rem;">[ Hours ]</p>
+          <p style="margin-top:1rem;">Mon–Sun &middot; 4pm – 11pm</p>
         </div>
         <div class="footer-contact">
           <h3>Contact</h3>
-          <p><a href="mailto:#" class="content-ph">[ Email ]</a></p>
-          <p><a href="tel:#" class="content-ph">[ Phone ]</a></p>
+          <p><a href="mailto:info@etherealdelray.com">info@etherealdelray.com</a></p>
+          <p><a href="tel:+15612702738">(561) 270-2738</a></p>
           <a href="/pages/reservations.html" class="footer-reserve-link">Reserve a Table</a>
         </div>
       </div>

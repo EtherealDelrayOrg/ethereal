@@ -48,8 +48,8 @@ Tracks what content exists, what's pending, and what needs to be provided by the
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Toast Tab URL | ❓ | Need from client |
-| Online ordering enabled? | ❓ | Confirm with client |
+| Online ordering | ✅ | **No online ordering** (confirmed). Menu page reframed as dine-in / by reservation; Toast references removed. |
+| Full menu (items/PDF/image) | ❓ | Pending. Drop into `.menu-embed-placeholder` in `pages/menu.html` when ready. |
 
 ---
 
@@ -90,7 +90,7 @@ Tracks what content exists, what's pending, and what needs to be provided by the
 | Item | Status | Notes |
 |------|--------|-------|
 | Open positions | ❓ | List from client |
-| Application method | ❓ | Email? Form? External ATS? |
+| Application method | 🔄 | Apply links email info@etherealdelray.com for now; confirm preferred method/inbox. |
 | General careers copy | ❓ | |
 
 ---
@@ -99,12 +99,12 @@ Tracks what content exists, what's pending, and what needs to be provided by the
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Restaurant address | ❓ | |
-| Phone number | ❓ | |
-| Email address | ❓ | |
-| Hours of operation | ❓ | |
-| Social media links | ❓ | Instagram, etc. |
-| Map embed (Google Maps) | ❓ | Needs Google Maps API key or iframe |
+| Restaurant address | ✅ | 324 NE 3rd Ave #1, Delray Beach, FL 33444 (footers + contact page) |
+| Phone number | ✅ | (561) 270-2738 — `tel:+15612702738` |
+| Email address | ✅ | info@etherealdelray.com (general + press + careers apply links) |
+| Hours of operation | ✅ | Mon–Sun, 4pm–11pm |
+| Social media links | ❓ | Instagram handle/URL still needed (placeholder in place) |
+| Map embed (Google Maps) | 🔄 | Clickable map card → Google Maps directions (keyless, works now). For a live embedded map, paste the official `/maps/embed?pb=…` iframe from Maps → Share → Embed. |
 
 ---
 
