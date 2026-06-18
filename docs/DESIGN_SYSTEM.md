@@ -2,135 +2,180 @@
 
 ## Aesthetic Direction
 
-**"Antiquarian Botanical"** — the intersection of clockwork precision and organic wonder. Think a Victorian natural history cabinet: aged brass instruments beside pressed flowers, mechanical gears half-hidden by magnolia vines, a white crane standing still as a clock ticks behind it. Time does not rush here. It breathes.
+**"Opulent Botanical Nocturne"** — the website should feel like stepping into the restaurant itself at dusk: a dark, warm, candlelit jewel-box where botanical wonder meets old-world luxury and the slow turning of a clock.
 
-This is *not* dark industrial steampunk (the direction of the early demo files). The reference assets are warmer, richer, more painterly. The mood is: wonder, elegance, age, mystery — the feeling of a beautiful old thing that still works perfectly.
+This direction is drawn directly from the built interior (see `_reference/images/`), not from a mood board. The space is **maximalist and warm**, not cool or museum-faded:
+
+- A sculptural bare **tree** rises behind a carved-stone **bar**, lit by pools of amber light
+- A **peacock** mural glows on textured plaster under warm uplight
+- Deep **forest-green velvet** curved banquettes, fluted and channel-tufted, wrap the lounge
+- Polished **bronze cone** pedestal tables catch the light
+- Cascading cream **shell chandeliers** hang from a vaulted ceiling of dark marbled-agate panels
+- A **mosaic stained-glass clock** (emerald, terracotta, cream) sits inside a gilded **birdcage** dripping with crystal
+- The floor is warm: **leopard-spotted resin** in the lounge, an ochre **geometric tile** (Greek-key) at the bar
+
+The mood is: **warmth, depth, candlelight, jewel-tones, botanical life, unhurried luxury.** Time does not rush here. It breathes.
+
+> What changed from the previous spec: the old "Antiquarian Botanical" direction read cool, dusty, and museum-like. The real restaurant is warmer, darker, and more opulent — emerald velvet and bronze under candlelight. The palette, materials, and type below are tuned to that reality.
+
+---
+
+## Brand Marks
+
+The brand has a formal, minimal identity (see the four lockup PDFs in `_reference/`):
+
+| Mark | File | Use |
+|------|------|-----|
+| **Wordmark** | `ÄTHÄRÄAL.pdf` | The primary logotype — thin, geometric, signature dotted **`ė`** repeated (ė-TH-ė-R-ė-AL) |
+| **Full lockup** | `ÄTHÄRÄAL Restaurant & Bar.pdf` | Wordmark + hairline rule + "Restaurant & Bar" |
+| **Monogram / icon** | `Ä.pdf` | The dotted **`ė`** alone — favicon, loading marks, decorative motif |
+| **Tagline lock** | `Restaurant & Bar.pdf` | "Restaurant & Bar" set in the thin geometric companion |
+
+The dotted **`ė`** (a circle with a horizontal bar and a tittle above) is the brand's signature glyph. Use it as a recurring ornament — dividers, list markers, loading dots — in place of generic diamonds or bullets.
+
+**Active site logo:** the burnished-gold `eTHeReAL` wordmark (`src/assets/images/logo.png`) is currently used in the nav, footer, and opening sequence. It harmonizes with the bronze-and-candlelight palette. The thin black wordmark from the PDFs is the formal/print identity and the basis for the favicon and the `ė` motif. Logo art is always placed as an image asset (PNG/SVG) — never recreated in a web font.
 
 ---
 
 ## Color Palette
 
-All values extracted directly from the provided brand assets (clock illustrations, brand background, logo).
+Sampled from the built interior and the brand assets. The site is built on **warm darkness** — deep greens and browns under gold light, never cool or blue-black.
 
-### Primary Colors
-
-| Name | Hex | Usage |
-|------|-----|-------|
-| `--ink` | `#0d0b09` | Page background. Near-black with warmth — not cool or blue. |
-| `--brass` | `#c4a440` | Primary accent. Aged clock bezel. All gold UI elements. |
-| `--brass-dark` | `#8a6e28` | Shadow face of brass. Borders, dividers, subtle details. |
-| `--brass-light` | `#d4b858` | Highlight face of brass. Hover states, active elements. |
-| `--ivory` | `#ede3ce` | Primary text on dark backgrounds. From the numeral cartouche panels. |
-| `--ivory-dark` | `#c8b898` | Secondary / muted text. |
-
-### Secondary Colors
+### Foundation
 
 | Name | Hex | Usage |
 |------|-----|-------|
-| `--sage` | `#4a6b65` | The aged fresco wall from the brand illustration. Section backgrounds, overlays. Used sparingly — never for text. |
-| `--sage-dark` | `#2e4440` | Deeper sage. Layering behind the sage sections. |
-| `--teal` | `#2d5f6b` | Peacock body. The deep jewel tone. Accent on special elements, hover. |
-| `--blush` | `#c49098` | Magnolia pink. Muted and dusty — never bright. Subtle accents, small decorative details only. |
+| `--ink` | `#0a0807` | Page background. Warm near-black, like an unlit room. |
+| `--shadow` | `#050403` | Deepest shadow. Vignettes, drop shadows, deep section wells. |
+| `--char` | `#161210` | Raised charcoal — cards, panels, slightly lifted surfaces. |
 
-### Atmosphere Colors (mosaic, depth, atmosphere)
+### Emerald — the signature material (velvet)
 
 | Name | Hex | Usage |
 |------|-----|-------|
-| `--mosaic-teal` | `#5b8f98` | From the clock center rosette. Decorative elements, subtle textures. |
-| `--mosaic-rust` | `#9e6040` | From the clock center rosette. Warmth, aged patina details. |
-| `--shadow` | `#060503` | Deepest shadow. Vignette edges, drop shadows. |
+| `--emerald` | `#234a3f` | Forest-green velvet. Feature section backgrounds, the "lounge" surface. |
+| `--emerald-deep` | `#15302a` | Deeper velvet in shadow. Layering, gradients. |
+| `--emerald-lit` | `#356457` | Velvet catching light. Hover tints, accents on emerald surfaces. |
+
+### Gold & Bronze — the metal
+
+| Name | Hex | Usage |
+|------|-----|-------|
+| `--brass` | `#c4a440` | Primary accent. The gilded birdcage, clock bezel, all gold UI. |
+| `--brass-light` | `#dcc06a` | Highlight face. Hover states on gold, active elements. |
+| `--brass-dark` | `#8a6e28` | Shadow face. Hairline borders, dividers, quiet details. |
+| `--bronze` | `#a87b4a` | Warmer metal — the cone tables, lamp bases. Secondary metallic accent. |
+
+### Warm accents
+
+| Name | Hex | Usage |
+|------|-----|-------|
+| `--terracotta` | `#a3603c` | Mosaic + leopard-floor warmth. Small accents, patina, hover on warm elements. |
+| `--mosaic-teal` | `#4f8a88` | The clock's stained-glass center. Special decorative accents only. |
+| `--blush` | `#cf9ca0` | Magnolia pink. Dusty, never bright. Tiny decorative touches. |
+| `--amber` | `#e0a85a` | The candlelight glow. Used in radial light effects, never as a flat fill. |
+
+### Text & light
+
+| Name | Hex | Usage |
+|------|-----|-------|
+| `--ivory` | `#efe6d2` | Primary text on dark. From the shell chandeliers + clock numerals. |
+| `--ivory-dark` | `#cbb893` | Secondary / muted text. |
 
 ### Do Not Use
-- Pure white `#ffffff` — too harsh. Use `--ivory`.
-- Pure black `#000000` — too flat. Use `--ink` or `--shadow`.
-- Saturated bright colors — anything Tailwind would call "blue-500" or "pink-400" is wrong for this palette.
-- The aggressive copper/iron tones from the demo CSS — those were too industrial.
+- Pure white `#ffffff` (use `--ivory`) or pure black `#000000` (use `--ink`/`--shadow`).
+- Cool / blue-black backgrounds — the whole world is warm.
+- Saturated, bright, or "digital" colors — everything is aged, deep, and candlelit.
+- Cool sage/grey-greens as the green — the velvet is **warm forest emerald**, not dusty sage.
 
 ---
 
 ## Typography
 
-### Logo
-The "eTHeReAL" wordmark is a custom 3D burnished gold letterform — mixed case, with a specific rhythm (lowercase `e`, uppercase `TH`, lowercase `é`, uppercase `R`, lowercase `e`, uppercase `AL`). This is the logo as an asset (SVG or PNG), never recreated with a web font.
+The brand wordmark is **thin and geometric** (Art-Deco / Futura-adjacent, with the dotted `ė`). The UI layer echoes that geometry; the editorial layer stays in a romantic high-contrast serif that matches the carved-stone, classical opulence of the room.
 
-### Web Fonts (Google Fonts)
+### Display / Headings — **Cormorant Garamond**
+- Page titles, section headers, pull quotes, the tagline.
+- Weights: 300 (light italic for taglines & large display), 400, 600 (emphasis).
+- Character: classical, high-contrast, calligraphic — matches the ornate, hand-built interior.
+- Sizes: 48–80px display, 28–36px section headers, 20–24px subheads.
 
-**Display / Headings — Cormorant Garamond**
-- Used for: page titles, section headers, pull quotes, the brand tagline
-- Weights: 300 (light italic for taglines), 400 (regular), 600 (semibold for emphasis)
-- Character: deeply classical, refined, with a slight calligraphic quality that matches the handpainted feel of the brand illustration
-- Sizes: 48–80px display, 28–36px section headers, 20–24px subheadings
+### UI / Labels / Nav — **Jost**
+- Nav links, button labels, form labels, eyebrow labels, footer headings.
+- A geometric sans (Futura lineage) that mirrors the logo's letterforms.
+- Weights: 300 / 400. Never bold — keep it thin and quiet.
+- Always wide-tracked: `letter-spacing: 0.16em–0.25em`, uppercase for labels.
+- Sizes: 10–13px for nav/labels/buttons.
+- Replaces the previous Cinzel (engraved Roman caps) — Jost is closer to the actual brand voice and feels more contemporary-luxe.
 
-**Navigation / Labels / UI — Cinzel**
-- Used for: nav links, button labels, form labels, small caps details
-- Weight: 400 only — Cinzel at heavier weights becomes too aggressive for this palette
-- Character: engraved Roman capitals, the typographic equivalent of text chiseled in brass
-- Sizes: 12–14px for nav/labels (letter-spacing: 0.15em to give it room to breathe)
-
-**Body text — Cormorant Garamond Regular**
-- The same family as the display font, but at reading size (16–18px, weight 400)
-- Line-height: 1.8 — generous, unhurried
-- Never Cinzel for body text — it becomes unreadable at small sizes
+### Body — **Cormorant Garamond Regular**
+- 16–19px, weight 400, line-height ~1.9. Generous and unhurried.
+- Never set body in Jost — it's a display/UI face only.
 
 ### Hierarchy Example
 ```
-eTHeReAL                    ← Logo SVG asset
-Where time breathes.        ← Cormorant Garamond 300 italic, 20px, --ivory-dark
-OUR STORY                   ← Cinzel 400, 12px, letter-spacing 0.2em, --brass
-A restaurant is not merely  ← Cormorant Garamond 400, 17px, --ivory
+[ė logo asset]              ← brand mark image
+where time breathes.        ← Cormorant Garamond 300 italic, --ivory-dark
+OUR STORY                   ← Jost 400, 11px, tracking 0.22em, --brass
+A restaurant out of time…   ← Cormorant Garamond 400, 18px, --ivory
+RESERVE A TABLE             ← Jost 400, 11px, tracking 0.18em (button)
 ```
 
 ---
 
 ## Spacing & Layout
 
-- Base unit: 8px
-- All spacing in multiples of 8: 8 / 16 / 24 / 32 / 48 / 64 / 96 / 128px
-- Max content width: 1200px, centered
-- Section padding (desktop): 96–128px top/bottom
-- Section padding (mobile): 48–64px top/bottom
+- Base unit 8px; spacing in multiples (8 / 16 / 24 / 32 / 48 / 64 / 96 / 128).
+- Max content width ~1320px, centered (wider on ≥1500px).
+- Section padding: 96–128px desktop, 48–64px mobile.
+- Generous negative space — the opulence reads better with room around it.
 
 ---
 
-## Borders & Surfaces
+## Materials & Surfaces
 
-- **Borders:** always `--brass-dark`, 1px. Never sharp default gray.
-- **Dividers:** a single 1px `--brass-dark` line, often with a small ornamental element centered on it (a dot, a small gear SVG). Never a plain HR.
-- **Cards / panels:** background `rgba(255,255,255,0.03)` — barely lifted from the page bg. Border `1px solid var(--brass-dark)`. No white cards.
-- **Radius:** very subtle — `border-radius: 2px` at most, or none. Straight edges feel more architectural.
+Surfaces should evoke real materials in the room, layered with warm light.
+
+- **Velvet (emerald):** feature sections use `--emerald` / `--emerald-deep`, ideally with a soft vertical gradient and a faint vignette so it reads like light falling across fabric.
+- **Candlelight:** warm radial glows (`radial-gradient` in `--amber` / `--brass` at very low alpha) behind heroes, CTAs, and focal points. Light pools, never flat fills.
+- **Metal:** borders and rules in `--brass-dark` (1px hairline). Gold elements may carry a faint warm glow on hover (brightness/›glow), never a color change.
+- **Cards / panels:** background `--char` or `rgba(255,255,255,0.03)`, 1px `--brass-dark` border, radius ≤ 2px.
+- **Mosaic accents:** the clock rosette's tessellated emerald/terracotta/cream can inspire small decorative details and dividers.
+- **Vignettes:** most full-bleed imagery gets a warm dark vignette so text stays legible and the mood stays nocturnal.
+
+---
+
+## Ornament & Iconography
+
+- The dotted **`ė`** is the house ornament. Use it (or a single mosaic-style dot) as the centerpiece of dividers and as list markers, replacing generic diamonds/bullets.
+- No emoji, no generic icon packs. Icons are thin SVG line drawings (1–1.5px stroke) in `--ivory-dark` or `--brass-dark`.
+- The brand's visual vocabulary: the **clock**, **peacock**, **crane**, **magnolia**, **bare tree**, **shell chandelier**, **bird-cage scrollwork**. Decorative flourishes should reference these forms.
+- Botanical cutout assets (peacock, crane, magnolia — in `_reference/images/`) may be placed sparingly as corner flourishes or section accents at low opacity, always serving the composition, never busy.
 
 ---
 
 ## Motion & Animation
 
-The brand moves like something mechanical: deliberate, weighted, never snappy.
+The brand moves like something mechanical and weighted — deliberate, never snappy.
 
-- **Duration:** 600–900ms for transitions. Nothing under 400ms feels right here.
-- **Easing:** `cubic-bezier(0.25, 0.1, 0.1, 1)` — starts slightly fast, decelerates into place. Feels like gears settling.
-- **Hover states:** subtle brightness increase on brass elements (filter: brightness(1.15)), no color change.
-- **Reveals on scroll:** elements fade in and rise 20px. Stagger 100ms between siblings.
-- **No bounce, no spring** — those feel playful and modern. This brand is still and certain.
-
----
-
-## Iconography
-
-No emoji. No generic icon packs. Where icons are needed:
-- Use simple SVG line icons, drawn thin (1–1.5px stroke), in `--ivory-dark`
-- Alternatively: small ornamental flourishes (fleurons, dots, dashes) in `--brass-dark`
-- The brand has a visual vocabulary of: gears, feathers, clock hands, botanical stems — if an icon is needed, it should reference one of these forms
+- Duration: 600–900ms for transitions; nothing under 400ms.
+- Easing: `cubic-bezier(0.25, 0.1, 0.1, 1)` — gears settling into place.
+- Hover: subtle warmth/brightness on gold; gentle lift on cards. No color flips.
+- Scroll reveals: fade + 20px rise, 100ms stagger between siblings.
+- No bounce, no spring. Still and certain.
+- Respect `prefers-reduced-motion` — disable the opening sequence and large motions.
 
 ---
 
 ## Photography & Imagery Direction
 
-All photography should feel **aged, painterly, and atmospheric** — not the crisp high-contrast editorial style of a typical restaurant site.
+Imagery should look like the room: **warm, dark, candlelit, jewel-toned.**
 
-- Warm temperature. No cool/blue tones.
-- Slight desaturation / matte finish — avoid super-punchy contrast.
-- Bokeh welcome. Shallow depth of field fits the dreamlike quality.
-- Food photography: candlelit or warm-window-light only. Dark backgrounds preferred.
-- The clock and bird illustration aesthetic is the north star — if a photo feels out of place next to those assets, it's the wrong photo.
+- Warm temperature only — no cool/blue grades.
+- Rich shadow, deep blacks, pools of amber light. Embrace darkness.
+- Shallow depth of field / bokeh fits the dreamlike, intimate quality.
+- Food: candlelit or warm-window light on dark surfaces.
+- The built interior (emerald velvet, bronze, the tree, the mosaic clock) is the north star — if a photo doesn't feel of-a-piece with those rooms, it's the wrong photo.
 
 ---
 
@@ -138,10 +183,13 @@ All photography should feel **aged, painterly, and atmospheric** — not the cri
 
 | Avoid | Why |
 |-------|-----|
-| Bright white backgrounds | Breaks the atmospheric dark-world feeling |
-| Saturated colors | Brand palette is entirely muted and aged |
-| Sans-serif fonts for display | Wrong energy — too modern, too clean |
-| Drop shadows with spread | Feels web-2.0; use only tight `box-shadow: 0 2px 8px rgba(0,0,0,0.6)` |
-| Rounded corners > 4px | Softens the mechanical precision the brand carries |
-| Animations under 400ms | Too snappy; nothing here should feel instant |
-| Stock photography | Must feel bespoke and of-a-piece with the illustration assets |
+| Cool / blue-black backgrounds | The world is warm darkness, candlelit |
+| Bright white or hard contrast | Breaks the nocturnal jewel-box mood |
+| Dusty/grey sage as "the green" | The signature green is warm forest emerald (velvet) |
+| Saturated or digital colors | Everything is aged, deep, and warm |
+| Bold/heavy UI type | UI is thin geometric (Jost), quiet and wide-tracked |
+| Rounded corners > 2–4px | Softens the architectural, hand-built precision |
+| Flat fills where light should pool | Use warm radial glows; light has a source here |
+| Animations under 400ms, bounce/spring | Too snappy/playful; the brand is still and certain |
+| Stock photography | Must feel bespoke and of-a-piece with the real rooms |
+</content>

@@ -7,7 +7,9 @@
   position: fixed;
   inset: 0;
   z-index: 500;
-  background: var(--ink);
+  background:
+    radial-gradient(ellipse 50% 50% at 50% 42%, rgba(224, 168, 90, 0.08) 0%, transparent 65%),
+    var(--ink);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -64,13 +66,11 @@
 }
 
 .seq-logo {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 6vw, 3rem);
-  font-weight: 400;
-  font-style: italic;
-  color: var(--ivory);
-  letter-spacing: 0.06em;
   display: block;
+  width: min(360px, 75vw);
+  height: auto;
+  margin: 0 auto;
+  mix-blend-mode: screen;
 }
 
 .seq-tagline {

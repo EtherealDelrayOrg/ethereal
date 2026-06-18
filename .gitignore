@@ -4,3 +4,6 @@ Thumbs.db
 node_modules/
 .env
 .claude/
+
+# Local reference assets (large binaries — not for repo)
+_reference/

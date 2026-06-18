@@ -14,11 +14,11 @@ Tracks what content exists, what's pending, and what needs to be provided by the
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Logo (SVG) | ❓ | Need from client |
-| Brand colors (final) | 🔄 | Working from reference sketches; need confirmation |
-| Brand fonts (final) | 🔄 | Assuming Cinzel + Cormorant Garamond; confirm |
-| Favicon | ✅ | Inline SVG (brass clock circle on ink) — replace with logo-derived version when logo is received |
-| Tagline / brand copy | ❓ | "Where time breathes" from sketches — confirmed? |
+| Logo | ✅ | `src/assets/images/logo.png` (gold wordmark) active in nav/footer/opening. Official thin wordmark + `ė` monogram in `_reference/` PDFs. |
+| Brand colors (final) | ✅ | Sampled from built interior — see `DESIGN_SYSTEM.md`. Confirm with client. |
+| Brand fonts (final) | 🔄 | **Jost** (UI/labels, echoes logo) + **Cormorant Garamond** (display/body). Confirm. |
+| Favicon | 🔄 | Inline SVG clock mark — should be replaced with the `ė` monogram from `Ä.pdf`. |
+| Tagline / brand copy | 🔄 | "Where time breathes" + "Restaurant & Bar" (from brand lockups). Confirm. |
 
 ---
 
