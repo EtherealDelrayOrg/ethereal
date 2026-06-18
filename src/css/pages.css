@@ -343,7 +343,8 @@
   background: var(--char);
 }
 .contact-map-canvas .leaflet-tile-pane {
-  filter: grayscale(0.55) sepia(0.45) brightness(0.62) contrast(1.05) hue-rotate(-8deg);
+  /* warm the dark base toward brass/gold streets on near-black */
+  filter: sepia(0.65) saturate(1.5) hue-rotate(2deg) brightness(0.95) contrast(1.05);
 }
 .contact-map .leaflet-container { background: var(--char); }
 .contact-map .leaflet-control-attribution {
