@@ -343,9 +343,10 @@
   background: var(--char);
 }
 .contact-map-canvas .leaflet-tile-pane {
-  /* Voyager has blue water + warm land natively. Darken it to fit the dark page
-     while keeping the hues, so only the water reads blue. */
-  filter: brightness(0.22) saturate(2) contrast(1.12);
+  /* Voyager has blue water + warm land natively. Darken + warm it toward the
+     bronze/char palette so land reads dark with subtle streets, while high
+     saturation keeps the water blue. */
+  filter: brightness(0.16) saturate(2.6) contrast(1.22) sepia(0.14);
 }
 .contact-map .leaflet-container { background: var(--char); }
 .contact-map .leaflet-control-attribution {
@@ -373,15 +374,15 @@
   text-align: center;
   padding: 1.25rem;
   background:
-    radial-gradient(ellipse 75% 55% at 50% 38%, transparent 40%, rgba(10, 8, 7, 0.35) 100%),
-    linear-gradient(to top, rgba(10, 8, 7, 0.92) 0%, rgba(10, 8, 7, 0.45) 32%, transparent 60%);
+    radial-gradient(ellipse 90% 70% at 50% 42%, transparent 62%, rgba(10, 8, 7, 0.18) 100%),
+    linear-gradient(to top, rgba(10, 8, 7, 0.82) 0%, rgba(10, 8, 7, 0.28) 30%, transparent 52%);
   transition: background var(--transition-fast);
 }
 .contact-map:hover { border-color: var(--brass); }
 .contact-map:hover .contact-map-overlay {
   background:
-    radial-gradient(ellipse 75% 55% at 50% 38%, rgba(224, 168, 90, 0.10) 30%, rgba(10, 8, 7, 0.30) 100%),
-    linear-gradient(to top, rgba(10, 8, 7, 0.92) 0%, rgba(10, 8, 7, 0.45) 32%, transparent 60%);
+    radial-gradient(ellipse 90% 70% at 50% 42%, rgba(224, 168, 90, 0.10) 50%, rgba(10, 8, 7, 0.16) 100%),
+    linear-gradient(to top, rgba(10, 8, 7, 0.82) 0%, rgba(10, 8, 7, 0.28) 30%, transparent 52%);
 }
 .contact-map-addr {
   font-family: var(--font-ui);
