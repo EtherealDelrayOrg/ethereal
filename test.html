@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clock animation test</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a0807;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      font-family: serif;
+    }
+
+    .clock-wrap {
+      position: relative;
+      width: min(400px, 80vw);
+      height: min(400px, 80vw);
+    }
+
+    .clock-face {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      filter:
+        drop-shadow(0 0 28px rgba(196, 164, 64, 0.32))
+        drop-shadow(0 0 80px rgba(196, 164, 64, 0.14));
+    }
+
+    .clock-hands {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .hand {
+      transform-box: view-box;
+      transform-origin: 50% 50%;
+    }
+
+    /* Minute hand: one full revolution every 10s */
+    .hand--minute {
+      animation: spin 10s linear infinite;
+    }
+
+    /* Hour hand: one revolution every 120s (12× slower) */
+    .hand--hour {
+      animation: spin 120s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* Speed controls */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .controls button {
+      background: transparent;
+      border: 1px solid #8a6e28;
+      color: #c4a440;
+      font-family: inherit;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .controls button:hover { border-color: #c4a440; }
+    .controls button.active { background: #c4a440; color: #0a0807; }
+
+    .label {
+      color: #8a6e28;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <span class="label">Clock animation test</span>
+
+  <div class="clock-wrap">
+    <img class="clock-face" src="/src/assets/images/clock-face-bg.png" alt="">
+    <svg class="clock-hands" viewBox="0 0 964 964" xmlns="http://www.w3.org/2000/svg">
+      <!-- Minute hand -->
+      <path class="hand hand--minute"
+            d="M482,552 L479.5,490 L479,420 L480,172 L482,155 L484,172 L485,420 L484.5,490 L482,552 Z"
+            fill="#0e0b06"/>
+      <!-- Hour hand -->
+      <path class="hand hand--hour"
+            d="M482,552 L476,490 L475,420 L477,262 L482,248 L487,262 L489,420 L488,490 L482,552 Z"
+            fill="#0e0b06"/>
+      <!-- Centre cap -->
+      <circle cx="482" cy="482" r="16" fill="#0e0b06"/>
+      <circle cx="482" cy="482" r="7"  fill="#c4a440"/>
+    </svg>
+  </div>
+
+  <div class="controls">
+    <button onclick="setSpeed(30)"  id="btn-slow">Slow (30s)</button>
+    <button onclick="setSpeed(10)"  id="btn-med" class="active">Medium (10s)</button>
+    <button onclick="setSpeed(3)"   id="btn-fast">Fast (3s)</button>
+    <button onclick="setSpeed(0.5)" id="btn-ultra">Ultra (0.5s)</button>
+  </div>
+
+  <script>
+    function setSpeed(seconds) {
+      const minute = document.querySelector('.hand--minute');
+      const hour   = document.querySelector('.hand--hour');
+      minute.style.animationDuration = seconds + 's';
+      hour.style.animationDuration   = (seconds * 12) + 's';
+      document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
