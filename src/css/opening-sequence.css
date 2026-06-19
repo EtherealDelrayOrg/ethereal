@@ -41,20 +41,6 @@
     drop-shadow(0 0 80px rgba(196, 164, 64, 0.14));
 }
 
-/* Dark vignette fading the outer ring into the background — masks the
-   light-coloured outer tick area and creates a dramatic "emerge from dark" effect */
-.seq-clock::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at 50% 50%,
-    transparent 76%,
-    rgba(10, 8, 7, 0.55) 88%,
-    var(--ink) 100%
-  );
-  pointer-events: none;
-}
 
 /* When the real video replaces the clock SVG */
 #opening-video {
