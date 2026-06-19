@@ -41,6 +41,21 @@
     drop-shadow(0 0 80px rgba(196, 164, 64, 0.14));
 }
 
+/* Dark vignette fading the outer ring into the background — masks the
+   light-coloured outer tick area and creates a dramatic "emerge from dark" effect */
+.seq-clock::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    transparent 76%,
+    rgba(10, 8, 7, 0.55) 88%,
+    var(--ink) 100%
+  );
+  pointer-events: none;
+}
+
 /* When the real video replaces the clock SVG */
 #opening-video {
   position: absolute;
@@ -59,12 +74,12 @@
 
 .seq-tagline {
   font-family: var(--font-display);
-  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  font-size: clamp(1.3rem, 3.5vw, 2rem);
   font-weight: 300;
   font-style: italic;
-  color: var(--brass-dark);
-  letter-spacing: 0.12em;
-  margin-top: 0.4rem;
+  color: var(--brass-light);
+  letter-spacing: 0.08em;
+  margin-top: 0.6rem;
   display: block;
 }
 
