@@ -249,10 +249,12 @@
       if (window.L) {
         const map = L.map('leaflet-map', {
           center: [LAT, LNG], zoom: 13,
-          zoomControl: false, attributionControl: true,
+          zoomControl: false, attributionControl: false,
           dragging: false, scrollWheelZoom: false, doubleClickZoom: false,
           boxZoom: false, keyboard: false, touchZoom: false, tap: false
         });
+        // Attribution without the Leaflet logo / Ukrainian flag prefix
+        L.control.attribution({ prefix: false, position: 'bottomright' }).addTo(map);
         // CARTO dark basemap — minimal near-black map; warm-tinted via CSS to
         // read as fine gold streets on black, matching the jewel-box palette.
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {

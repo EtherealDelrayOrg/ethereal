@@ -343,22 +343,25 @@
   background: var(--char);
 }
 .contact-map-canvas .leaflet-tile-pane {
-  /* Voyager has blue water + warm land natively. Darken + warm it toward the
-     bronze/char palette so land reads dark with subtle streets, while high
-     saturation keeps the water blue. */
-  filter: brightness(0.16) saturate(2.6) contrast(1.22) sepia(0.14);
+  /* Voyager warm land + streets, brightened and sepia-tinted to read as
+     antique parchment — ivory land, warm-amber streets, soft coastal blue. */
+  filter: brightness(0.84) sepia(0.42) contrast(1.08) saturate(1.12);
 }
-.contact-map .leaflet-container { background: var(--char); }
+.contact-map .leaflet-container { background: #d6cbb8; }
 .contact-map .leaflet-control-attribution {
-  background: rgba(10, 8, 7, 0.6);
+  background: rgba(10, 8, 7, 0.55);
   color: var(--brass-dark);
   font-family: var(--font-ui);
   font-size: 10px;
   letter-spacing: 0.02em;
+  border-radius: 2px 0 0 0;
 }
-.contact-map .leaflet-control-attribution a { color: var(--brass); }
+.contact-map .leaflet-control-attribution a { color: var(--brass-light); }
+/* Hide the Leaflet logo / Ukrainian flag — keep OSM + CARTO attribution */
+.contact-map .leaflet-attribution-flag { display: none; }
+.contact-map .leaflet-control-attribution a[href*="leafletjs"] { display: none; }
 /* brand pin drop-shadow */
-.ethereal-pin svg { filter: drop-shadow(0 3px 5px rgba(5, 4, 3, 0.6)); }
+.ethereal-pin svg { filter: drop-shadow(0 2px 6px rgba(5, 4, 3, 0.75)); }
 
 /* Warm wash + label overlay; never intercepts the card click */
 .contact-map-overlay {
@@ -374,8 +377,8 @@
   text-align: center;
   padding: 1.25rem;
   background:
-    radial-gradient(ellipse 90% 70% at 50% 42%, transparent 62%, rgba(10, 8, 7, 0.18) 100%),
-    linear-gradient(to top, rgba(10, 8, 7, 0.82) 0%, rgba(10, 8, 7, 0.28) 30%, transparent 52%);
+    radial-gradient(ellipse 90% 70% at 50% 42%, transparent 62%, rgba(10, 8, 7, 0.10) 100%),
+    linear-gradient(to top, rgba(10, 8, 7, 0.74) 0%, rgba(10, 8, 7, 0.16) 34%, transparent 54%);
   transition: background var(--transition-fast);
 }
 .contact-map:hover { border-color: var(--brass); }
