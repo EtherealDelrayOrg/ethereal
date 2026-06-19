@@ -24,38 +24,12 @@
   <!-- ── Opening Sequence ─────────────────────────────── -->
   <div id="opening-sequence" role="presentation" aria-hidden="true">
 
-    <!-- CSS clock placeholder — replaced by <video> when AI video is ready -->
+    <!-- Real clock face — replaced by <video> when AI video is ready -->
     <div class="seq-clock">
-      <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- Outer ring -->
-        <circle class="seq-ring-outer" cx="100" cy="100" r="96" stroke="#8a6e28" stroke-width="1"/>
-        <circle cx="100" cy="100" r="90" stroke="#c4a440" stroke-width="1.5"/>
-        <!-- Rotating dashed inner ring -->
-        <circle class="seq-ring-inner" cx="100" cy="100" r="70" stroke="#8a6e28" stroke-width="0.75" stroke-dasharray="4 8"/>
-        <!-- Counter-rotating mid ring -->
-        <circle class="seq-ring-mid" cx="100" cy="100" r="52" stroke="#8a6e28" stroke-width="0.5" stroke-dasharray="2 6"/>
-        <!-- Tick marks at 12, 3, 6, 9 -->
-        <line x1="100" y1="10" x2="100" y2="20" stroke="#c4a440" stroke-width="1.5"/>
-        <line x1="190" y1="100" x2="180" y2="100" stroke="#c4a440" stroke-width="1.5"/>
-        <line x1="100" y1="190" x2="100" y2="180" stroke="#c4a440" stroke-width="1.5"/>
-        <line x1="10" y1="100" x2="20" y2="100" stroke="#c4a440" stroke-width="1.5"/>
-        <!-- Minor ticks -->
-        <line x1="150" y1="13.4" x2="146" y2="20.3" stroke="#8a6e28" stroke-width="0.75"/>
-        <line x1="186.6" y1="50" x2="179.7" y2="54" stroke="#8a6e28" stroke-width="0.75"/>
-        <line x1="186.6" y1="150" x2="179.7" y2="146" stroke="#8a6e28" stroke-width="0.75"/>
-        <line x1="150" y1="186.6" x2="146" y2="179.7" stroke="#8a6e28" stroke-width="0.75"/>
-        <line x1="50" y1="186.6" x2="54" y2="179.7" stroke="#8a6e28" stroke-width="0.75"/>
-        <line x1="13.4" y1="150" x2="20.3" y2="146" stroke="#8a6e28" stroke-width="0.75"/>
-        <line x1="13.4" y1="50" x2="20.3" y2="54" stroke="#8a6e28" stroke-width="0.75"/>
-        <line x1="50" y1="13.4" x2="54" y2="20.3" stroke="#8a6e28" stroke-width="0.75"/>
-        <!-- Center -->
-        <circle cx="100" cy="100" r="5" fill="#c4a440"/>
-        <circle cx="100" cy="100" r="2.5" fill="#0d0b09"/>
-      </svg>
+      <img src="/src/assets/images/clock-face-transparent.png" alt="" aria-hidden="true">
     </div>
 
     <div class="seq-brand">
-      <img src="/src/assets/images/logo.png" alt="Ethereal" class="seq-logo logo-img">
       <span class="seq-tagline">where time breathes.</span>
     </div>
 
@@ -74,7 +48,7 @@
     <!-- NAV -->
     <header id="site-header" class="nav-hidden" role="banner">
       <div class="nav-inner">
-        <a href="/" class="nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo.png" alt="Ethereal" class="logo-img"></a>
+        <a href="/" class="nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/clock-face-transparent.png" alt="Ethereal" class="logo-img"></a>
 
         <button class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-links">
           <span class="hamburger-line"></span>
@@ -250,7 +224,7 @@
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            <a href="/" class="footer-logo"><img src="/src/assets/images/logo.png" alt="Ethereal" class="logo-img"></a>
+            <a href="/" class="footer-logo"><img src="/src/assets/images/clock-face-transparent.png" alt="Ethereal" class="logo-img"></a>
             <p class="footer-tagline">Where time breathes.</p>
             <div class="footer-social">
               <a href="#" aria-label="Instagram">Instagram</a>
