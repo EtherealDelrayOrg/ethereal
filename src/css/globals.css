@@ -332,14 +332,10 @@ address { font-style: normal; }
 }
 .nav-logo:hover { opacity: 0.8; }
 .nav-logo .logo-img {
-  height: clamp(42px, 5.5vw, 50px);
-  width: auto;
+  height: auto;
+  width: clamp(160px, 18vw, 260px);
   display: block;
-  border-radius: 50%;
-  transition: filter var(--transition-fast);
-}
-.nav-logo:hover .logo-img {
-  filter: drop-shadow(0 0 10px rgba(196, 164, 64, 0.45));
+  mix-blend-mode: screen;
 }
 
 #nav-links {
@@ -520,14 +516,10 @@ address { font-style: normal; }
 }
 .footer-logo:hover { opacity: 0.8; }
 .footer-logo .logo-img {
-  height: clamp(72px, 9vw, 96px);
-  width: auto;
+  height: auto;
+  width: clamp(180px, 20vw, 280px);
   display: block;
-  border-radius: 50%;
-  transition: filter var(--transition-fast);
-}
-.footer-logo:hover .logo-img {
-  filter: drop-shadow(0 0 12px rgba(196, 164, 64, 0.4));
+  mix-blend-mode: screen;
 }
 
 .footer-tagline {
