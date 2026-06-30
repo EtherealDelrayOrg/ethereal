@@ -10,7 +10,7 @@ A luxury, atmospheric web experience built around a cinematic opening sequence �
 
 | Page | Status | Notes |
 |------|--------|-------|
-| `/` | Built | Landing + opening sequence (CSS clock placeholder; AI video pending) |
+| `/` | Built · minimal | Opening sequence + hero + footer only. Teaser sections removed until content is ready (CSS clock placeholder; AI video pending) |
 | `/gallery` | Built · in nav | Filterable photo grid (photography pending from client) |
 | `/about` | Built · in nav | Story, values, team bios (copy pending from client) |
 | `/reservations` | Built · in nav | Resy widget placeholder (venue slug pending from client) |
