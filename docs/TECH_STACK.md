@@ -5,7 +5,7 @@
 | Question | Answer |
 |----------|--------|
 | Launch timeline | **2–3 weeks** — extremely tight. Asset delivery from client is on the critical path. |
-| Site structure | **Separate pages** — each nav item (`/menu`, `/gallery`, `/about`, etc.) is its own HTML file |
+| Site structure | **Separate pages** — each page (`/menu`, `/gallery`, `/about`, etc.) is its own HTML file. Nav currently exposes a curated subset (Gallery, About, Reserve); other pages stay reachable by URL |
 | Opening sequence scope | Runs on `/` (main page) only; subpages load directly into their content |
 | Opening sequence tech | **Hybrid** — AI-generated video stitched seamlessly to CSS/JS reveal. Must work on mobile. |
 | Team | **Solo dev** — client team generates assets only, no code access |
@@ -28,9 +28,14 @@ Rationale: The site is primarily presentational. Avoiding React/Vue/etc. keeps t
 
 ### JavaScript Architecture
 
-- One entry script: `src/js/main.js` (shared utilities)
-- One script per feature: `src/js/opening-sequence.js`, `src/js/menu.js`, etc.
-- ES modules (`type="module"`) — no bundler needed for modern browsers
+- One entry script: `src/js/main.js` — shared utilities (nav scroll state, mobile menu, focus trap, scroll reveals, hero parallax)
+- `src/js/partials.js` — defines the shared `<site-header>` / `<site-footer>` web components, the single source of truth for the nav + footer. Loaded as a **blocking script in `<head>`** so the elements upgrade (render) before `main.js` queries the DOM
+- One script per feature: `src/js/opening-sequence.js` (homepage intro)
+- Plain IIFE scripts loaded via `<script>` tags — no bundler, no ES modules
+
+### Header & Footer (shared partials)
+
+The header (incl. mobile overlay) and footer are authored once in `partials.js`. Pages drop `<site-header>` / `<site-footer>` tags; `globals.css` sets `display: contents` on the wrappers so they don't affect layout. The active nav link is computed from the URL in `main.js`. Desktop renders a centered masthead (large wordmark with the menu stacked beneath); below 900px it collapses to a single-row bar with a hamburger, and the open menu repeats the wordmark as a tap-to-home link.
 
 ---
 
@@ -53,12 +58,19 @@ Rationale: The site is primarily presentational. Avoiding React/Vue/etc. keeps t
 4. Propagation: 24–48 hours
 5. HTTPS: Netlify auto-provisions via Let's Encrypt once DNS resolves
 
+### Branches
+
+| Branch | Netlify deploy | Purpose |
+|--------|----------------|---------|
+| `main` | Production → **etherealdelray.com** | Cleaned, client-facing |
+| `dev`  | Branch deploy → `dev--<site>.netlify.app` | Active development / staging |
+
 ### Netlify Configuration
 
-`netlify.toml` (to be created at project root) will handle:
-- Redirect `/` → opening sequence
+`netlify.toml` (at project root) handles:
+- Clean-URL rewrites (`/menu` → `/pages/menu.html`, etc.)
 - 404 fallback page
-- Cache headers for assets
+- Cache headers for assets (long-cache `src/assets`, no-cache HTML)
 - No build command (static site)
 
 ---
@@ -66,8 +78,10 @@ Rationale: The site is primarily presentational. Avoiding React/Vue/etc. keeps t
 ## Fonts
 
 Google Fonts — loaded via `<link>` in `<head>`:
-- **Cinzel** — headings, logo, navigation (engraved Roman caps feel)
-- **Cormorant Garamond** — body text, descriptions (elegant serif)
+- **Cormorant Garamond** — display headings, body text, descriptions (romantic high-contrast serif)
+- **Hanken Grotesk** — UI: nav, labels, buttons, addresses/contacts/hours, form fields (legible humanist sans)
+
+The logo is always an **image asset** (`logo.png` / `logo-wordmark.png`), never a web font. See [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) for the full type system.
 
 ---
 

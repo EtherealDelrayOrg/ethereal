@@ -19,7 +19,7 @@
   const HEADER = (opening) => `
     <header id="site-header" class="${opening ? 'nav-hidden' : 'is-scrolled'}" role="banner">
       <div class="nav-inner">
-        <a href="/" class="nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo.png" alt="Ethereal" class="logo-img"></a>
+        <a href="/" class="nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal" class="logo-img"></a>
 
         <button class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-links">
           <span class="hamburger-line"></span>
@@ -38,6 +38,7 @@
     </header>
 
     <div id="mobile-nav" role="dialog" aria-label="Navigation menu" aria-modal="true">
+      <a href="/" class="mobile-nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal"></a>
       <a href="/pages/gallery.html">Gallery</a>
       <a href="/pages/about.html">About Us</a>
       <a href="/pages/reservations.html" class="mobile-reserve">Reserve a Table</a>

@@ -47,7 +47,7 @@
   --transition-fast: 400ms cubic-bezier(0.25, 0.1, 0.1, 1);
 
   --container:    1320px;
-  --nav-height:   72px;
+  --nav-height:   132px;
   --section-v:    110px;
 }
 
@@ -319,10 +319,12 @@ site-header, site-footer { display: contents; }
 
 .nav-inner {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 0.7rem;
   height: 100%;
-  padding: 0 2rem;
+  padding: 0.75rem 2rem;
   max-width: var(--container);
   margin: 0 auto;
 }
@@ -336,7 +338,7 @@ site-header, site-footer { display: contents; }
 .nav-logo:hover { opacity: 0.8; }
 .nav-logo .logo-img {
   height: auto;
-  width: clamp(160px, 18vw, 260px);
+  width: clamp(230px, 27vw, 380px);
   display: block;
   mix-blend-mode: screen;
 }
@@ -349,7 +351,7 @@ site-header, site-footer { display: contents; }
 #nav-links ul {
   display: flex;
   align-items: center;
-  gap: 2.5rem;
+  gap: 2.75rem;
 }
 
 #nav-links a {
@@ -452,6 +454,22 @@ site-header, site-footer { display: contents; }
   text-align: center;
 }
 #mobile-nav a:hover { color: var(--ivory); }
+
+/* Brand logo pinned at the top of the open menu — taps back to home */
+#mobile-nav .mobile-nav-logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  padding: 0 1.25rem;
+}
+#mobile-nav .mobile-nav-logo img {
+  width: clamp(150px, 44vw, 200px);
+  height: auto;
+  mix-blend-mode: screen;
+}
 #mobile-nav .mobile-reserve {
   font-family: var(--font-ui);
   font-size: 12px;
@@ -638,7 +656,7 @@ site-header, site-footer { display: contents; }
   :root {
     --container:  1440px;
     --section-v:  128px;
-    --nav-height: 80px;
+    --nav-height: 150px;
   }
 }
 
@@ -647,6 +665,15 @@ site-header, site-footer { display: contents; }
     --section-v: 64px;
     --nav-height: 64px;
   }
+
+  /* Mobile bar reverts to a single row: logo left, hamburger right */
+  .nav-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0;
+    padding: 0 1.25rem;
+  }
+  .nav-logo .logo-img { width: clamp(150px, 44vw, 200px); }
 
   .nav-toggle { display: flex; }
   #nav-links { display: none; }
