@@ -286,6 +286,9 @@ address { font-style: normal; }
 /* ============================================================
    NAVIGATION
    ============================================================ */
+/* Shared partials wrappers — collapse so they don't affect layout */
+site-header, site-footer { display: contents; }
+
 #site-header {
   position: fixed;
   top: 0;

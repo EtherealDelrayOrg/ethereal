@@ -74,42 +74,13 @@
       .email-form button { border-radius: 0 0 2px 2px; }
     }
   </style>
+  <script src="/src/js/partials.js"></script>
 </head>
 <body>
 
   <a class="skip-link" href="#main-content">Skip to main content</a>
 
-  <header id="site-header" class="is-scrolled" role="banner">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo.png" alt="Ethereal" class="logo-img"></a>
-      <button class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-links">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-      </button>
-      <nav id="nav-links" aria-label="Main navigation">
-        <ul role="list">
-          <li><a href="/pages/menu.html">Menu</a></li>
-          <li><a href="/pages/gallery.html">Gallery</a></li>
-          <li><a href="/pages/about.html">About Us</a></li>
-          <li><a href="/pages/shop.html" aria-current="page">Shop</a></li>
-          <li><a href="/pages/careers.html">Careers</a></li>
-          <li><a href="/pages/contact.html">Contact</a></li>
-          <li><a href="/pages/reservations.html" class="nav-reserve">Reserve</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <div id="mobile-nav" role="dialog" aria-label="Navigation menu" aria-modal="true">
-    <a href="/pages/menu.html">Menu</a>
-    <a href="/pages/gallery.html">Gallery</a>
-    <a href="/pages/about.html">About Us</a>
-    <a href="/pages/shop.html">Shop</a>
-    <a href="/pages/careers.html">Careers</a>
-    <a href="/pages/contact.html">Contact</a>
-    <a href="/pages/reservations.html" class="mobile-reserve">Reserve a Table</a>
-  </div>
+  <site-header></site-header>
 
   <main id="main-content">
 
