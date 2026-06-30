@@ -46,9 +46,9 @@
 
 .hero-label {
   font-family: var(--font-ui);
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--brass-light);
   text-shadow: 0 1px 12px rgba(5, 4, 3, 0.85);
@@ -92,6 +92,11 @@
   flex-wrap: wrap;
   opacity: 0;
   animation: heroFadeUp 900ms 800ms var(--ease) forwards;
+}
+/* Slimmer hero buttons — reduced vertical padding */
+.hero-ctas .btn {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .hero-scroll {
