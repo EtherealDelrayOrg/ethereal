@@ -236,18 +236,20 @@ address { font-style: normal; }
   background: transparent;
 }
 .btn--filled {
-  /* Lighter gold fill, with a darker hairline border and a faint top/bottom bevel — reads
-     as a struck metal plaque (like the clock bezel) rather than a flat colored rectangle. */
-  background: var(--brass);
-  border-color: var(--brass-dark);
+  /* A richer, more saturated brass gold than the shared --brass token (which reads a
+     touch flat/pale at full-block scale) — plus a matching-hue darker border and a faint
+     top/bottom bevel so it reads as a struck metal plaque, not a flat colored rectangle.
+     Scoped to this button only; --brass itself is unchanged for nav/hairline/text use. */
+  background: #d48e2b;
+  border-color: #936525;
   color: var(--ink);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
 }
 .btn--filled:hover {
-  background: var(--brass-light);
-  border-color: var(--brass);
+  background: #daa458;
+  border-color: #d48e2b;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.12),
-              0 0 32px rgba(196, 145, 64, 0.32);
+              0 0 32px rgba(212, 142, 43, 0.35);
 }
 
 /* === IMAGE PLACEHOLDER === */
