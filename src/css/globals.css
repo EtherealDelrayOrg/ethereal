@@ -626,8 +626,15 @@ site-header, site-footer { display: contents; }
 .footer-contact a {
   transition: color var(--transition-fast);
 }
-.footer-contact a:hover { color: var(--brass); }
+/* :not() here matters — .footer-reserve-link is an <a> inside .footer-contact, so
+   without this exclusion this rule's extra `a` type selector out-specifies
+   .footer-reserve-link:hover's own color, silently winning and leaving brass-on-brass
+   (invisible) text once the link's background also turns gold on hover. */
+.footer-contact a:hover:not(.footer-reserve-link) { color: var(--brass); }
 
+/* Same metallic brass gradient as the landing hero's primary button (.btn--filled) —
+   a small warm highlight standing in for a light source, over a diagonal gradient
+   that runs light-dark-light-dark like brushed metal, rather than a flat fill. */
 .footer-reserve-link {
   display: inline-block;
   margin-top: 1.25rem;
@@ -636,16 +643,22 @@ site-header, site-footer { display: contents; }
   font-weight: 500;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--brass);
-  border: 1px solid var(--brass-dark);
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse 55% 45% at 28% 20%, rgba(255, 250, 235, 0.55) 0%, transparent 60%),
+    linear-gradient(155deg, #e2a95a 0%, #d98e26 28%, #b67820 52%, #c78323 72%, #a96f1e 100%);
+  border: 1px solid #a96f1e;
   padding: 11px 22px;
   border-radius: 2px;
-  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  transition: box-shadow var(--transition-fast);
 }
 .footer-reserve-link:hover {
-  background: var(--brass);
-  color: var(--ink);
-  border-color: var(--brass);
+  background:
+    radial-gradient(ellipse 55% 45% at 28% 20%, rgba(255, 250, 235, 0.7) 0%, transparent 60%),
+    linear-gradient(155deg, #eecda0 0%, #e2a95a 28%, #c78323 52%, #d98e26 72%, #b67820 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+              0 0 32px rgba(217, 142, 38, 0.4);
 }
 
 .footer-bottom {
