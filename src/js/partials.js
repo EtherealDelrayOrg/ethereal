@@ -33,6 +33,7 @@
             <li><a href="/pages/gallery.html">Gallery</a></li>
             <li><a href="/pages/about.html">About Us</a></li>
             <li><a href="/pages/shop.html">Shop</a></li>
+            <li><a href="/pages/careers.html">Careers</a></li>
             <li><a href="/pages/contact.html">Contact</a></li>
             <li><a href="/pages/reservations.html" class="nav-reserve">Reserve</a></li>
           </ul>
@@ -46,6 +47,7 @@
       <a href="/pages/gallery.html">Gallery</a>
       <a href="/pages/about.html">About Us</a>
       <a href="/pages/shop.html">Shop</a>
+      <a href="/pages/careers.html">Careers</a>
       <a href="/pages/contact.html">Contact</a>
       <a href="/pages/reservations.html" class="mobile-reserve">Reserve a Table</a>
     </div>
@@ -67,6 +69,7 @@
               <li><a href="/pages/gallery.html">Gallery</a></li>
               <li><a href="/pages/about.html">About Us</a></li>
               <li><a href="/pages/shop.html">Shop</a></li>
+              <li><a href="/pages/careers.html">Careers</a></li>
               <li><a href="/pages/contact.html">Contact</a></li>
             </ul>
           </nav>
