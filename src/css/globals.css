@@ -21,6 +21,7 @@
   --brass:        #c49140;
   --brass-light:  #dcb06a;
   --brass-dark:   #8a6428;
+  --brass-deep:   #886830;  /* solid fills (e.g. the primary button) — reads as gold, not yellow */
   --bronze:       #a87b4a;
 
   /* Warm accents */
@@ -236,12 +237,14 @@ address { font-style: normal; }
   background: transparent;
 }
 .btn--filled {
-  background: var(--brass);
+  background: var(--brass-deep);
+  border-color: var(--brass-deep);
   color: var(--ink);
 }
 .btn--filled:hover {
-  background: var(--brass-light);
-  box-shadow: 0 0 32px rgba(220, 176, 106, 0.35);
+  background: var(--brass);
+  border-color: var(--brass);
+  box-shadow: 0 0 32px rgba(196, 145, 64, 0.32);
 }
 
 /* === IMAGE PLACEHOLDER === */

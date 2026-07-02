@@ -35,34 +35,23 @@
   mix-blend-mode: normal;
 }
 
-/* Homepage-only, pre-scroll: the header is still transparent over the bright mural here,
-   so the (dark-background-tuned) nav colors need to flip dark. Once .is-scrolled adds its
-   own dark backdrop, the standard site-wide nav palette applies as normal. */
-#site-header:not(.is-scrolled) #nav-links a {
-  color: var(--ink);
-  /* A tight 1px rim, not a soft glow — keeps the glyph edges crisp against the mural
-     instead of hazing the image around them. */
-  text-shadow: -1px -1px 0 rgba(241, 232, 212, 0.5), 1px -1px 0 rgba(241, 232, 212, 0.5),
-               -1px  1px 0 rgba(241, 232, 212, 0.5), 1px  1px 0 rgba(241, 232, 212, 0.5);
-}
-#site-header:not(.is-scrolled) #nav-links a:hover {
-  color: var(--char);
+/* Homepage-only, pre-scroll: the header is still transparent over the bright mural here.
+   Rather than re-color the nav text (which fought with the mural depending on what was
+   behind it), give each item a small solid dark plaque and let the normal site-wide nav
+   colors — already designed for a dark background — apply unchanged. Once .is-scrolled
+   adds its own dark backdrop, these chips are redundant and the header's own background
+   takes over. */
+#site-header:not(.is-scrolled) #nav-links li {
+  background: rgba(10, 8, 7, 0.75);
+  padding: 6px 14px;
+  border-radius: 2px;
 }
 #site-header:not(.is-scrolled) .nav-reserve {
-  color: var(--ink) !important;
-  border-color: var(--ink);
-  /* Solid, not glass — backdrop-filter blur over a high-contrast part of the mural
-     renders as a smeared/dirty patch on iOS Safari. A flat, near-opaque chip can't smear. */
-  background: rgba(241, 232, 212, 0.88);
+  background: rgba(10, 8, 7, 0.75);
 }
-#site-header:not(.is-scrolled) .nav-reserve:hover {
-  background: var(--ink) !important;
-  border-color: var(--ink) !important;
-  color: var(--ivory) !important;
-}
-#site-header:not(.is-scrolled) .hamburger-line {
-  background: var(--ink);
-  filter: drop-shadow(0 0 3px rgba(241, 232, 212, 0.9));
+#site-header:not(.is-scrolled) .nav-toggle {
+  background: rgba(10, 8, 7, 0.75);
+  border-radius: 4px;
 }
 
 .hero-content {
@@ -100,21 +89,9 @@
   font-size: clamp(2.8rem, 7.5vw, 7rem);
   font-weight: 300;
   font-style: italic;
-  color: var(--ink);
-  line-height: 1.02;
+  color: var(--ivory);
+  line-height: 1.7;
   margin-bottom: 1.5rem;
-  /* A real vector stroke plus a matching 8-direction shadow ring, and a soft cast shadow
-     beneath for depth — crisp edge definition, not a glow that hazes the mural. Sampled the
-     actual pixels under this text: the wallpaper reads as a muted mid-dark olive, so dark
-     ink is already the higher-contrast choice; the outline covers the patches (the peacock's
-     feathers) where the mural dips close to ink's own value. A single 1px shadow rim proved
-     too thin on a retina phone at this stroke weight — thickened here. */
-  -webkit-text-stroke: 0.6px rgba(241, 232, 212, 0.8);
-  text-shadow: -1px -1px 0 rgba(241, 232, 212, 0.7), 1px -1px 0 rgba(241, 232, 212, 0.7),
-               -1px  1px 0 rgba(241, 232, 212, 0.7), 1px  1px 0 rgba(241, 232, 212, 0.7),
-               -1.5px 0 0 rgba(241, 232, 212, 0.6), 1.5px 0 0 rgba(241, 232, 212, 0.6),
-               0 -1.5px 0 rgba(241, 232, 212, 0.6), 0 1.5px 0 rgba(241, 232, 212, 0.6),
-               0 4px 14px rgba(0, 0, 0, 0.35);
   opacity: 0;
   animation: heroFadeUp 900ms 400ms var(--ease) forwards;
 }
@@ -124,20 +101,29 @@
   font-size: clamp(1.35rem, 2.8vw, 1.7rem);
   font-weight: 500;
   font-style: italic;
-  line-height: 1.5;
-  color: var(--ink);
-  -webkit-text-stroke: 0.5px rgba(241, 232, 212, 0.7);
-  text-shadow: -1px -1px 0 rgba(241, 232, 212, 0.65), 1px -1px 0 rgba(241, 232, 212, 0.65),
-               -1px  1px 0 rgba(241, 232, 212, 0.65), 1px  1px 0 rgba(241, 232, 212, 0.65),
-               -1.5px 0 0 rgba(241, 232, 212, 0.55), 1.5px 0 0 rgba(241, 232, 212, 0.55),
-               0 -1.5px 0 rgba(241, 232, 212, 0.55), 0 1.5px 0 rgba(241, 232, 212, 0.55),
-               0 3px 10px rgba(0, 0, 0, 0.3);
+  line-height: 2.3;
+  color: var(--ivory-dark);
   margin-bottom: 2.5rem;
   max-width: 630px;
   margin-left: auto;
   margin-right: auto;
   opacity: 0;
   animation: heroFadeUp 900ms 600ms var(--ease) forwards;
+}
+
+/* Outline/glow tricks (tried first) either hazed the image or read as an ugly white
+   background once thick enough to hold up on a retina phone. This is the same "plaque"
+   used for .hero-label, just fitted per line: box-decoration-break:clone gives each
+   wrapped/broken line its own tightly-sized dark plate — a fixed, guaranteed-contrast
+   surface (like a museum placard) instead of trying to out-shadow an unpredictable photo.
+   Text stays the exact --ivory / --ivory-dark used everywhere else on the site. */
+.hero-title .line-bg,
+.hero-sub .line-bg {
+  background: rgba(10, 8, 7, 0.78);
+  padding: 0.08em 0.5em;
+  border-radius: 3px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 .hero-ctas {
@@ -153,19 +139,19 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
-/* The ghost button's light ivory text/border (tuned for dark sections) disappears against
-   the bright mural — give it a dark-on-light chip scoped to the hero only. Solid, not
-   glass: backdrop-filter blur over a high-contrast part of the mural (petal edges) renders
-   as a smeared/dirty patch on iOS Safari, so this is a flat, near-opaque fill instead. */
+/* The ghost button reads fine on the mural with the site's normal ghost colors — it just
+   needs the same dark plaque as the rest of the hero for guaranteed contrast, instead of a
+   bespoke light-chip variant. Same border/text colors and hover behavior as the standard
+   .btn--ghost used on dark sections elsewhere, just with a solid backing added. */
 .hero-ctas .btn--ghost {
-  border-color: var(--ink);
-  color: var(--ink);
-  background: rgba(241, 232, 212, 0.88);
+  border-color: var(--brass-dark);
+  color: var(--ivory-dark);
+  background: rgba(10, 8, 7, 0.78);
 }
 .hero-ctas .btn--ghost:hover {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--ivory);
+  border-color: var(--brass);
+  color: var(--brass);
+  background: rgba(10, 8, 7, 0.9);
 }
 
 .hero-scroll {
