@@ -29,8 +29,11 @@
 
         <nav id="nav-links" aria-label="Main navigation">
           <ul role="list">
+            <li><a href="/pages/menu.html">Menu</a></li>
             <li><a href="/pages/gallery.html">Gallery</a></li>
             <li><a href="/pages/about.html">About Us</a></li>
+            <li><a href="/pages/shop.html">Shop</a></li>
+            <li><a href="/pages/contact.html">Contact</a></li>
             <li><a href="/pages/reservations.html" class="nav-reserve">Reserve</a></li>
           </ul>
         </nav>
@@ -39,8 +42,11 @@
 
     <div id="mobile-nav" role="dialog" aria-label="Navigation menu" aria-modal="true">
       <a href="/" class="mobile-nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal"></a>
+      <a href="/pages/menu.html">Menu</a>
       <a href="/pages/gallery.html">Gallery</a>
       <a href="/pages/about.html">About Us</a>
+      <a href="/pages/shop.html">Shop</a>
+      <a href="/pages/contact.html">Contact</a>
       <a href="/pages/reservations.html" class="mobile-reserve">Reserve a Table</a>
     </div>
   `;
@@ -57,8 +63,11 @@
           <nav class="footer-nav" aria-label="Footer navigation">
             <h3>Navigate</h3>
             <ul role="list">
+              <li><a href="/pages/menu.html">Menu</a></li>
               <li><a href="/pages/gallery.html">Gallery</a></li>
               <li><a href="/pages/about.html">About Us</a></li>
+              <li><a href="/pages/shop.html">Shop</a></li>
+              <li><a href="/pages/contact.html">Contact</a></li>
             </ul>
           </nav>
           <div class="footer-visit">
