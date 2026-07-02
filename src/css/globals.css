@@ -553,7 +553,7 @@ site-header, site-footer { display: contents; }
 
 .footer-logo {
   display: inline-block;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.1rem;
   transition: opacity var(--transition-fast);
 }
 .footer-logo:hover { opacity: 0.8; }
@@ -564,13 +564,18 @@ site-header, site-footer { display: contents; }
   mix-blend-mode: screen;
 }
 
+/* Was a flat 18px regardless of viewport — next to a wordmark that scales up to
+   280px on desktop, that read as an afterthought rather than a signature line.
+   Scales with the same logic as the logo above it; letter-spacing gives it a
+   touch more presence at the larger sizes. */
 .footer-tagline {
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 500;
-  font-size: 18px;
+  font-size: clamp(1.05rem, 1.7vw, 1.375rem);
+  letter-spacing: 0.015em;
   color: var(--ivory);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 
 .footer-social {
