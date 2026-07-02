@@ -34,7 +34,7 @@
    MENU PAGE
    ============================================================ */
 .menu-embed-wrapper {
-  background: rgba(196, 164, 64, 0.03);
+  background: rgba(196, 145, 64, 0.03);
   border: 1px solid var(--brass-dark);
   border-radius: 2px;
   overflow: hidden;
@@ -215,7 +215,7 @@
 }
 .job-listing:hover {
   border-color: var(--brass);
-  background: rgba(196, 164, 64, 0.03);
+  background: rgba(196, 145, 64, 0.03);
 }
 .job-listing-header {
   display: flex;
@@ -261,7 +261,7 @@
 .job-apply:hover { color: var(--brass-light); }
 
 .careers-cta {
-  background: rgba(196, 164, 64, 0.04);
+  background: rgba(196, 145, 64, 0.04);
   border: 1px solid var(--brass-dark);
   padding: 3rem;
   text-align: center;
@@ -470,7 +470,7 @@
    RESERVATIONS PAGE
    ============================================================ */
 .resy-wrapper {
-  background: rgba(196, 164, 64, 0.03);
+  background: rgba(196, 145, 64, 0.03);
   border: 1px solid var(--brass-dark);
   padding: 4rem 3rem;
   text-align: center;

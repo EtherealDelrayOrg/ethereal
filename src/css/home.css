@@ -18,22 +18,51 @@
   inset: 0;
   background-image: url('/src/assets/images/bg-brand.png');
   background-size: cover;
-  background-position: center;
-  filter: brightness(0.26) saturate(0.85) sepia(0.12);
+  /* Top-weighted: a plain center crop clips the crane's head on wide viewports
+     (the mural's subjects sit in the upper third of the square source image). */
+  background-position: center 12%;
+  /* Client-requested exception: the mural is the hero, shown near-true brightness — no dark
+     nocturnal treatment here. See DESIGN_SYSTEM.md "Homepage Hero" exception. */
+  filter: brightness(1.05) saturate(1.12);
   transform: scale(1.04);
   transition: transform 12s ease-out;
 }
 
-.hero-vignette {
-  position: absolute;
-  inset: 0;
-  background:
-    /* candlelight pooling at center */
-    radial-gradient(ellipse 55% 45% at 50% 42%, rgba(224, 168, 90, 0.10) 0%, transparent 60%),
-    /* warm nocturnal vignette */
-    radial-gradient(ellipse 80% 65% at 50% 50%, transparent 28%, rgba(10, 8, 7, 0.78) 100%),
-    linear-gradient(to bottom, rgba(10, 8, 7, 0.45) 0%, transparent 38%, rgba(10, 8, 7, 0.72) 100%);
-  pointer-events: none;
+/* Homepage-only: the shared header sits directly on the bright mural (transparent until
+   scrolled), and the logo's screen blend-mode assumes a dark backdrop — normal blend keeps
+   the gold wordmark legible against the light hero image. */
+.nav-logo .logo-img {
+  mix-blend-mode: normal;
+}
+
+/* Homepage-only, pre-scroll: the header is still transparent over the bright mural here,
+   so the (dark-background-tuned) nav colors need to flip dark. Once .is-scrolled adds its
+   own dark backdrop, the standard site-wide nav palette applies as normal. */
+#site-header:not(.is-scrolled) #nav-links a {
+  color: var(--ink);
+  /* A tight 1px rim, not a soft glow — keeps the glyph edges crisp against the mural
+     instead of hazing the image around them. */
+  text-shadow: -1px -1px 0 rgba(241, 232, 212, 0.5), 1px -1px 0 rgba(241, 232, 212, 0.5),
+               -1px  1px 0 rgba(241, 232, 212, 0.5), 1px  1px 0 rgba(241, 232, 212, 0.5);
+}
+#site-header:not(.is-scrolled) #nav-links a:hover {
+  color: var(--char);
+}
+#site-header:not(.is-scrolled) .nav-reserve {
+  color: var(--ink) !important;
+  border-color: var(--ink);
+  background: rgba(241, 232, 212, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+#site-header:not(.is-scrolled) .nav-reserve:hover {
+  background: var(--ink) !important;
+  border-color: var(--ink) !important;
+  color: var(--ivory) !important;
+}
+#site-header:not(.is-scrolled) .hamburger-line {
+  background: var(--ink);
+  filter: drop-shadow(0 0 3px rgba(241, 232, 212, 0.9));
 }
 
 .hero-content {
@@ -50,9 +79,18 @@
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
+  /* A small badge, not text sitting directly on the mural — full-strength brand gold on
+     its own dark chip reads clearly no matter what's behind it, and a tight badge doesn't
+     haze the image the way a full-width scrim did. */
+  display: inline-block;
   color: var(--brass-light);
-  text-shadow: 0 1px 12px rgba(5, 4, 3, 0.85);
-  margin-bottom: 1.5rem;
+  background: rgba(10, 8, 7, 0.68);
+  border: 1px solid rgba(196, 145, 64, 0.4);
+  padding: 7px 18px;
+  border-radius: 2px;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  margin-bottom: 1.75rem;
   opacity: 0;
   animation: heroFadeUp 900ms 200ms var(--ease) forwards;
 }
@@ -62,9 +100,16 @@
   font-size: clamp(2.8rem, 7.5vw, 7rem);
   font-weight: 300;
   font-style: italic;
-  color: var(--ivory);
+  color: var(--ink);
   line-height: 1.02;
   margin-bottom: 1.5rem;
+  /* A tight 1px rim plus a soft cast shadow beneath — crisp edge definition, not a glow
+     that hazes the mural. Sampled the actual pixels under this text: the wallpaper reads
+     as a muted mid-dark olive, so dark ink is already the higher-contrast choice; the rim
+     covers the few patches where the mural dips close to ink's own value. */
+  text-shadow: -1px -1px 0 rgba(241, 232, 212, 0.55), 1px -1px 0 rgba(241, 232, 212, 0.55),
+               -1px  1px 0 rgba(241, 232, 212, 0.55), 1px  1px 0 rgba(241, 232, 212, 0.55),
+               0 4px 14px rgba(0, 0, 0, 0.3);
   opacity: 0;
   animation: heroFadeUp 900ms 400ms var(--ease) forwards;
 }
@@ -75,8 +120,10 @@
   font-weight: 500;
   font-style: italic;
   line-height: 1.5;
-  color: var(--ivory);
-  text-shadow: 0 1px 16px rgba(5, 4, 3, 0.7);
+  color: var(--ink);
+  text-shadow: -1px -1px 0 rgba(241, 232, 212, 0.45), 1px -1px 0 rgba(241, 232, 212, 0.45),
+               -1px  1px 0 rgba(241, 232, 212, 0.45), 1px  1px 0 rgba(241, 232, 212, 0.45),
+               0 3px 10px rgba(0, 0, 0, 0.25);
   margin-bottom: 2.5rem;
   max-width: 630px;
   margin-left: auto;
@@ -97,6 +144,20 @@
 .hero-ctas .btn {
   padding-top: 10px;
   padding-bottom: 10px;
+}
+/* The ghost button's light ivory text/border (tuned for dark sections) disappears against
+   the bright mural — give it a dark glass treatment scoped to the hero only. */
+.hero-ctas .btn--ghost {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: rgba(241, 232, 212, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.hero-ctas .btn--ghost:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--ivory);
 }
 
 .hero-scroll {

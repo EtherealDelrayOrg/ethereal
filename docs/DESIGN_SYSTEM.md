@@ -61,10 +61,12 @@ Sampled from the built interior and the brand assets. The site is built on **war
 
 | Name | Hex | Usage |
 |------|-----|-------|
-| `--brass` | `#c4a440` | Primary accent. The gilded birdcage, clock bezel, all gold UI. |
-| `--brass-light` | `#dcc06a` | Highlight face. Hover states on gold, active elements. |
-| `--brass-dark` | `#8a6e28` | Shadow face. Hairline borders, dividers, quiet details. |
+| `--brass` | `#c49140` | Primary accent. The gilded birdcage, clock bezel, all gold UI. |
+| `--brass-light` | `#dcb06a` | Highlight face. Hover states on gold, active elements. |
+| `--brass-dark` | `#8a6428` | Shadow face. Hairline borders, dividers, quiet details. |
 | `--bronze` | `#a87b4a` | Warmer metal — the cone tables, lamp bases. Secondary metallic accent. |
+
+> **Updated Jul 2026:** the brass hue was shifted a few degrees warmer (was `#c4a440`/`#dcc06a`/`#8a6e28`) — the old values read as flat yellow rather than a metal. Same lightness/saturation, just less yellow, more gold-orange. Applies everywhere `--brass*` is used, including the hardcoded rgba() glows/tints in `globals.css`, `pages.css`, and `opening-sequence.css` that echo these hex values.
 
 ### Warm accents
 
@@ -79,8 +81,8 @@ Sampled from the built interior and the brand assets. The site is built on **war
 
 | Name | Hex | Usage |
 |------|-----|-------|
-| `--ivory` | `#efe6d2` | Primary text on dark. From the shell chandeliers + clock numerals. |
-| `--ivory-dark` | `#cbb893` | Secondary / muted text. |
+| `--ivory` | `#f1e8d4` | Primary text on dark. From the shell chandeliers + clock numerals. |
+| `--ivory-dark` | `#dccaa2` | Secondary / muted text. |
 
 ### Do Not Use
 - Pure white `#ffffff` (use `--ivory`) or pure black `#000000` (use `--ink`/`--shadow`).
@@ -139,7 +141,25 @@ Surfaces should evoke real materials in the room, layered with warm light.
 - **Metal:** borders and rules in `--brass-dark` (1px hairline). Gold elements may carry a faint warm glow on hover (brightness/›glow), never a color change.
 - **Cards / panels:** background `--char` or `rgba(255,255,255,0.03)`, 1px `--brass-dark` border, radius ≤ 2px.
 - **Mosaic accents:** the clock rosette's tessellated emerald/terracotta/cream can inspire small decorative details and dividers.
-- **Vignettes:** most full-bleed imagery gets a warm dark vignette so text stays legible and the mood stays nocturnal.
+- **Vignettes:** most full-bleed imagery gets a warm dark vignette so text stays legible and the mood stays nocturnal. **The homepage hero is the one deliberate exception — see below.**
+
+---
+
+## Homepage Hero — Bright Mural Exception
+
+**Added Jul 2026, client-requested.** The hero's crane-and-peacock mural (`src/assets/images/bg-brand.png`) is shown near its true brightness, not the dark nocturnal treatment used everywhere else on the site. The client wants this specific image to be the showcase, not a moody backdrop.
+
+- **Image:** `filter: brightness(1.05) saturate(1.12)` on `.hero-bg` (was `brightness(0.26) saturate(0.85) sepia(0.12)`). No dark vignette over the artwork.
+- **Framing:** `background-position: center 12%` (was `center`). The mural's square source (`1024×1024`) puts both birds' heads in the top third — a plain center crop clips the crane's crown on any viewport wider than the image is tall. The top-weighted position keeps both heads in frame from mobile portrait through ultrawide desktop; verified at 375×812, 768×1024, 1280×800, and 1920×820.
+- **No overlay at all — an earlier pass tried a soft ivory "spotlight" scrim behind the text and it read as a haze sitting over the artwork. Removed entirely (`.hero-vignette` and its div deleted).** Legibility now comes purely from text color and shadow, chosen from the mural's *actual* pixel values, not assumption:
+  - Sampled the raw source under where each line of text falls (canvas `getImageData`, mapped through the same cover/position/transform math the CSS uses). Result: the wallpaper behind the text is a muted mid-dark olive (~`rgb(100,105,90)`), not the light pastel it appears to be in thumbnail — meaning **dark ink text was already the higher-contrast choice**, no lightening needed.
+  - Every hero/nav text element gets a tight 1px **rim** (four 1px-offset, 0-blur `text-shadow`s in ivory) plus, on the title/sub, a soft *cast* shadow beneath (`0 4px 14px rgba(0,0,0,.3)`) for depth. This is a crisp edge treatment, not a glow — it doesn't lighten or haze any area of the image, it only outlines the glyphs themselves.
+- **Eyebrow label is a badge, not text-on-photo:** `.hero-label` ("Coming Soon") sits on its own small dark chip (`rgba(10,8,7,.68)` + hairline brass border), so it can use full-strength `--brass-light` gold regardless of what's behind it — sampling showed gold text alone was nearly unreadable against the mural's mid-tone olive (contrast as low as 1.36:1) since they're similar luminance. A tight badge solves this without any full-bleed treatment.
+- **Ghost CTA:** `.hero-ctas .btn--ghost` gets a hero-scoped override (dark ink border/text, translucent ivory glass fill with `backdrop-filter: blur`) — the standard `.btn--ghost` (light border/text, tuned for dark sections) disappears against a bright image. The reusable global `.btn--ghost` is untouched for use elsewhere.
+- **Nav, pre-scroll only:** the shared header sits transparently over the hero until `.is-scrolled` is added on scroll. `home.css` (loaded only on `index.html`) overrides `#nav-links a` to dark ink with the same tight rim, and gives `.nav-reserve`/`.hamburger-line` a matching dark-ink treatment, under `#site-header:not(.is-scrolled)`; once scrolled, the header's own dark backdrop returns and the standard light-on-dark nav palette applies again unchanged.
+- **Logo blend mode:** `.logo-img` normally uses `mix-blend-mode: screen`, which assumes a dark backdrop (see Brand Marks) — against the bright hero it washes the gold wordmark toward white. `home.css` sets `.nav-logo .logo-img { mix-blend-mode: normal; }`, scoped to the homepage only; footer and subpage logos are unaffected.
+
+This is a scoped exception, not a new site-wide direction — every other section, page, and component keeps the dark "Opulent Botanical Nocturne" treatment described above.
 
 ---
 

@@ -37,8 +37,8 @@
   opacity: 0;
   animation: seqClockReveal 1100ms 100ms var(--ease) forwards;
   filter:
-    drop-shadow(0 0 28px rgba(196, 164, 64, 0.32))
-    drop-shadow(0 0 80px rgba(196, 164, 64, 0.14));
+    drop-shadow(0 0 28px rgba(196, 145, 64, 0.32))
+    drop-shadow(0 0 80px rgba(196, 145, 64, 0.14));
 }
 
 
@@ -102,7 +102,7 @@
   transform: translateX(-50%);
   width: 120px;
   height: 1px;
-  background: rgba(138, 110, 40, 0.2);
+  background: rgba(138, 100, 40, 0.2);
 }
 .seq-progress-fill {
   height: 100%;
