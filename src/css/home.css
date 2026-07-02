@@ -33,9 +33,9 @@
   /* Top-weighted: a plain center crop clips the crane's crown on wide viewports — both
      birds' heads sit in the top third of the square (1024×1024) source. */
   background-position: center 12%;
-  /* Brightened back up per client (was 0.88, briefly) — the scrim below carries more of
-     the legibility work now so the photo itself can stay closer to true brightness. */
-  filter: brightness(1.05) saturate(1.12);
+  /* Brightened per client request (was 1.05, before that 0.88) — the scrim below carries
+     more of the legibility work so the photo itself can keep getting brighter. */
+  filter: brightness(1.15) saturate(1.14);
   transform: scale(1.04);
   transition: transform 12s ease-out;
 }
@@ -45,12 +45,12 @@
   inset: 0;
   /* Darkens, never lightens — a graduated grade (like burning in a photographic print),
      not a flat overlay. Nearly invisible across the top where the birds' heads are;
-     builds toward the bottom where the subtitle and buttons sit. Strengthened slightly
-     to compensate for the brighter base image above, re-verified against sampled mural
-     pixels (see DESIGN_SYSTEM.md) — still comfortably passes contrast at every point. */
+     builds toward the bottom where the subtitle and buttons sit. Strengthened again to
+     compensate for the brighter image above, re-verified against sampled mural pixels
+     (see DESIGN_SYSTEM.md) — worst case ~4.7:1, comfortably passing at every point. */
   background:
-    radial-gradient(ellipse 62% 50% at 50% 46%, rgba(10, 8, 7, 0.38) 0%, transparent 70%),
-    linear-gradient(to bottom, rgba(10, 8, 7, 0.06) 0%, rgba(10, 8, 7, 0.38) 42%, rgba(10, 8, 7, 0.6) 78%, rgba(10, 8, 7, 0.68) 100%);
+    radial-gradient(ellipse 62% 50% at 50% 46%, rgba(10, 8, 7, 0.44) 0%, transparent 70%),
+    linear-gradient(to bottom, rgba(10, 8, 7, 0.07) 0%, rgba(10, 8, 7, 0.42) 42%, rgba(10, 8, 7, 0.64) 78%, rgba(10, 8, 7, 0.72) 100%);
   pointer-events: none;
 }
 

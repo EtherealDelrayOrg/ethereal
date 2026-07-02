@@ -672,16 +672,25 @@ site-header, site-footer { display: contents; }
     --nav-height: 64px;
   }
 
-  /* Mobile bar reverts to a single row: logo left, hamburger right */
+  /* Mobile bar reverts to a single row, logo centered — the hamburger is pulled out of
+     flow and pinned to the right edge so the logo can sit truly centered in the bar
+     rather than sharing a space-between row with it. */
   .nav-inner {
+    position: relative;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     gap: 0;
     padding: 0 1.25rem;
   }
   .nav-logo .logo-img { width: clamp(150px, 44vw, 200px); }
 
-  .nav-toggle { display: flex; }
+  .nav-toggle {
+    display: flex;
+    position: absolute;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
   #nav-links { display: none; }
   #mobile-nav { display: flex; }
 

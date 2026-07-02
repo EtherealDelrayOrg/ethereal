@@ -35,7 +35,7 @@ Rationale: The site is primarily presentational. Avoiding React/Vue/etc. keeps t
 
 ### Header & Footer (shared partials)
 
-The header (incl. mobile overlay) and footer are authored once in `partials.js`. Pages drop `<site-header>` / `<site-footer>` tags; `globals.css` sets `display: contents` on the wrappers so they don't affect layout. The active nav link is computed from the URL in `main.js`. Desktop renders a centered masthead (large wordmark with the menu stacked beneath); below 900px it collapses to a single-row bar with a hamburger, and the open menu repeats the wordmark as a tap-to-home link.
+The header (incl. mobile overlay) and footer are authored once in `partials.js`. Pages drop `<site-header>` / `<site-footer>` tags; `globals.css` sets `display: contents` on the wrappers so they don't affect layout. The active nav link is computed from the URL in `main.js`. Desktop renders a centered masthead (large wordmark with the menu stacked beneath); below 900px it collapses to a single-row bar with the wordmark centered and the hamburger pulled out of flow (`position: absolute`) and pinned to the right edge, rather than sharing a `space-between` row with the logo — that had left the logo sitting off to the side instead of centered. The open menu repeats the wordmark as a tap-to-home link.
 
 ---
 
