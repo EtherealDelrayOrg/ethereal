@@ -3,21 +3,25 @@
    ============================================================ */
 
 /* === Hero ===
-   The mural is the showpiece, shown fully clear with nothing overlaid on it — no vignette,
-   no scrim, no text. Copy lives below it in a solid-ink caption band instead, styled with
-   the exact same type system as the rest of the site (see DESIGN_SYSTEM.md "Homepage Hero").
-   This is the standard high-end hospitality pattern: the photograph and the wall label are
-   two separate surfaces, not one fighting the other for contrast. */
+   Text sits on the mural (client preference — a separate caption band below the image
+   read as broken/awkward on mobile and Android). Legibility comes from three things
+   working together instead of any one overlay trick carrying the whole job:
+     1. The image itself is graded a little darker and a touch richer (still clearly
+        bright, nowhere near the old nocturnal treatment).
+     2. A soft, bottom-weighted dark gradient (never a lightening haze) — heaviest low,
+        almost nothing across the birds' heads at the top.
+     3. Denser, heavier type: the title moves from a thin 300-weight italic to a bold
+        600-weight, and the subtitle moves from decorative serif to the site's own
+        functional sans (Hanken Grotesk) — both have far more "ink" per glyph, so they
+        hold up on a busy photo without needing a heavy outline or a solid backing.
+   See DESIGN_SYSTEM.md "Homepage Hero" for the full rationale and what was tried first. */
 #hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   position: relative;
-}
-
-.hero-image {
-  position: relative;
-  margin-top: var(--nav-height);
-  height: 78vh;
-  min-height: 460px;
-  max-height: 820px;
   overflow: hidden;
 }
 
@@ -29,51 +33,74 @@
   /* Top-weighted: a plain center crop clips the crane's crown on wide viewports — both
      birds' heads sit in the top third of the square (1024×1024) source. */
   background-position: center 12%;
-  /* Client-requested: the mural is shown near-true brightness, not the dark nocturnal
-     treatment used elsewhere on the site. */
-  filter: brightness(1.05) saturate(1.12);
+  /* "Slightly darker" per client — was brightness(1.05); still clearly a bright, colorful
+     photograph, just with enough depth for text to sit on. */
+  filter: brightness(0.88) saturate(1.1);
   transform: scale(1.04);
   transition: transform 12s ease-out;
 }
 
-.hero-caption {
-  background: var(--ink);
-  border-top: 1px solid var(--brass-dark);
-  text-align: center;
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  /* Darkens, never lightens — a graduated grade (like burning in a photographic print),
+     not a flat overlay. Nearly invisible across the top where the birds' heads are;
+     builds toward the bottom where the subtitle and buttons sit. */
+  background:
+    radial-gradient(ellipse 62% 50% at 50% 46%, rgba(10, 8, 7, 0.32) 0%, transparent 70%),
+    linear-gradient(to bottom, rgba(10, 8, 7, 0.05) 0%, rgba(10, 8, 7, 0.32) 42%, rgba(10, 8, 7, 0.58) 78%, rgba(10, 8, 7, 0.66) 100%);
+  pointer-events: none;
 }
 
 .hero-content {
-  max-width: 700px;
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
   margin: 0 auto;
-  padding: var(--section-v) 1.5rem;
+  padding: 0 1.5rem;
+  padding-top: calc(var(--nav-height) + 40px);
 }
 
-.hero-content .label {
+.hero-label {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--brass-light);
+  /* Gold-on-gold is the one real risk here (the mural has warm mid-tones too) — sits in
+     the least-darkened part of the scrim (near the top, to keep the birds' heads bright),
+     so it gets a stronger shadow than the rest of the hero copy to compensate. */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 2px 16px rgba(0, 0, 0, 0.7);
+  margin-bottom: 1.5rem;
+  display: block;
   opacity: 0;
   animation: heroFadeUp 900ms 200ms var(--ease) forwards;
 }
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 7.5vw, 6.5rem);
-  font-weight: 300;
+  font-size: clamp(2.9rem, 7.5vw, 6.6rem);
+  font-weight: 600;
   font-style: italic;
   color: var(--ivory);
   line-height: 1.05;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 6px 28px rgba(0, 0, 0, 0.55), 0 2px 10px rgba(0, 0, 0, 0.5);
   opacity: 0;
   animation: heroFadeUp 900ms 400ms var(--ease) forwards;
 }
 
 .hero-sub {
-  font-family: var(--font-display);
-  font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+  font-family: var(--font-ui);
+  font-size: clamp(1.05rem, 1.7vw, 1.2rem);
   font-weight: 500;
-  font-style: italic;
-  line-height: 1.6;
-  color: var(--ivory-dark);
-  margin-bottom: 2.25rem;
-  max-width: 560px;
+  letter-spacing: 0.01em;
+  line-height: 1.7;
+  color: var(--ivory);
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.6);
+  margin-bottom: 2.5rem;
+  max-width: 520px;
   margin-left: auto;
   margin-right: auto;
   opacity: 0;
@@ -88,6 +115,16 @@
   opacity: 0;
   animation: heroFadeUp 900ms 800ms var(--ease) forwards;
 }
+/* Slimmer hero buttons — reduced vertical padding */
+.hero-ctas .btn {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+/* The scrim guarantees a dark-enough backdrop for the ghost button's normal (light
+   border/text) styling to hold up here — no bespoke override needed. */
+.hero-ctas .btn--ghost {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
 
 @keyframes heroFadeUp {
   from { opacity: 0; transform: translateY(18px); }
@@ -95,18 +132,7 @@
 }
 
 /* === Responsive === */
-@media (max-width: 900px) {
-  .hero-image {
-    height: 62vh;
-    min-height: 380px;
-  }
-}
-
 @media (max-width: 600px) {
-  .hero-image {
-    height: 48vh;
-    min-height: 320px;
-  }
   .hero-ctas { flex-direction: column; align-items: center; }
   .hero-ctas .btn { width: 100%; max-width: 280px; text-align: center; }
 }
