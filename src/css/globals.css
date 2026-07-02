@@ -54,6 +54,13 @@
 /* === RESET === */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* The [hidden] attribute is meant to always hide an element, but any author rule that
+   sets its own `display` (e.g. `.contact-form { display: flex }`) silently wins over the
+   browser's default [hidden] styling since both are equal-specificity author-vs-UA rules —
+   author styles always beat the UA stylesheet. Without this, toggling `el.hidden = true`
+   on a flex/grid element does nothing visually. */
+[hidden] { display: none !important; }
+
 html {
   font-size: 16px;
   scroll-behavior: smooth;

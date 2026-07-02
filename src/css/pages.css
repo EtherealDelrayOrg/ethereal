@@ -462,6 +462,15 @@
 .form-submit { margin-top: 0.5rem; }
 .form-submit .btn { width: 100%; }
 
+.form-status {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ivory);
+  padding: 1rem 0;
+}
+.form-status.is-error { color: var(--mosaic-rust); }
+
 @media (max-width: 800px) {
   .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
 }

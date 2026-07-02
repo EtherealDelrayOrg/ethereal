@@ -107,10 +107,18 @@
           <p style="font-family:var(--font-ui); font-size:12px; font-weight:500; letter-spacing:0.13em; text-transform:uppercase; color:var(--ivory-dark); margin-bottom:1.25rem;">
             Notify me when the shop opens
           </p>
-          <form class="email-form" aria-label="Email notification signup">
+          <!-- Netlify form — captured automatically once deployed (Site → Forms in the
+               Netlify dashboard). Email notifications to the client's inbox are a separate
+               one-time dashboard step; see docs/INTEGRATIONS.md. -->
+          <form class="email-form" name="shop-notify" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" aria-label="Email notification signup" novalidate>
+            <input type="hidden" name="form-name" value="shop-notify">
+            <p class="form-honeypot" hidden>
+              <label>Don't fill this out if you're human: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
+            </p>
             <input type="email" name="email" placeholder="Your email address" required aria-label="Email address">
             <button type="submit">Notify Me</button>
           </form>
+          <p class="form-status" role="status" aria-live="polite" hidden style="margin-top:1rem;"></p>
         </div>
 
       </div>
@@ -119,5 +127,45 @@
   </main>
 
   <script src="/src/js/main.js"></script>
+  <script>
+    // AJAX submit to Netlify Forms — keeps the visitor on the page instead of navigating
+    // to Netlify's generic success page.
+    (function () {
+      const form = document.querySelector('.email-form');
+      const status = document.querySelector('.form-status');
+      if (!form) return;
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const email = form.querySelector('input[type="email"]');
+        if (!email.value.trim()) {
+          email.style.borderColor = 'var(--mosaic-rust)';
+          return;
+        }
+        email.style.borderColor = '';
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+
+        fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(new FormData(form)).toString()
+        })
+          .then(() => {
+            form.hidden = true;
+            status.hidden = false;
+            status.textContent = "You're on the list — we'll email you when the shop opens.";
+          })
+          .catch(() => {
+            submitBtn.disabled = false;
+            status.hidden = false;
+            status.classList.add('is-error');
+            status.textContent = 'Something went wrong. Please try again in a moment.';
+          });
+      });
+    })();
+  </script>
 </body>
 </html>

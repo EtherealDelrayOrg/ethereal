@@ -100,12 +100,22 @@
             <span class="label">Send a Message</span>
             <h2 class="section-heading" style="margin-bottom:2rem; font-size:clamp(1.5rem,3vw,2.2rem);">We'd love<br>to hear from you.</h2>
 
-            <!-- Netlify form -->
+            <!-- Netlify form — captured automatically once deployed (Site → Forms in the
+                 Netlify dashboard). Email notifications to the client's inbox are a separate
+                 one-time dashboard step; see docs/INTEGRATIONS.md. -->
             <form
               class="contact-form"
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
               aria-label="Contact form"
               novalidate
             >
+              <input type="hidden" name="form-name" value="contact">
+              <p class="form-honeypot" hidden>
+                <label>Don't fill this out if you're human: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
+              </p>
 
               <div class="form-group">
                 <label for="name">Your Name</label>
@@ -139,6 +149,7 @@
                 <button type="submit" class="btn btn--filled">Send Message</button>
               </div>
             </form>
+            <p class="form-status" role="status" aria-live="polite" hidden></p>
           </div>
 
         </div>
@@ -218,10 +229,14 @@
     })();
   </script>
   <script>
-    // Basic client-side form validation feedback
+    // Client-side validation + AJAX submit to Netlify Forms (keeps the visitor on the
+    // page — no navigation to Netlify's generic success page).
     const form = document.querySelector('.contact-form');
+    const status = document.querySelector('.form-status');
     if (form) {
       form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
         const required = form.querySelectorAll('[required]');
         let valid = true;
         required.forEach(field => {
@@ -232,7 +247,27 @@
             field.style.borderColor = '';
           }
         });
-        if (!valid) e.preventDefault();
+        if (!valid) return;
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+
+        fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(new FormData(form)).toString()
+        })
+          .then(() => {
+            form.hidden = true;
+            status.hidden = false;
+            status.textContent = "Thank you — your message has been sent. We'll be in touch soon.";
+          })
+          .catch(() => {
+            submitBtn.disabled = false;
+            status.hidden = false;
+            status.classList.add('is-error');
+            status.textContent = 'Something went wrong sending your message. Please try again, or email us directly.';
+          });
       });
     }
   </script>

@@ -72,6 +72,33 @@ Resy also provides a modal or inline datepicker widget. Requires venue to be liv
 
 ---
 
+## Netlify Forms — Contact & Shop Signup
+
+**What it is:** Both `/pages/contact.html` (the contact form) and `/pages/shop.html` (the "notify me" email signup) submit through [Netlify Forms](https://docs.netlify.com/forms/setup/) — no backend, database, or third-party form service needed. Netlify's build system detects any `<form data-netlify="true">` in the static HTML at deploy time and starts capturing submissions automatically from then on.
+
+Each form:
+- Has a unique `name` (`contact`, `shop-notify`) and a matching hidden `<input name="form-name">`, both required for Netlify to register and correctly attribute submissions.
+- Has a honeypot field (`data-netlify-honeypot="bot-field"` + a hidden `bot-field` input) for basic spam filtering.
+- Submits via `fetch()` to `/` instead of a normal page navigation, so the visitor sees an inline confirmation message (`.form-status`) instead of being sent to Netlify's generic default success page.
+
+### Where submissions go
+
+**Storage is automatic** — as soon as the site is deployed with these forms in place, every submission is captured under **Site → Forms** in the Netlify dashboard (viewable individually, exportable as CSV). No further setup required for this part.
+
+**Emailing the client on every submission is a one-time manual step** (can't be done from code — it's an account/site-level setting):
+1. Netlify dashboard → the site → **Site configuration → Forms → Form notifications**
+2. **Add notification → Email notification**
+3. Choose the form (`contact` or `shop-notify`) and enter the client's email address
+4. Repeat for the other form
+
+Once set up, every new submission auto-emails that address with the submitted fields. Submissions remain stored in the dashboard either way, so nothing is lost if this step is skipped or done later.
+
+### Netlify Forms cost
+
+Free and unlimited on Netlify's current (credit-based) pricing plans. (Only older "legacy" Netlify plans meter form submissions — not a concern at this site's expected volume regardless.)
+
+---
+
 ## DNS & Domain (Wix → Netlify)
 
 See [TECH_STACK.md](TECH_STACK.md#connecting-wix-domain--netlify) for step-by-step DNS setup.
