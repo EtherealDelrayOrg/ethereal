@@ -63,6 +63,18 @@
     });
   }
 
+  // Logo: already on the homepage, so a normal <a href="/"> click would force a full
+  // reload for no reason. Just close the mobile menu (if open) instead of navigating.
+  const isHome = window.location.pathname === '/' || window.location.pathname === '/index.html';
+  if (isHome) {
+    document.querySelectorAll('.nav-logo').forEach(logo => {
+      logo.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeMobileNav();
+      });
+    });
+  }
+
   // Trap focus inside mobile nav when open
   if (mobileNav) {
     mobileNav.addEventListener('keydown', (e) => {

@@ -315,7 +315,13 @@ site-header, site-footer { display: contents; }
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  /* Above #mobile-nav (z-index 150) so the header — logo, hamburger/X toggle — stays
+     exactly where it is, on top of the overlay, when the mobile menu opens. Previously
+     the overlay had its own separate (left-aligned) logo, so opening the menu visibly
+     jumped the wordmark from centered to the side; keeping the same header element in
+     place throughout removes the jump entirely and the existing hamburger-to-X toggle
+     doubles as the close control, since it's now actually visible above the overlay. */
+  z-index: 160;
   height: var(--nav-height);
   /* Always opaque, not just after scroll — a fixed header should be legible against
      whatever's beneath it without depending on scroll position or page content (the
@@ -476,21 +482,6 @@ site-header, site-footer { display: contents; }
 }
 #mobile-nav a:hover { color: var(--ivory); }
 
-/* Brand logo pinned at the top of the open menu — taps back to home */
-#mobile-nav .mobile-nav-logo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: var(--nav-height);
-  display: flex;
-  align-items: center;
-  padding: 0 1.25rem;
-}
-#mobile-nav .mobile-nav-logo img {
-  width: clamp(150px, 44vw, 200px);
-  height: auto;
-  mix-blend-mode: screen;
-}
 #mobile-nav .mobile-reserve {
   font-family: var(--font-ui);
   font-size: 12px;
