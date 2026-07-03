@@ -47,7 +47,7 @@
   --transition-fast: 400ms cubic-bezier(0.25, 0.1, 0.1, 1);
 
   --container:    1320px;
-  --nav-height:   132px;
+  --nav-height:   112px;
   --section-v:    110px;
 }
 
@@ -349,9 +349,9 @@ site-header, site-footer { display: contents; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.7rem;
+  gap: 0.4rem;
   height: 100%;
-  padding: 0.75rem 2rem;
+  padding: 0.5rem 2rem;
   max-width: var(--container);
   margin: 0 auto;
 }
@@ -365,7 +365,7 @@ site-header, site-footer { display: contents; }
 .nav-logo:hover { opacity: 0.8; }
 .nav-logo .logo-img {
   height: auto;
-  width: clamp(230px, 27vw, 380px);
+  width: clamp(190px, 20vw, 250px);
   display: block;
   mix-blend-mode: screen;
 }
@@ -532,33 +532,37 @@ site-header, site-footer { display: contents; }
 #site-footer {
   background: var(--shadow);
   border-top: 1px solid var(--brass-dark);
-  padding: 64px 0 32px;
+  padding: 48px 0 28px;
 }
 
 .footer-grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 3rem;
-  margin-bottom: 3rem;
+  margin-bottom: 2.25rem;
 }
 
 .footer-logo {
   display: inline-block;
-  margin-bottom: 1.1rem;
+  margin-bottom: 1rem;
   transition: opacity var(--transition-fast);
 }
 .footer-logo:hover { opacity: 0.8; }
+/* logo-wordmark.png here, not logo.png — the latter is a 3:2 canvas where the wordmark
+   only occupies the middle band, so it rendered as a ~190px-tall mostly-empty box that
+   pushed the tagline far below the visible logo and inflated the whole footer. The
+   tightly-cropped wordmark keeps the brand block compact. */
 .footer-logo .logo-img {
   height: auto;
-  width: clamp(180px, 20vw, 280px);
+  width: clamp(170px, 18vw, 240px);
   display: block;
   mix-blend-mode: screen;
 }
 
-/* Was a flat 18px regardless of viewport — next to a wordmark that scales up to
-   280px on desktop, that read as an afterthought rather than a signature line.
-   Scales with the same logic as the logo above it; letter-spacing gives it a
-   touch more presence at the larger sizes. */
+/* Was a flat 18px regardless of viewport — next to a wordmark that scales with the
+   viewport, that read as an afterthought rather than a signature line. Scales with
+   the same logic as the logo above it; letter-spacing gives it a touch more presence
+   at the larger sizes. */
 .footer-tagline {
   font-family: var(--font-display);
   font-style: italic;
@@ -566,7 +570,7 @@ site-header, site-footer { display: contents; }
   font-size: clamp(1.05rem, 1.7vw, 1.375rem);
   letter-spacing: 0.015em;
   color: var(--ivory);
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.25rem;
 }
 
 .footer-social {
@@ -686,7 +690,7 @@ site-header, site-footer { display: contents; }
   :root {
     --container:  1440px;
     --section-v:  128px;
-    --nav-height: 150px;
+    --nav-height: 120px;
   }
 }
 

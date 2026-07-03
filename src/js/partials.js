@@ -49,7 +49,7 @@
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            <a href="/" class="footer-logo"><img src="/src/assets/images/logo.png" alt="Ethereal" class="logo-img"></a>
+            <a href="/" class="footer-logo"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal" class="logo-img"></a>
             <p class="footer-tagline">Where time breathes.</p>
             <div class="footer-social"><a href="https://www.instagram.com/etherealdelray" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a></div>
           </div>
