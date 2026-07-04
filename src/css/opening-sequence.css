@@ -7,9 +7,20 @@
   position: fixed;
   inset: 0;
   z-index: 500;
+  /* Extra mid-stops soften the falloff (fewer/farther-apart stops band visibly on
+     OLED phone screens at this low an opacity) and translateZ(0) forces this gradient
+     to composite as one stable layer before the animated children below are promoted
+     to their own layers — otherwise a child's layer can paint a visible seam/rectangle
+     against this background where the two layers meet. */
   background:
-    radial-gradient(ellipse 50% 50% at 50% 42%, rgba(224, 168, 90, 0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 60% at 50% 42%,
+      rgba(224, 168, 90, 0.09) 0%,
+      rgba(224, 168, 90, 0.05) 35%,
+      rgba(224, 168, 90, 0.02) 55%,
+      transparent 80%),
     var(--ink);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,14 +39,19 @@
   position: relative;
   width: min(360px, 68vw);
   height: min(360px, 68vw);
+  opacity: 0;
+  animation: seqClockReveal 1100ms 100ms var(--ease) forwards;
 }
 
+/* The scale/opacity reveal lives on the wrapper above, not here — animating
+   `transform` on the same element as `filter: drop-shadow` is a known Safari/iOS
+   bug where the glow gets clipped to the element's own box instead of blooming
+   outward, showing up as a hard-edged square around the glow. Keeping the filter
+   on a non-transformed element avoids it. */
 .seq-clock img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  opacity: 0;
-  animation: seqClockReveal 1100ms 100ms var(--ease) forwards;
   filter:
     drop-shadow(0 0 28px rgba(196, 145, 64, 0.32))
     drop-shadow(0 0 80px rgba(196, 145, 64, 0.14));

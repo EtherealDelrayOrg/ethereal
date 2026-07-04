@@ -47,7 +47,7 @@
   --transition-fast: 400ms cubic-bezier(0.25, 0.1, 0.1, 1);
 
   --container:    1320px;
-  --nav-height:   132px;
+  --nav-height:   112px;
   --section-v:    110px;
 }
 
@@ -219,7 +219,7 @@ address { font-style: normal; }
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  padding: 15px 32px;
+  padding: 12px 32px;
   border: 1px solid var(--brass);
   color: var(--brass);
   background: transparent;
@@ -315,16 +315,31 @@ site-header, site-footer { display: contents; }
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  /* Above #mobile-nav (z-index 150) so the header — logo, hamburger/X toggle — stays
+     exactly where it is, on top of the overlay, when the mobile menu opens. Previously
+     the overlay had its own separate (left-aligned) logo, so opening the menu visibly
+     jumped the wordmark from centered to the side; keeping the same header element in
+     place throughout removes the jump entirely and the existing hamburger-to-X toggle
+     doubles as the close control, since it's now actually visible above the overlay. */
+  z-index: 160;
   height: var(--nav-height);
-  /* Always opaque, not just after scroll — a fixed header should be legible against
-     whatever's beneath it without depending on scroll position or page content (the
-     homepage hero image included). One less thing that can go wrong per page. */
+  /* Transparent by default so the homepage hero can run edge-to-edge behind the nav.
+     The solid bar comes from either .nav-solid (subpages render with it permanently —
+     their content is ink-on-ink and would scroll illegibly under a transparent header)
+     or .is-scrolled (added by main.js past 80px on every page). The homepage's top-of-
+     hero legibility over the bright mural is handled in home.css: a top-weighted scrim
+     gradient plus per-element insurance on the nav links / Reserve pill / hamburger. */
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+#site-header.nav-solid,
+#site-header.is-scrolled {
   background: rgba(13, 11, 9, 0.92);
-  border-bottom: 1px solid var(--brass-dark);
+  border-bottom-color: var(--brass-dark);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  transition: background var(--transition), border-color var(--transition);
 }
 
 #site-header.nav-hidden {
@@ -343,9 +358,9 @@ site-header, site-footer { display: contents; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.7rem;
+  gap: 0.4rem;
   height: 100%;
-  padding: 0.75rem 2rem;
+  padding: 0.5rem 2rem;
   max-width: var(--container);
   margin: 0 auto;
 }
@@ -359,7 +374,7 @@ site-header, site-footer { display: contents; }
 .nav-logo:hover { opacity: 0.8; }
 .nav-logo .logo-img {
   height: auto;
-  width: clamp(230px, 27vw, 380px);
+  width: clamp(190px, 20vw, 250px);
   display: block;
   mix-blend-mode: screen;
 }
@@ -402,7 +417,7 @@ site-header, site-footer { display: contents; }
 
 .nav-reserve {
   border: 1px solid var(--brass-dark);
-  padding: 8px 18px;
+  padding: 7px 18px;
   border-radius: 2px;
   color: var(--brass) !important;
   transition: background var(--transition-fast), border-color var(--transition-fast) !important;
@@ -476,21 +491,6 @@ site-header, site-footer { display: contents; }
 }
 #mobile-nav a:hover { color: var(--ivory); }
 
-/* Brand logo pinned at the top of the open menu — taps back to home */
-#mobile-nav .mobile-nav-logo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: var(--nav-height);
-  display: flex;
-  align-items: center;
-  padding: 0 1.25rem;
-}
-#mobile-nav .mobile-nav-logo img {
-  width: clamp(150px, 44vw, 200px);
-  height: auto;
-  mix-blend-mode: screen;
-}
 #mobile-nav .mobile-reserve {
   font-family: var(--font-ui);
   font-size: 12px;
@@ -541,36 +541,45 @@ site-header, site-footer { display: contents; }
 #site-footer {
   background: var(--shadow);
   border-top: 1px solid var(--brass-dark);
-  padding: 64px 0 32px;
+  padding: 48px 0 28px;
 }
 
 .footer-grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 3rem;
-  margin-bottom: 3rem;
+  margin-bottom: 2.25rem;
 }
 
 .footer-logo {
   display: inline-block;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   transition: opacity var(--transition-fast);
 }
 .footer-logo:hover { opacity: 0.8; }
+/* logo-wordmark.png here, not logo.png — the latter is a 3:2 canvas where the wordmark
+   only occupies the middle band, so it rendered as a ~190px-tall mostly-empty box that
+   pushed the tagline far below the visible logo and inflated the whole footer. The
+   tightly-cropped wordmark keeps the brand block compact. */
 .footer-logo .logo-img {
   height: auto;
-  width: clamp(180px, 20vw, 280px);
+  width: clamp(170px, 18vw, 240px);
   display: block;
   mix-blend-mode: screen;
 }
 
+/* Was a flat 18px regardless of viewport — next to a wordmark that scales with the
+   viewport, that read as an afterthought rather than a signature line. Scales with
+   the same logic as the logo above it; letter-spacing gives it a touch more presence
+   at the larger sizes. */
 .footer-tagline {
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 500;
-  font-size: 18px;
+  font-size: clamp(1.05rem, 1.7vw, 1.375rem);
+  letter-spacing: 0.015em;
   color: var(--ivory);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .footer-social {
@@ -621,8 +630,15 @@ site-header, site-footer { display: contents; }
 .footer-contact a {
   transition: color var(--transition-fast);
 }
-.footer-contact a:hover { color: var(--brass); }
+/* :not() here matters — .footer-reserve-link is an <a> inside .footer-contact, so
+   without this exclusion this rule's extra `a` type selector out-specifies
+   .footer-reserve-link:hover's own color, silently winning and leaving brass-on-brass
+   (invisible) text once the link's background also turns gold on hover. */
+.footer-contact a:hover:not(.footer-reserve-link) { color: var(--brass); }
 
+/* Same metallic brass gradient as the landing hero's primary button (.btn--filled) —
+   a small warm highlight standing in for a light source, over a diagonal gradient
+   that runs light-dark-light-dark like brushed metal, rather than a flat fill. */
 .footer-reserve-link {
   display: inline-block;
   margin-top: 1.25rem;
@@ -631,16 +647,22 @@ site-header, site-footer { display: contents; }
   font-weight: 500;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--brass);
-  border: 1px solid var(--brass-dark);
-  padding: 11px 22px;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse 55% 45% at 28% 20%, rgba(255, 250, 235, 0.55) 0%, transparent 60%),
+    linear-gradient(155deg, #e2a95a 0%, #d98e26 28%, #b67820 52%, #c78323 72%, #a96f1e 100%);
+  border: 1px solid #a96f1e;
+  padding: 9px 22px;
   border-radius: 2px;
-  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  transition: box-shadow var(--transition-fast);
 }
 .footer-reserve-link:hover {
-  background: var(--brass);
-  color: var(--ink);
-  border-color: var(--brass);
+  background:
+    radial-gradient(ellipse 55% 45% at 28% 20%, rgba(255, 250, 235, 0.7) 0%, transparent 60%),
+    linear-gradient(155deg, #eecda0 0%, #e2a95a 28%, #c78323 52%, #d98e26 72%, #b67820 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+              0 0 32px rgba(217, 142, 38, 0.4);
 }
 
 .footer-bottom {
@@ -677,7 +699,7 @@ site-header, site-footer { display: contents; }
   :root {
     --container:  1440px;
     --section-v:  128px;
-    --nav-height: 150px;
+    --nav-height: 120px;
   }
 }
 
@@ -730,4 +752,90 @@ site-header, site-footer { display: contents; }
     padding-top: calc(var(--nav-height) + 48px);
     padding-bottom: 40px;
   }
+}
+
+/* ============================================================
+   COMING SOON — links to pages that aren't live yet (Menu's
+   Toast embed and Reservations' Resy widget are both still
+   placeholders — see docs/DESIGN_SYSTEM.md). Reads as normal,
+   inviting UI at rest; only on interaction does it reveal itself
+   as not-yet-available, rather than sitting permanently greyed
+   out and looking broken. The real href stays in the markup for
+   direct access; main.js blocks the click. */
+.is-coming-soon {
+  position: relative;
+  cursor: not-allowed;
+}
+.is-coming-soon:hover,
+.is-coming-soon:focus-visible,
+.is-coming-soon.is-touched {
+  filter: grayscale(1) brightness(0.8);
+}
+.coming-soon-badge {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translate(-50%, 6px);
+  white-space: nowrap;
+  background: rgba(13, 11, 9, 0.97);
+  /* The badge only ever shows while its parent link is greyed out by the
+     hover/touch filter above — and a filter paints the whole subtree, so the
+     badge is inevitably grayscaled with it. Ivory text and a mid-brass border
+     are chosen for how they look AFTER grayscale(1) brightness(0.8): light-grey
+     text and a visible grey outline, legible both over the bright hero mural
+     and against the near-black mobile-nav overlay (where a dark pill alone
+     disappears entirely). Don't "fix" these back to brass-on-dark without
+     re-checking the post-filter result. */
+  color: var(--ivory);
+  border: 1px solid var(--brass);
+  border-radius: 3px;
+  padding: 7px 14px;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 240ms var(--ease), transform 240ms var(--ease), visibility 240ms;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+  z-index: 30;
+}
+.coming-soon-badge::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--brass);
+}
+.is-coming-soon:hover .coming-soon-badge,
+.is-coming-soon:focus-visible .coming-soon-badge,
+.is-coming-soon.is-touched .coming-soon-badge {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+/* In the desktop masthead the nav row sits directly beneath the wordmark, so a
+   tooltip above the link lands on the logo. Flip it below the link there —
+   it drops over the mural/page instead. Footer and mobile keep the default. */
+#nav-links .coming-soon-badge {
+  bottom: auto;
+  top: calc(100% + 12px);
+  transform: translate(-50%, -6px);
+}
+#nav-links .coming-soon-badge::after {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: var(--brass);
+}
+/* The ID selector above out-specifies the class-based visible-state rule's
+   transform, so the settled position needs restating at the same specificity. */
+#nav-links .is-coming-soon:hover .coming-soon-badge,
+#nav-links .is-coming-soon:focus-visible .coming-soon-badge,
+#nav-links .is-coming-soon.is-touched .coming-soon-badge {
+  transform: translate(-50%, 0);
 }

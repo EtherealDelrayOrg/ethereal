@@ -52,9 +52,36 @@
      deliberately thinner margin than earlier rounds, traded for the brighter/lighter look
      the client asked for. */
   background:
-    radial-gradient(ellipse 62% 50% at 50% 46%, rgba(10, 8, 7, 0.38) 0%, transparent 70%),
-    linear-gradient(to bottom, rgba(10, 8, 7, 0.06) 0%, rgba(10, 8, 7, 0.37) 42%, rgba(10, 8, 7, 0.54) 78%, rgba(10, 8, 7, 0.62) 100%);
+    /* Top band: lets the header sit directly on the mural (it's transparent until
+       scrolled — see globals.css #site-header). Sized in px against the fixed
+       112/120px header and gone by 260px, which is above the crane's crown, so the
+       birds stay at full brightness. Strength chosen from sampled mural pixels: the
+       olive wallpaper behind the nav links needs ~0.53 here to clear 4.5:1 for the
+       13px links; the near-white magnolia petal at the right edge is hopeless for
+       text at any tasteful strength, so the Reserve pill (which sits over it) gets
+       its own solid backing below instead of this gradient carrying that case. */
+    linear-gradient(to bottom, rgba(10, 8, 7, 0.66) 0, rgba(10, 8, 7, 0.5) 112px, rgba(10, 8, 7, 0.12) 190px, transparent 260px),
+    radial-gradient(ellipse 62% 50% at 50% 46%, rgba(10, 8, 7, 0.3) 0%, transparent 70%),
+    linear-gradient(to bottom, rgba(10, 8, 7, 0.05) 0%, rgba(10, 8, 7, 0.29) 42%, rgba(10, 8, 7, 0.45) 78%, rgba(10, 8, 7, 0.52) 100%);
   pointer-events: none;
+}
+
+/* Homepage, pre-scroll: the header is transparent over the mural (globals.css). The
+   scrim gradient above carries most of the legibility; these are the per-element
+   insurance pieces for the spots it can't cover at a tasteful strength. All of it
+   stops applying the moment .is-scrolled adds the solid bar. */
+#site-header:not(.is-scrolled) #nav-links a {
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55), 0 1px 14px rgba(0, 0, 0, 0.35);
+}
+#site-header:not(.is-scrolled) .nav-reserve {
+  /* Sits over the brightest part of the mural (a near-white magnolia petal at the
+     right edge of the links row) — gold text there needs ~0.83 combined darkness to
+     pass contrast, far beyond what the scrim can do without reading as a dark bar.
+     A filled pill is already part of the design language, so it carries its own. */
+  background: rgba(10, 8, 7, 0.7);
+}
+#site-header:not(.is-scrolled) .hamburger-line {
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.6));
 }
 
 .hero-content {
@@ -85,12 +112,15 @@
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(2.9rem, 7.5vw, 6.6rem);
+  /* Mobile floor untouched (still hits the 2.9rem min below ~600px); raised the
+     desktop ceiling and slope so it reads bigger on wide viewports specifically
+     (bumped twice on request: 7.5vw/6.6rem → 7.8vw/7.2rem → 8.1vw/7.7rem). */
+  font-size: clamp(2.9rem, 8.1vw, 7.7rem);
   font-weight: 600;
   font-style: italic;
   color: var(--ivory);
   line-height: 1.05;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.85rem;
   text-shadow: 0 6px 28px rgba(0, 0, 0, 0.55), 0 2px 10px rgba(0, 0, 0, 0.5);
   opacity: 0;
   animation: heroFadeUp 900ms 400ms var(--ease) forwards;
@@ -104,7 +134,9 @@
   line-height: 1.7;
   color: var(--ivory);
   text-shadow: 0 3px 14px rgba(0, 0, 0, 0.6);
-  margin-bottom: 2.5rem;
+  /* Generous gap before the CTAs — with the title at full desktop size the
+     buttons sitting close underneath read claustrophobic (client feedback). */
+  margin-bottom: 3.25rem;
   max-width: 520px;
   margin-left: auto;
   margin-right: auto;
@@ -122,8 +154,8 @@
 }
 /* Slimmer hero buttons — reduced vertical padding */
 .hero-ctas .btn {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 /* The scrim guarantees a dark-enough backdrop for the ghost button's normal (light
    border/text) styling to hold up here — no bespoke override needed. */

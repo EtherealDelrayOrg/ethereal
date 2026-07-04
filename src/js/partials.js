@@ -17,7 +17,7 @@
   'use strict';
 
   const HEADER = (opening) => `
-    <header id="site-header" class="${opening ? 'nav-hidden' : 'is-scrolled'}" role="banner">
+    <header id="site-header" class="${opening ? 'nav-hidden' : 'nav-solid'}" role="banner">
       <div class="nav-inner">
         <a href="/" class="nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal" class="logo-img"></a>
 
@@ -42,7 +42,6 @@
     </header>
 
     <div id="mobile-nav" role="dialog" aria-label="Navigation menu" aria-modal="true">
-      <a href="/" class="mobile-nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal"></a>
       <a href="/pages/menu.html">Menu</a>
       <a href="/pages/gallery.html">Gallery</a>
       <a href="/pages/about.html">About Us</a>
@@ -58,7 +57,7 @@
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            <a href="/" class="footer-logo"><img src="/src/assets/images/logo.png" alt="Ethereal" class="logo-img"></a>
+            <a href="/" class="footer-logo"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal" class="logo-img"></a>
             <p class="footer-tagline">Where time breathes.</p>
             <div class="footer-social"><a href="https://www.instagram.com/etherealdelray" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a></div>
           </div>
