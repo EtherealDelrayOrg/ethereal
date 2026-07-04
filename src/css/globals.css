@@ -323,14 +323,23 @@ site-header, site-footer { display: contents; }
      doubles as the close control, since it's now actually visible above the overlay. */
   z-index: 160;
   height: var(--nav-height);
-  /* Always opaque, not just after scroll — a fixed header should be legible against
-     whatever's beneath it without depending on scroll position or page content (the
-     homepage hero image included). One less thing that can go wrong per page. */
+  /* Transparent by default so the homepage hero can run edge-to-edge behind the nav.
+     The solid bar comes from either .nav-solid (subpages render with it permanently —
+     their content is ink-on-ink and would scroll illegibly under a transparent header)
+     or .is-scrolled (added by main.js past 80px on every page). The homepage's top-of-
+     hero legibility over the bright mural is handled in home.css: a top-weighted scrim
+     gradient plus per-element insurance on the nav links / Reserve pill / hamburger. */
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+#site-header.nav-solid,
+#site-header.is-scrolled {
   background: rgba(13, 11, 9, 0.92);
-  border-bottom: 1px solid var(--brass-dark);
+  border-bottom-color: var(--brass-dark);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  transition: background var(--transition), border-color var(--transition);
 }
 
 #site-header.nav-hidden {

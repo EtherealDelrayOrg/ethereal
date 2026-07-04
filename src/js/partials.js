@@ -17,7 +17,7 @@
   'use strict';
 
   const HEADER = (opening) => `
-    <header id="site-header" class="${opening ? 'nav-hidden' : 'is-scrolled'}" role="banner">
+    <header id="site-header" class="${opening ? 'nav-hidden' : 'nav-solid'}" role="banner">
       <div class="nav-inner">
         <a href="/" class="nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal" class="logo-img"></a>
 
