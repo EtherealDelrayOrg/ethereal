@@ -56,9 +56,11 @@
     if (e.key === 'Escape') closeMobileNav();
   });
 
-  // Close when a link is clicked
+  // Close when a link is clicked — except coming-soon links, which need the menu to
+  // stay open long enough to show their greyed-out/tooltip feedback (see below).
   if (mobileNav) {
     mobileNav.querySelectorAll('a').forEach(link => {
+      if (link.classList.contains('is-coming-soon')) return;
       link.addEventListener('click', closeMobileNav);
     });
   }
@@ -91,6 +93,19 @@
       }
     });
   }
+
+  // ── Coming-soon links (Menu + Reservations aren't live yet) ──────
+  // Real hrefs stay in the markup (direct URL access still works); this just
+  // stops the click from navigating and gives touch devices a way to see the
+  // tooltip, since :hover doesn't fire reliably on tap.
+  document.querySelectorAll('.is-coming-soon').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      link.classList.add('is-touched');
+      clearTimeout(link._comingSoonTimer);
+      link._comingSoonTimer = setTimeout(() => link.classList.remove('is-touched'), 2200);
+    });
+  });
 
   // ── Active nav link ───────────────────────────────────────
   const currentPath = window.location.pathname;

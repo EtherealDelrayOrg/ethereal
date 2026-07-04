@@ -753,3 +753,60 @@ site-header, site-footer { display: contents; }
     padding-bottom: 40px;
   }
 }
+
+/* ============================================================
+   COMING SOON — links to pages that aren't live yet (Menu's
+   Toast embed and Reservations' Resy widget are both still
+   placeholders — see docs/DESIGN_SYSTEM.md). Reads as normal,
+   inviting UI at rest; only on interaction does it reveal itself
+   as not-yet-available, rather than sitting permanently greyed
+   out and looking broken. The real href stays in the markup for
+   direct access; main.js blocks the click. */
+.is-coming-soon {
+  position: relative;
+  cursor: not-allowed;
+}
+.is-coming-soon:hover,
+.is-coming-soon:focus-visible,
+.is-coming-soon.is-touched {
+  filter: grayscale(1) brightness(0.8);
+}
+.coming-soon-badge {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translate(-50%, 6px);
+  white-space: nowrap;
+  background: rgba(13, 11, 9, 0.97);
+  color: var(--brass-light);
+  border: 1px solid var(--brass-dark);
+  border-radius: 3px;
+  padding: 7px 14px;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 240ms var(--ease), transform 240ms var(--ease), visibility 240ms;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+  z-index: 30;
+}
+.coming-soon-badge::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--brass-dark);
+}
+.is-coming-soon:hover .coming-soon-badge,
+.is-coming-soon:focus-visible .coming-soon-badge,
+.is-coming-soon.is-touched .coming-soon-badge {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}

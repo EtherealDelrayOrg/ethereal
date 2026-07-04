@@ -31,7 +31,7 @@
           <ul role="list">
             <li><a href="/pages/gallery.html">Gallery</a></li>
             <li><a href="/pages/about.html">About Us</a></li>
-            <li><a href="/pages/reservations.html" class="nav-reserve">Reserve</a></li>
+            <li><a href="/pages/reservations.html" class="nav-reserve is-coming-soon" aria-disabled="true" title="Coming soon">Reserve<span class="coming-soon-badge">Coming Soon</span></a></li>
           </ul>
         </nav>
       </div>
@@ -40,7 +40,7 @@
     <div id="mobile-nav" role="dialog" aria-label="Navigation menu" aria-modal="true">
       <a href="/pages/gallery.html">Gallery</a>
       <a href="/pages/about.html">About Us</a>
-      <a href="/pages/reservations.html" class="mobile-reserve">Reserve a Table</a>
+      <a href="/pages/reservations.html" class="mobile-reserve is-coming-soon" aria-disabled="true" title="Coming soon">Reserve a Table<span class="coming-soon-badge">Coming Soon</span></a>
     </div>
   `;
 
@@ -72,7 +72,7 @@
             <h3>Contact</h3>
             <p><a href="mailto:info@etherealdelray.com">info@etherealdelray.com</a></p>
             <p><a href="tel:+15612702738">(561) 270-2738</a></p>
-            <a href="/pages/reservations.html" class="footer-reserve-link">Reserve a Table</a>
+            <a href="/pages/reservations.html" class="footer-reserve-link is-coming-soon" aria-disabled="true" title="Coming soon">Reserve a Table<span class="coming-soon-badge">Coming Soon</span></a>
           </div>
         </div>
         <div class="footer-bottom">
