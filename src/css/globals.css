@@ -374,7 +374,10 @@ site-header, site-footer { display: contents; }
 .nav-logo:hover { opacity: 0.8; }
 .nav-logo .logo-img {
   height: auto;
-  width: clamp(190px, 20vw, 250px);
+  /* Sized against the fixed masthead: at the 320px cap the ~4.76:1 wordmark is
+     ~67px tall — with the links row + gap that's ~109px of the 112px bar, i.e.
+     the practical ceiling. Don't raise the cap without raising --nav-height. */
+  width: clamp(240px, 25vw, 320px);
   display: block;
   mix-blend-mode: screen;
 }
@@ -719,7 +722,9 @@ site-header, site-footer { display: contents; }
     gap: 0;
     padding: 0 1.25rem;
   }
-  .nav-logo .logo-img { width: clamp(150px, 44vw, 200px); }
+  /* 60vw keeps ~19px clearance to the hamburger on a 375px phone; the 250px cap
+     does the same on wider phones. ~47px tall in the 64px bar. */
+  .nav-logo .logo-img { width: clamp(190px, 60vw, 250px); }
 
   .nav-toggle {
     display: flex;
