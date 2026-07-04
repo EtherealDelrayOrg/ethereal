@@ -61,8 +61,8 @@
        text at any tasteful strength, so the Reserve pill (which sits over it) gets
        its own solid backing below instead of this gradient carrying that case. */
     linear-gradient(to bottom, rgba(10, 8, 7, 0.66) 0, rgba(10, 8, 7, 0.5) 112px, rgba(10, 8, 7, 0.12) 190px, transparent 260px),
-    radial-gradient(ellipse 62% 50% at 50% 46%, rgba(10, 8, 7, 0.38) 0%, transparent 70%),
-    linear-gradient(to bottom, rgba(10, 8, 7, 0.06) 0%, rgba(10, 8, 7, 0.37) 42%, rgba(10, 8, 7, 0.54) 78%, rgba(10, 8, 7, 0.62) 100%);
+    radial-gradient(ellipse 62% 50% at 50% 46%, rgba(10, 8, 7, 0.3) 0%, transparent 70%),
+    linear-gradient(to bottom, rgba(10, 8, 7, 0.05) 0%, rgba(10, 8, 7, 0.29) 42%, rgba(10, 8, 7, 0.45) 78%, rgba(10, 8, 7, 0.52) 100%);
   pointer-events: none;
 }
 
@@ -112,12 +112,14 @@
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(2.9rem, 7.5vw, 6.6rem);
+  /* Mobile floor untouched (still hits the 2.9rem min below ~600px); raised the
+     desktop ceiling and slope so it reads bigger on wide viewports specifically. */
+  font-size: clamp(2.9rem, 7.8vw, 7.2rem);
   font-weight: 600;
   font-style: italic;
   color: var(--ivory);
   line-height: 1.05;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.85rem;
   text-shadow: 0 6px 28px rgba(0, 0, 0, 0.55), 0 2px 10px rgba(0, 0, 0, 0.5);
   opacity: 0;
   animation: heroFadeUp 900ms 400ms var(--ease) forwards;
