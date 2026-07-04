@@ -113,8 +113,9 @@
 .hero-title {
   font-family: var(--font-display);
   /* Mobile floor untouched (still hits the 2.9rem min below ~600px); raised the
-     desktop ceiling and slope so it reads bigger on wide viewports specifically. */
-  font-size: clamp(2.9rem, 7.8vw, 7.2rem);
+     desktop ceiling and slope so it reads bigger on wide viewports specifically
+     (bumped twice on request: 7.5vw/6.6rem → 7.8vw/7.2rem → 8.1vw/7.7rem). */
+  font-size: clamp(2.9rem, 8.1vw, 7.7rem);
   font-weight: 600;
   font-style: italic;
   color: var(--ivory);
@@ -133,7 +134,9 @@
   line-height: 1.7;
   color: var(--ivory);
   text-shadow: 0 3px 14px rgba(0, 0, 0, 0.6);
-  margin-bottom: 2.5rem;
+  /* Generous gap before the CTAs — with the title at full desktop size the
+     buttons sitting close underneath read claustrophobic (client feedback). */
+  margin-bottom: 3.25rem;
   max-width: 520px;
   margin-left: auto;
   margin-right: auto;
@@ -151,8 +154,8 @@
 }
 /* Slimmer hero buttons — reduced vertical padding */
 .hero-ctas .btn {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 /* The scrim guarantees a dark-enough backdrop for the ghost button's normal (light
    border/text) styling to hold up here — no bespoke override needed. */
