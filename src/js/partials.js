@@ -29,8 +29,8 @@
 
         <nav id="nav-links" aria-label="Main navigation">
           <ul role="list">
-            <li><a href="/pages/gallery.html">Gallery</a></li>
-            <li><a href="/pages/about.html">About Us</a></li>
+            <li><a href="/pages/gallery.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">Gallery<span class="coming-soon-badge">Coming Soon</span></a></li>
+            <li><a href="/pages/about.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">About Us<span class="coming-soon-badge">Coming Soon</span></a></li>
             <li><a href="/pages/reservations.html" class="nav-reserve is-coming-soon" aria-disabled="true" title="Coming soon">Reserve<span class="coming-soon-badge">Coming Soon</span></a></li>
           </ul>
         </nav>
@@ -38,8 +38,8 @@
     </header>
 
     <div id="mobile-nav" role="dialog" aria-label="Navigation menu" aria-modal="true">
-      <a href="/pages/gallery.html">Gallery</a>
-      <a href="/pages/about.html">About Us</a>
+      <a href="/pages/gallery.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">Gallery<span class="coming-soon-badge">Coming Soon</span></a>
+      <a href="/pages/about.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">About Us<span class="coming-soon-badge">Coming Soon</span></a>
       <a href="/pages/reservations.html" class="mobile-reserve is-coming-soon" aria-disabled="true" title="Coming soon">Reserve a Table<span class="coming-soon-badge">Coming Soon</span></a>
     </div>
   `;
@@ -56,8 +56,8 @@
           <nav class="footer-nav" aria-label="Footer navigation">
             <h3>Navigate</h3>
             <ul role="list">
-              <li><a href="/pages/gallery.html">Gallery</a></li>
-              <li><a href="/pages/about.html">About Us</a></li>
+              <li><a href="/pages/gallery.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">Gallery<span class="coming-soon-badge">Coming Soon</span></a></li>
+              <li><a href="/pages/about.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">About Us<span class="coming-soon-badge">Coming Soon</span></a></li>
             </ul>
           </nav>
           <div class="footer-visit">

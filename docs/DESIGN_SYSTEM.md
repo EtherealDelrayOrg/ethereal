@@ -187,6 +187,18 @@ This is a scoped exception, not a new site-wide direction — every other sectio
 
 ---
 
+## Coming-Soon Links (temporary, pre-launch)
+
+While a page isn't ready for visitors, every link/button pointing to it gets `class="is-coming-soon"` plus a `<span class="coming-soon-badge">Coming Soon</span>` child (see `globals.css`; `main.js` blocks the click and adds a 2.2s `.is-touched` state so tap devices get the same feedback as `:hover`). **Currently applied to: Menu, Reservations, Gallery, and About Us** — the nav, mobile overlay, and footer versions all live in `partials.js`, so the header/footer only ever need editing there. Real `href`s stay in the markup (direct URL access still works); un-gating a page when it launches is just deleting the class + badge span from its links.
+
+Design decisions worth keeping:
+- **Rest state is untouched** — links look normal and inviting until interacted with; a permanently greyed nav reads as broken, not curated.
+- **On hover/tap the whole link greys** (`filter: grayscale(1) brightness(0.8)`) and the badge tooltip appears. Because a CSS filter paints the element's entire subtree, the badge inside the link is *inevitably* grayscaled with it — so the badge's authored colors (ivory text, mid-brass border on a near-black pill) are chosen for how they look **after** the filter: light-grey text with a visible grey outline, legible both over the bright hero mural and against the near-black mobile-nav overlay (where a dark pill alone vanishes). Don't "restore" it to brass-on-dark without re-checking the post-filter result.
+- **The badge flips below the link inside `#nav-links`** (scoped override in `globals.css`) — in the desktop masthead the menu row sits directly beneath the wordmark, so an above-the-link tooltip lands on the logo. Everywhere else (footer, mobile overlay, in-page CTAs) it stays above. Note the specificity trap: the `#nav-links`-scoped rules out-rank the class-based visible-state rule, so the settled `transform` is restated at ID specificity there.
+- **The mobile menu deliberately stays open** when a coming-soon link is tapped (`main.js` skips its close handler for them) — otherwise the overlay would dismiss before the feedback is seen.
+
+---
+
 ## Ornament & Iconography
 
 - The dotted **`ė`** is the house ornament. Use it (or a single mosaic-style dot) as the centerpiece of dividers and as list markers, replacing generic diamonds/bullets.

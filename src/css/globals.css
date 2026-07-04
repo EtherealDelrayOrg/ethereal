@@ -778,8 +778,16 @@ site-header, site-footer { display: contents; }
   transform: translate(-50%, 6px);
   white-space: nowrap;
   background: rgba(13, 11, 9, 0.97);
-  color: var(--brass-light);
-  border: 1px solid var(--brass-dark);
+  /* The badge only ever shows while its parent link is greyed out by the
+     hover/touch filter above — and a filter paints the whole subtree, so the
+     badge is inevitably grayscaled with it. Ivory text and a mid-brass border
+     are chosen for how they look AFTER grayscale(1) brightness(0.8): light-grey
+     text and a visible grey outline, legible both over the bright hero mural
+     and against the near-black mobile-nav overlay (where a dark pill alone
+     disappears entirely). Don't "fix" these back to brass-on-dark without
+     re-checking the post-filter result. */
+  color: var(--ivory);
+  border: 1px solid var(--brass);
   border-radius: 3px;
   padding: 7px 14px;
   font-family: var(--font-ui);
@@ -801,12 +809,33 @@ site-header, site-footer { display: contents; }
   left: 50%;
   transform: translateX(-50%);
   border: 5px solid transparent;
-  border-top-color: var(--brass-dark);
+  border-top-color: var(--brass);
 }
 .is-coming-soon:hover .coming-soon-badge,
 .is-coming-soon:focus-visible .coming-soon-badge,
 .is-coming-soon.is-touched .coming-soon-badge {
   opacity: 1;
   visibility: visible;
+  transform: translate(-50%, 0);
+}
+/* In the desktop masthead the nav row sits directly beneath the wordmark, so a
+   tooltip above the link lands on the logo. Flip it below the link there —
+   it drops over the mural/page instead. Footer and mobile keep the default. */
+#nav-links .coming-soon-badge {
+  bottom: auto;
+  top: calc(100% + 12px);
+  transform: translate(-50%, -6px);
+}
+#nav-links .coming-soon-badge::after {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: var(--brass);
+}
+/* The ID selector above out-specifies the class-based visible-state rule's
+   transform, so the settled position needs restating at the same specificity. */
+#nav-links .is-coming-soon:hover .coming-soon-badge,
+#nav-links .is-coming-soon:focus-visible .coming-soon-badge,
+#nav-links .is-coming-soon.is-touched .coming-soon-badge {
   transform: translate(-50%, 0);
 }
