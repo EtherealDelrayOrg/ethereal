@@ -65,6 +65,14 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* The actual bug: mobile rubber-band/elastic overscroll let you scroll past the
+     real end of the document (past the footer/copyright) into whatever's behind
+     the page. overscroll-behavior-y: none is what stops that scroll from
+     happening at all (Chrome/Android + Safari 16+). The background match below
+     is just a fallback in case any bounce still slips through on an older
+     browser — it was never the actual fix, just what color you'd see during it. */
+  background: var(--ink);
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -75,6 +83,7 @@ body {
   font-weight: 400;
   line-height: 1.85;
   overflow-x: hidden;
+  overscroll-behavior-y: none;
 }
 
 img, video, svg { display: block; max-width: 100%; }
