@@ -170,6 +170,16 @@
 
 /* === Responsive === */
 @media (max-width: 600px) {
-  .hero-ctas { flex-direction: column; align-items: center; }
-  .hero-ctas .btn { width: 100%; max-width: 280px; text-align: center; }
+  .hero-ctas { flex-direction: column; align-items: center; gap: 0.8rem; }
+  /* Compact pills, not full-width bars (client felt the 280px versions read as
+     oversized blocks over the mural). Equal fixed width keeps the stacked pair
+     tidy; ~32px tall stays comfortably tappable. */
+  .hero-ctas .btn {
+    width: 100%;
+    max-width: 220px;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    padding: 8px 20px;
+  }
 }
