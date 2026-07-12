@@ -15,6 +15,7 @@
   const header  = document.getElementById('site-header');
   const skipBtn = document.querySelector('.seq-skip');
   const progress = document.querySelector('.seq-progress-fill');
+  const bloom   = document.getElementById('seq-bloom');
 
   if (!seq || !content) return;
 
@@ -76,7 +77,18 @@
 
   function startCrossfade() {
     seq.classList.add('is-fading');
+    // .is-visible does triple duty (all keyed to this same moment so the blend
+    // reads as one motion): fades the site in, starts the hero entrance cascade
+    // (home.css gates the heroFadeUp animations on it), and kicks the hero
+    // background's slow 1 → 1.04 drift that carries the video's push-in
+    // direction across the seam.
     content.classList.add('is-visible');
+    // Light-bloom bridge: fast swell, then the slow dissolve runs over the
+    // crossfade window (asymmetric transition speeds live in the CSS).
+    if (bloom) {
+      bloom.classList.add('is-active');
+      setTimeout(() => bloom.classList.remove('is-active'), 420);
+    }
     // Reveal nav
     if (header) {
       header.classList.remove('nav-hidden');
@@ -90,6 +102,13 @@
   function revealSite() {
     // Remove seq from DOM entirely to free memory
     if (seq && seq.parentNode) seq.parentNode.removeChild(seq);
+    // Bloom's dissolve (420ms swell + 1150ms fade) outlives the 1400ms
+    // crossfade by ~170ms — removing it here would clip the tail visibly.
+    if (bloom) {
+      setTimeout(() => {
+        if (bloom.parentNode) bloom.parentNode.removeChild(bloom);
+      }, 400);
+    }
     content.classList.add('is-visible');
     content.removeAttribute('aria-hidden');
     if (header) {

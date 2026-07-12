@@ -127,6 +127,35 @@
   transition: width linear;
 }
 
+/* === Light-bloom bridge ===
+   A warm wash that swells at crossfade-start and dissolves over the blend.
+   The opening video ends on warm light through stained glass; this bloom makes
+   the handoff read as passing THROUGH that light into the site, and it masks
+   the scale mismatch between the video's macro close-up and the wide hero.
+   Sits above both the sequence overlay (z 500) and the site, ignores clicks.
+   In/out speeds are asymmetric: fast swell, slow dissolve. */
+.seq-bloom {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  pointer-events: none;
+  background: radial-gradient(ellipse 85% 75% at 50% 45%,
+    rgba(232, 186, 110, 0.5) 0%,
+    rgba(224, 168, 90, 0.28) 38%,
+    rgba(224, 168, 90, 0.08) 62%,
+    transparent 82%);
+  opacity: 0;
+  transition: opacity 1150ms ease;
+}
+.seq-bloom.is-active {
+  opacity: 1;
+  transition: opacity 320ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seq-bloom { display: none !important; }
+}
+
 /* === Keyframes === */
 @keyframes seqClockReveal {
   from { opacity: 0; transform: scale(0.93); }
