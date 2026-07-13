@@ -1,21 +1,25 @@
 /* ============================================================
    OPENING SEQUENCE
-   Orchestrates CSS animation placeholder → crossfade → site reveal
-   When AI video is ready: replace SVG clock with <video> element
+   Desktop: full-bleed AI video, crossfade timed off video playback.
+   Mobile (no 9:16 clip yet) + video-load failure: CSS clock placeholder
+   on a fixed timer. Both paths converge on the same startCrossfade().
    ============================================================ */
 
 (function () {
   'use strict';
 
-  const SEQUENCE_DURATION = 3000; // ms — total time before crossfade starts
+  const SEQUENCE_DURATION = 3000; // ms — fallback-path time before crossfade starts
   const CROSSFADE_DURATION = 1400; // ms — must match CSS transition
+  const VIDEO_CROSSFADE_LEAD = 1.4; // s — start crossfade this long before video ends
 
-  const seq     = document.getElementById('opening-sequence');
-  const content = document.getElementById('site-content');
-  const header  = document.getElementById('site-header');
-  const skipBtn = document.querySelector('.seq-skip');
-  const progress = document.querySelector('.seq-progress-fill');
-  const bloom   = document.getElementById('seq-bloom');
+  const seq          = document.getElementById('opening-sequence');
+  const content       = document.getElementById('site-content');
+  const header        = document.getElementById('site-header');
+  const skipBtn       = document.querySelector('.seq-skip');
+  const progress      = document.querySelector('.seq-progress-fill');
+  const bloom         = document.getElementById('seq-bloom');
+  const video         = document.getElementById('opening-video');
+  const clockFallback = document.getElementById('seq-clock-fallback');
 
   if (!seq || !content) return;
 
@@ -25,57 +29,98 @@
     return;
   }
 
-  // ── Progress bar ──────────────────────────────────────────
-  if (progress) {
-    progress.style.transitionDuration = SEQUENCE_DURATION + 'ms';
-    // Trigger on next frame so transition fires
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        progress.style.width = '100%';
-      });
-    });
-  }
+  let autoTimer = null;
+  let crossfadeStarted = false;
+  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
 
-  // ── Auto-start crossfade after duration ───────────────────
-  let autoTimer = setTimeout(startCrossfade, SEQUENCE_DURATION);
+  if (video && isDesktop) {
+    playVideoSequence();
+  } else {
+    startFallbackTimer();
+  }
 
   // ── Skip button ───────────────────────────────────────────
   if (skipBtn) {
-    skipBtn.addEventListener('click', () => {
-      clearTimeout(autoTimer);
-      startCrossfade();
-    });
-    // Keyboard: space or enter
+    skipBtn.addEventListener('click', skip);
     skipBtn.addEventListener('keydown', (e) => {
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
-        clearTimeout(autoTimer);
-        startCrossfade();
+        skip();
       }
     });
   }
 
-  // ── When video is wired up, use this instead of auto-timer ─
-  // const video = document.getElementById('opening-video');
-  // if (video) {
-  //   const isMobile = window.matchMedia('(max-width: 767px)').matches;
-  //   const src = isMobile ? '/src/assets/video/opening-mobile' : '/src/assets/video/opening-desktop';
-  //   const webm = document.createElement('source');
-  //   webm.src = src + '.webm'; webm.type = 'video/webm';
-  //   const mp4 = document.createElement('source');
-  //   mp4.src = src + '.mp4'; mp4.type = 'video/mp4';
-  //   video.prepend(webm); video.prepend(mp4);
-  //   video.addEventListener('timeupdate', () => {
-  //     if (video.duration && (video.duration - video.currentTime) <= 1.5) {
-  //       clearTimeout(autoTimer);
-  //       startCrossfade();
-  //     }
-  //   });
-  //   video.addEventListener('ended', revealSite);
-  //   video.play().catch(() => startCrossfade()); // autoplay blocked → skip
-  // }
+  function skip() {
+    if (autoTimer) clearTimeout(autoTimer);
+    startCrossfade();
+  }
+
+  // ── Fallback path: CSS clock on a fixed timer ──────────────
+  function startFallbackTimer() {
+    if (progress) {
+      progress.style.transitionDuration = SEQUENCE_DURATION + 'ms';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          progress.style.width = '100%';
+        });
+      });
+    }
+    autoTimer = setTimeout(startCrossfade, SEQUENCE_DURATION);
+  }
+
+  // ── Video path: desktop only (no mobile 9:16 clip yet) ─────
+  function playVideoSequence() {
+    if (clockFallback) clockFallback.style.display = 'none';
+
+    const src = '/src/assets/video/opening-desktop';
+    const webm = document.createElement('source');
+    webm.src = src + '.webm'; webm.type = 'video/webm';
+    const mp4 = document.createElement('source');
+    mp4.src = src + '.mp4'; mp4.type = 'video/mp4';
+    video.appendChild(webm);
+    video.appendChild(mp4);
+    video.muted = true;
+    video.defaultMuted = true;
+
+    video.addEventListener('loadedmetadata', () => {
+      if (progress && video.duration) {
+        progress.style.transitionDuration = (video.duration * 1000) + 'ms';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            progress.style.width = '100%';
+          });
+        });
+      }
+    });
+
+    video.addEventListener('timeupdate', () => {
+      if (!crossfadeStarted && video.duration &&
+          (video.duration - video.currentTime) <= VIDEO_CROSSFADE_LEAD) {
+        startCrossfade();
+      }
+    });
+    video.addEventListener('ended', () => {
+      if (!crossfadeStarted) startCrossfade();
+    });
+    // Safety net: if playback starts but the browser later pauses it mid-stream
+    // (e.g. tab backgrounded), don't strand the user on a frozen frame
+    video.addEventListener('pause', () => {
+      if (!crossfadeStarted && !video.ended) startCrossfade();
+    });
+
+    video.play().then(() => {
+      video.classList.add('is-active');
+    }).catch(() => {
+      // Autoplay blocked or clip failed to load — fall back to the static clock
+      video.classList.remove('is-active');
+      if (clockFallback) clockFallback.style.display = '';
+      startFallbackTimer();
+    });
+  }
 
   function startCrossfade() {
+    if (crossfadeStarted) return;
+    crossfadeStarted = true;
     seq.classList.add('is-fading');
     // .is-visible does triple duty (all keyed to this same moment so the blend
     // reads as one motion): fades the site in, starts the hero entrance cascade

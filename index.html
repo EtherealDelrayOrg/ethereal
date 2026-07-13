@@ -25,8 +25,16 @@
   <!-- ── Opening Sequence ─────────────────────────────── -->
   <div id="opening-sequence" role="presentation" aria-hidden="true">
 
-    <!-- Real clock face — replaced by <video> when AI video is ready -->
-    <div class="seq-clock">
+    <!-- Full-bleed AI video (desktop only for now — mobile 9:16 clip pending).
+         Populated and played by opening-sequence.js; stays empty/hidden on
+         mobile viewports, which keep the CSS clock fallback below. -->
+    <video id="opening-video" muted playsinline webkit-playsinline
+           preload="auto" poster="/src/assets/video/opening-desktop-poster.jpg"
+           aria-hidden="true"></video>
+
+    <!-- Static clock fallback — used on mobile (no video yet) and if the
+         desktop video fails to autoplay -->
+    <div class="seq-clock" id="seq-clock-fallback">
       <img src="/src/assets/images/clock-face-transparent.png" alt="" aria-hidden="true">
     </div>
 

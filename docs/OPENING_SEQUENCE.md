@@ -6,135 +6,107 @@
 |----------|--------|
 | Plays on subpages? | **No** — only on main page (`/`) load |
 | Replay on return visits? | **Yes** — plays every time the main page loads |
-| What happens to the clock after? | **Disappears** — clean transition to site; no persistent clock in UI. A clock icon/logo may be used in nav depending on assets received from client. |
-| Tech approach | **Hybrid** — AI-generated video + CSS/JS stitch. Priority: seamless join, must look great on mobile. |
-| Mobile video | **Required** — video must be produced and served at portrait/square crop for mobile. Not a fallback — a first-class experience. |
+| What happens to the clock after? | **Disappears** — clean crossfade to site; no persistent clock in UI |
+| Tech approach | AI-generated video (two jobs, reversed + spliced in post) + CSS crossfade into the hero |
+| Mobile video | **Required**, first-class — separate 9:16 generation, not a cropped fallback |
 
 ---
 
-## Concept (from client brief)
+## Concept
 
-> A scene opens with a clock at center, birds surrounding it. The clock begins rotating counter-clockwise. The camera pushes forward and flies into the clock face. Inside the clock, the website content appears.
+A painterly scene: an ornate antique clock (gold filigree hands, stained-glass mosaic center) floats
+between a white crane and a peacock among magnolias. The hands spin **counter-clockwise** (time
+rewinding) as the camera dollies in. The clock face unravels — its numeral panels part like flower
+petals, no explosion — and the camera threads through the golden gear mechanism, arriving bright and
+sharp on a backlit stained-glass rosette. A 1.4s crossfade carries this into the site hero (same
+artwork family, so palette continuity is built in — see `opening-sequence.js` → `startCrossfade()`).
 
----
-
-## The Core Technical Challenge
-
-**Video and live web content cannot be composited in a browser.** A pre-rendered video clip cannot show the actual website "inside" the clock — the moment the camera enters the clock, it must transition to real HTML. This seam needs to be engineered deliberately.
-
----
-
-## Architecture: Hybrid Video + Crossfade Transition
-
-**Stitch method: crossfade.** The video and the site content fade simultaneously — video opacity goes 1→0 while site opacity goes 0→1 over the same ~1s window. The seam is invisible because both layers are visible at once during the overlap. This is more forgiving than a hard cut, especially on mobile where video frame timing can stutter.
-
-### Playback phases
-
-```
-Phase 1 — AI Video  [0s → ~6s]
-  Clock and birds rendered via AI video model
-  Camera slowly pushes toward the clock face
-  Video ends with the ornate clock center filling the full viewport
-  Last frame: clock center detail filling screen (warm, not black)
-
-Phase 2 — Crossfade  [~5.5s → ~7s]
-  video opacity: 1 → 0  \
-                          } simultaneously over ~1–1.5s CSS transition
-  site opacity:  0 → 1  /
-  Site is already fully rendered underneath — no load delay at this moment
-
-Phase 3 — Website  [~7s onward]
-  Full site visible, nav fades in
-  Video element removed from DOM (no memory leak)
-  User can scroll / interact normally
-```
-
-### JS implementation sketch
-
-```js
-video.addEventListener('timeupdate', () => {
-  const remaining = video.duration - video.currentTime;
-  if (remaining <= 1.5 && !crossfadeStarted) {
-    crossfadeStarted = true;
-    video.style.transition = 'opacity 1.4s ease';
-    video.style.opacity = '0';
-    siteContent.style.transition = 'opacity 1.4s ease';
-    siteContent.style.opacity = '1';
-  }
-});
-
-video.addEventListener('ended', () => {
-  openingSequence.remove();
-  siteContent.setAttribute('aria-hidden', 'false');
-});
-```
-
-### Why crossfade
-- Video and site are simultaneously visible — no hard cut to notice
-- Works even if the video ends a frame early or late on mobile
-- No requirement for the video's last frame to be pixel-perfect against the site bg
+End-frame rosette is **intentionally different per device**:
+- 16:9 (desktop) → rose-window tracery rosette
+- 9:16 (mobile) → square-tesserae mosaic rosette
 
 ---
 
-## AI Video Generation Plan
+## Tools
 
-### Recommended Models (as of mid-2026)
-
-| Model | Strength | Notes |
-|-------|----------|-------|
-| **Kling 1.6 / 2.0** | Slow camera motion, cinematic quality | Best for controlled push-in shots |
-| **Runway Gen-4** | Good prompt adherence, fast | Strong on atmosphere/mood |
-| **Hailuo (MiniMax)** | Detailed textures | Good for ornate close-up shots |
-| **Sora** | High fidelity | Expensive; API access limited |
-
-Recommend starting with **Kling** for the slow camera push, then upscale with **Topaz Video AI** if needed.
-
-### What to generate
-
-**Clip 1 — Wide establishing shot** (2–3s)
-- Dark atmospheric space
-- Clock centered, slightly below eye level
-- Birds perched and in slow flight around clock
-- Depth: slight fog/dust particles
-- Camera: completely static or micro-drift
-
-**Clip 2 — Push-in** (3–4s)
-- Camera begins slow, accelerating push toward clock face
-- Clock begins counter-clockwise rotation (slow at first, building)
-- Birds react — flutter off as camera approaches
-- Camera enters the clock face; final frame is the ornate center detail filling screen
-
-> These two clips can be a single continuous generation or edited together in Premiere/Resolve.
-
-### Prompt scaffold (Kling/Runway)
-
-```
-Cinematic establishing shot of an ornate antique clock suspended in deep atmospheric darkness,
-surrounded by elegant cranes and peacocks with luminous gold and copper feathers.
-The clock face is intricate brass and iron with gothic numerals.
-Soft bokeh dust particles float through shafts of amber light.
-Slow dolly push-in toward the clock face.
-The clock begins a slow counter-clockwise rotation.
-Birds take flight as the camera approaches.
-Film grain, anamorphic lens, color grade: dark gold and shadow.
-No text. No people. Photorealistic.
-```
-
-Adjust based on which model you use — Kling responds better to short, concrete sentences.
+- **Higgsfield "supercomputer"**, generating on **Seedance 2.0** — chosen because it anchors both the
+  first *and* last frame of a generation, which the reversal pipeline below depends on.
+- **Nano Banana Pro** for still/image edits (prepping the anchor frames).
 
 ---
 
-## Assets Required from Client
+## Key Constraint: Video Models Can't Render Counter-Clockwise
 
-The following must be provided to generate the video and build the sequence:
+Direct prompting for counter-clockwise clock hand rotation fails repeatedly across models — there's a
+strong clockwise training bias. Workaround: generate clockwise, reverse in post.
 
-| Asset | Format | Purpose |
-|-------|--------|---------|
-| Clock face illustration | PNG, 3000px+, transparent BG | Primary video subject + CSS overlay |
-| Bird illustrations (peacock, crane) | PNG, transparent BG | Video subject + CSS birds on page |
-| Brand logo | SVG or PNG | Nav, favicon |
-| Brand color confirmation | Hex values | Final CSS tokens |
-| Any existing brand video/motion references | Links or files | Style direction for AI video prompt |
+## Pipeline: Two Jobs Per Aspect Ratio
+
+**Job 1 — "rewind plate"** (final timeline position: 0–6s)
+- Static camera
+- Hands spin clockwise fast, decelerating to a full stop
+- Both first *and* last frame anchored to the master start still (same still — camera doesn't move)
+- This clip gets **time-reversed** in post → hands read as counter-clockwise, any petal/dust drift
+  reads as drifting upward (on-theme, not a visible tell)
+
+**Job 2 — "push-in"** (final timeline position: 6–10s)
+- First frame = master start still (same anchor as Job 1)
+- Last frame = the rosette still (16:9 tracery / 9:16 mosaic, per device)
+- Hands are an unreadable blur during the push (masks any residual rotation-direction artifact)
+- Numeral panels unravel like petals; camera threads through the gear mechanism
+- Ends mid-drift, bright — **no fade to black**
+
+**Splice point:** Job 1 reversed ends on the exact master frame Job 2 starts on → invisible cut when
+concatenated. Reverse → trim → concat → encode is done via `ffmpeg`.
+
+```bash
+# 1. Reverse Job 1 (rewind plate)
+ffmpeg -i job1-rewind.mp4 -vf reverse -af areverse job1-reversed.mp4
+
+# 2. Concat (requires matching codec/resolution/fps — re-encode first if they differ)
+ffmpeg -f concat -safe 0 -i concat-list.txt -c copy opening-master.mp4
+# concat-list.txt:
+#   file 'job1-reversed.mp4'
+#   file 'job2-pushin.mp4'
+
+# 3. Encode final deliverables
+ffmpeg -i opening-master.mp4 -vcodec libx264 -crf 20 -preset slow -an opening-desktop.mp4   # target ~4–5MB
+ffmpeg -i opening-master.mp4 -c:v libvpx-vp9  -crf 32 -b:v 0    -an opening-desktop.webm
+ffmpeg -i opening-master-mobile.mp4 -vcodec libx264 -crf 22 -preset slow -an opening-mobile.mp4  # target ~2–3MB
+ffmpeg -i opening-master-mobile.mp4 -c:v libvpx-vp9  -crf 34 -b:v 0    -an opening-mobile.webm
+
+# 4. Poster images (from the master start stills, not extracted frames — cleaner)
+# desktop-start-still.png → opening-desktop-poster.jpg
+# mobile-start-still.png  → opening-mobile-poster.jpg
+```
+
+Run this per aspect ratio (16:9 desktop, 9:16 mobile) — four source clips in, two deliverable pairs out.
+
+---
+
+## Stitch Into Site: Crossfade
+
+**Stitch method: crossfade.** Video opacity 1→0 while site content opacity 0→1 over the same ~1.4s
+window (`CROSSFADE_DURATION` in `opening-sequence.js`). Both layers visible during the overlap, so
+the seam is forgiving of a frame early/late — important on mobile where video timing can stutter.
+
+This is already implemented and pushed (dev `de2de55`): `startCrossfade()` in
+[`src/js/opening-sequence.js`](../src/js/opening-sequence.js) fires the `.seq-bloom` light-bridge,
+fades `#opening-sequence` out, and fades `#site-content` in — which simultaneously gates the hero's
+entrance cascade and kicks the `hero-bg` 1→1.04 scale drift, so the video's push-in momentum carries
+across the seam into the hero. Nav (`#site-header`) is revealed in the same tick.
+
+**Video wiring** — the commented-out block at the bottom of `opening-sequence.js` (lines ~58–76) is
+the swap: replace the static `.seq-clock` `<img>` in `index.html` (currently
+`clock-face-transparent.png`) with a `<video id="opening-video">`, matchMedia-swap the source between
+`/src/assets/video/opening-mobile` and `/src/assets/video/opening-desktop` at `<768px`, and drive
+`startCrossfade()` off `timeupdate` (last 1.5s remaining) instead of the current fixed
+`SEQUENCE_DURATION` timeout.
+
+**Gotcha:** the in-app preview browser freezes CSS animation clocks (and likely `<video>` playback
+state) while its tab is backgrounded — verify end-of-sequence state programmatically
+(`video.currentTime`, `video.ended`, computed opacity) rather than trusting a screenshot taken after
+switching tabs away and back.
 
 ---
 
@@ -142,39 +114,45 @@ The following must be provided to generate the video and build the sequence:
 
 | Spec | Value |
 |------|-------|
-| Resolution | 1920×1080 (16:9) |
-| Duration | 6–8 seconds |
+| Desktop resolution | 1920×1080 (16:9) |
+| Mobile resolution | 1080×1920 (9:16) |
+| Duration | ~10s per aspect ratio (6s rewind + 4s push-in, post-splice) |
 | Format | MP4 (H.264) primary + WebM (VP9) fallback |
-| Target file size | Under 15MB after compression |
-| Audio | None (the sequence is silent; ambient audio can be added later) |
-
-Compression tool: **HandBrake** (free) or `ffmpeg`:
-```bash
-ffmpeg -i input.mp4 -vcodec libx264 -crf 23 -preset slow -an output.mp4
-ffmpeg -i input.mp4 -c:v libvpx-vp9 -crf 30 -b:v 0 -an output.webm
-```
+| Target file size | Desktop ~4–5MB, Mobile ~2–3MB |
+| Audio | None |
+| Output location | `src/assets/video/opening-desktop.{mp4,webm}`, `src/assets/video/opening-mobile.{mp4,webm}`, plus poster JPGs |
 
 ---
 
-## Mobile Behavior
+## Assets
 
-Mobile is a first-class experience, not a fallback. iOS blocks autoplay with audio — the video must always be `muted` and `playsinline`, which is already the plan. File size is the main risk on mobile networks.
+**Desktop (16:9) — DONE.** Delivered as a single pre-reversed, pre-spliced 10.04s master
+(clockwise-generated rewind plate reversed + push-in spliced, already assembled before handoff —
+the two-job/ffmpeg-splice step below wasn't needed for this one, only re-encode). Archived at
+`_reference/video/opening-desktop-master.mp4` (26.5MB source). Encoded deliverables in
+`src/assets/video/`: `opening-desktop.mp4` (4.2MB, H.264 CRF 25), `opening-desktop.webm` (3.9MB,
+VP9 CRF 34), `opening-desktop-poster.jpg` (extracted first frame). Hand-rotation direction verified
+correct (counter-clockwise) by frame sampling.
 
-**Two video versions — required:**
-- `opening-desktop.mp4/.webm` — 16:9, 1920×1080, served on screens ≥ 768px
-- `opening-mobile.mp4/.webm` — 9:16 or 1:1 crop, 1080×1920 or 1080×1080, served on screens < 768px
-
-The JS opening sequence logic will `matchMedia('(max-width: 767px)')` and swap the video `src` before playback starts. Both versions get the same CSS reveal transition at the end.
+**Mobile (9:16) — NOT YET PRODUCED.** Site currently falls back to the CSS clock placeholder on
+mobile viewports (`<768px`) until this clip exists. See `_reference/images/` for the older approved-stills
+list (transparent gold-hands clock PNG, 16:9/9:16 start frames, 16:9/9:16 rosette end frames) — the
+9:16 pair from that list is still what's needed to produce the mobile clip via the two-job pipeline.
 
 ---
 
 ## Implementation Phases
 
-1. [ ] Receive required assets from client
-2. [ ] Generate AI video clips, edit into one sequence
-3. [ ] Compress and optimize video files
-4. [ ] Build HTML/CSS skeleton for the opening overlay
-5. [ ] Implement video playback + transition JS logic
-6. [ ] Implement mobile fallback
-7. [ ] Test on Chrome, Safari (iOS/macOS), Firefox, Edge
+1. [x] Site-side crossfade/hero-handoff wiring (dev `de2de55`)
+2. [x] Desktop video: receive, verify direction, archive master, encode deliverables, wire into
+   `index.html` / `opening-sequence.css` / `opening-sequence.js` (full-bleed `<video>`, matchMedia-gated
+   to desktop, crossfade driven off `timeupdate`, graceful fallback to CSS clock if autoplay is blocked
+   or the tab is backgrounded mid-play)
+3. [ ] Generate mobile (9:16) Job 1 (rewind plate) + Job 2 (push-in) via Higgsfield/Seedance 2.0
+4. [ ] Reverse Job 1, splice with Job 2, encode mobile deliverables (`ffmpeg`, see pipeline above)
+5. [ ] Generate mobile poster image
+6. [ ] Extend `opening-sequence.js` matchMedia gate to also play video on mobile once the clip exists
+7. [ ] Test on Chrome, Safari (iOS/macOS), Firefox, Edge — verify programmatically, not just by eye
+   (in-app preview browsers can report `document.hidden: true` and block autoplay — not a real bug,
+   confirm on an actual foreground browser tab before treating it as one)
 8. [ ] Performance audit (Lighthouse)
