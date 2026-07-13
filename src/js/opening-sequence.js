@@ -16,7 +16,9 @@
   const content       = document.getElementById('site-content');
   const header        = document.getElementById('site-header');
   const skipBtn       = document.querySelector('.seq-skip');
+  const progressBar   = document.querySelector('.seq-progress');
   const progress      = document.querySelector('.seq-progress-fill');
+  const brand         = document.querySelector('.seq-brand');
   const bloom         = document.getElementById('seq-bloom');
   const video         = document.getElementById('opening-video');
   const clockFallback = document.getElementById('seq-clock-fallback');
@@ -69,8 +71,13 @@
   }
 
   // ── Video path: desktop only (no mobile 9:16 clip yet) ─────
+  // Tagline and progress bar are dropped here — they read as clutter over
+  // the video's own full-bleed art; the fallback CSS-clock path still shows
+  // them since that placeholder needs the loading cue.
   function playVideoSequence() {
     if (clockFallback) clockFallback.style.display = 'none';
+    if (brand) brand.style.display = 'none';
+    if (progressBar) progressBar.style.display = 'none';
 
     const src = '/src/assets/video/opening-desktop';
     const webm = document.createElement('source');
@@ -81,17 +88,6 @@
     video.appendChild(mp4);
     video.muted = true;
     video.defaultMuted = true;
-
-    video.addEventListener('loadedmetadata', () => {
-      if (progress && video.duration) {
-        progress.style.transitionDuration = (video.duration * 1000) + 'ms';
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            progress.style.width = '100%';
-          });
-        });
-      }
-    });
 
     video.addEventListener('timeupdate', () => {
       if (!crossfadeStarted && video.duration &&
@@ -114,6 +110,8 @@
       // Autoplay blocked or clip failed to load — fall back to the static clock
       video.classList.remove('is-active');
       if (clockFallback) clockFallback.style.display = '';
+      if (brand) brand.style.display = '';
+      if (progressBar) progressBar.style.display = '';
       startFallbackTimer();
     });
   }
