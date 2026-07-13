@@ -69,8 +69,8 @@
        text at any tasteful strength, so the Reserve pill (which sits over it) gets
        its own solid backing below instead of this gradient carrying that case. */
     linear-gradient(to bottom, rgba(10, 8, 7, 0.66) 0, rgba(10, 8, 7, 0.5) 112px, rgba(10, 8, 7, 0.12) 190px, transparent 260px),
-    radial-gradient(ellipse 62% 50% at 50% 46%, rgba(10, 8, 7, 0.3) 0%, transparent 70%),
-    linear-gradient(to bottom, rgba(10, 8, 7, 0.05) 0%, rgba(10, 8, 7, 0.29) 42%, rgba(10, 8, 7, 0.45) 78%, rgba(10, 8, 7, 0.52) 100%);
+    radial-gradient(ellipse 62% 50% at 50% 46%, rgba(10, 8, 7, 0.22) 0%, transparent 70%),
+    linear-gradient(to bottom, rgba(10, 8, 7, 0.04) 0%, rgba(10, 8, 7, 0.21) 42%, rgba(10, 8, 7, 0.33) 78%, rgba(10, 8, 7, 0.38) 100%);
   pointer-events: none;
 }
 
