@@ -341,6 +341,14 @@ site-header, site-footer { display: contents; }
   background: transparent;
   border-bottom: 1px solid transparent;
   transition: background var(--transition), border-color var(--transition);
+  /* iOS Safari bug: a `position: fixed` element that gains `backdrop-filter` (added
+     below by .is-scrolled) can visually detach from the top of the viewport mid-scroll
+     — it renders at a stale scroll offset, reading as if the header jumped down the
+     page, until the compositor catches up. Forcing this onto its own GPU layer up
+     front (before the blur ever applies, so there's no layer-promotion pop either)
+     is the standard fix. */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 #site-header.nav-solid,
