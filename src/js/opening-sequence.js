@@ -20,8 +20,10 @@
   const progress      = document.querySelector('.seq-progress-fill');
   const brand         = document.querySelector('.seq-brand');
   const bloom         = document.getElementById('seq-bloom');
+  const fogEl         = document.getElementById('seq-fog');
   const video         = document.getElementById('opening-video');
   const clockFallback = document.getElementById('seq-clock-fallback');
+  let fogEffect = null;
 
   if (!seq || !content) return;
 
@@ -39,6 +41,51 @@
     playVideoSequence();
   } else {
     startFallbackTimer();
+  }
+
+  // ── Fog bridge: desktop only, loaded off the CDN in parallel with everything
+  // else above so Three.js/Vanta never costs mobile a byte. Purely a progressive
+  // enhancement on top of the bloom — if the CDN is slow, blocked, or errors,
+  // fogEffect just stays null and startCrossfade()'s bloom-only path is already
+  // a complete, intentional-looking transition on its own. ─────────────────────
+  if (fogEl && isDesktop) {
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js')
+      .then(() => loadScript('https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.fog.min.js'))
+      .then(initFog)
+      .catch(() => {});
+  }
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  // Pre-warm: init immediately (hidden at opacity:0, still fully laid out and
+  // rendering) rather than waiting for crossfade — a cold WebGL context/shader
+  // compile takes long enough to be visible if triggered at the reveal moment
+  // itself, which is the one instant this can't afford to stutter.
+  function initFog() {
+    if (!fogEl || !window.VANTA || crossfadeStarted) return;
+    fogEffect = VANTA.FOG({
+      el: fogEl,
+      mouseControls: false,
+      touchControls: false,
+      gyroControls: false,
+      minHeight: 200,
+      minWidth: 200,
+      highlightColor: 0xe0a85a,
+      midtoneColor: 0xc49140,
+      lowlightColor: 0x8a6428,
+      baseColor: 0x0a0807,
+      blurFactor: 0.6,
+      speed: 1.2,
+      zoom: 1
+    });
   }
 
   // ── Skip button ───────────────────────────────────────────
@@ -89,6 +136,13 @@
     video.muted = true;
     video.defaultMuted = true;
 
+    // Gates the pause safety-net below so it only fires for a genuine mid-stream
+    // interruption after playback truly began. Without this, a blocked-autoplay
+    // rejection — which Chrome/WebKit dispatch as a real 'pause' event, not just
+    // a rejected promise — races the .catch() below and fires the safety net
+    // first, skipping the intended fallback-timer duration almost instantly.
+    let videoStarted = false;
+
     video.addEventListener('timeupdate', () => {
       if (!crossfadeStarted && video.duration &&
           (video.duration - video.currentTime) <= VIDEO_CROSSFADE_LEAD) {
@@ -101,10 +155,11 @@
     // Safety net: if playback starts but the browser later pauses it mid-stream
     // (e.g. tab backgrounded), don't strand the user on a frozen frame
     video.addEventListener('pause', () => {
-      if (!crossfadeStarted && !video.ended) startCrossfade();
+      if (videoStarted && !crossfadeStarted && !video.ended) startCrossfade();
     });
 
     video.play().then(() => {
+      videoStarted = true;
       video.classList.add('is-active');
     }).catch(() => {
       // Autoplay blocked or clip failed to load — fall back to the static clock
@@ -126,6 +181,12 @@
     // background's slow 1 → 1.04 drift that carries the video's push-in
     // direction across the seam.
     content.classList.add('is-visible');
+    // Fog bridge: same asymmetric swell/dissolve timing as the bloom below, so
+    // the two read as one atmosphere rather than two separate effects.
+    if (fogEl && fogEffect) {
+      fogEl.classList.add('is-active');
+      setTimeout(() => fogEl.classList.remove('is-active'), 420);
+    }
     // Light-bloom bridge: fast swell, then the slow dissolve runs over the
     // crossfade window (asymmetric transition speeds live in the CSS).
     if (bloom) {
@@ -150,6 +211,15 @@
     if (bloom) {
       setTimeout(() => {
         if (bloom.parentNode) bloom.parentNode.removeChild(bloom);
+      }, 400);
+    }
+    // Same tail-outlive delay as the bloom, then tear down the WebGL context —
+    // it's rendering every frame and would otherwise leak on repeat visits.
+    if (fogEffect) {
+      setTimeout(() => {
+        fogEffect.destroy();
+        fogEffect = null;
+        if (fogEl && fogEl.parentNode) fogEl.parentNode.removeChild(fogEl);
       }, 400);
     }
     content.classList.add('is-visible');

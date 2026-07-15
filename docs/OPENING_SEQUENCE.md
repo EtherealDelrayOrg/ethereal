@@ -90,23 +90,43 @@ Run this per aspect ratio (16:9 desktop, 9:16 mobile) — four source clips in, 
 window (`CROSSFADE_DURATION` in `opening-sequence.js`). Both layers visible during the overlap, so
 the seam is forgiving of a frame early/late — important on mobile where video timing can stutter.
 
-This is already implemented and pushed (dev `de2de55`): `startCrossfade()` in
-[`src/js/opening-sequence.js`](../src/js/opening-sequence.js) fires the `.seq-bloom` light-bridge,
+Implemented (dev `de2de55`, `42469dc`, `[fog commit]`): `startCrossfade()` in
+[`src/js/opening-sequence.js`](../src/js/opening-sequence.js) fires the fog + bloom bridge (below),
 fades `#opening-sequence` out, and fades `#site-content` in — which simultaneously gates the hero's
 entrance cascade and kicks the `hero-bg` 1→1.04 scale drift, so the video's push-in momentum carries
 across the seam into the hero. Nav (`#site-header`) is revealed in the same tick.
 
-**Video wiring** — the commented-out block at the bottom of `opening-sequence.js` (lines ~58–76) is
-the swap: replace the static `.seq-clock` `<img>` in `index.html` (currently
-`clock-face-transparent.png`) with a `<video id="opening-video">`, matchMedia-swap the source between
-`/src/assets/video/opening-mobile` and `/src/assets/video/opening-desktop` at `<768px`, and drive
-`startCrossfade()` off `timeupdate` (last 1.5s remaining) instead of the current fixed
-`SEQUENCE_DURATION` timeout.
+**Fog + bloom bridge (desktop only)** — two layered atmosphere effects at the crossfade moment
+instead of a flat color fade:
+- `#seq-fog` — [Vanta.js FOG](https://www.vantajs.com/?effect=fog) (Three.js r134 + `vanta.fog.min.js`
+  0.5.24, loaded off CDN, desktop-only so mobile never downloads it). Warm amber/brass drifting mist,
+  composited via `mix-blend-mode: screen` over a near-black `baseColor` so only the light mist glows
+  through rather than a visible canvas box. **Pre-warmed on page load** (created immediately, hidden
+  at `opacity: 0`, already rendering) rather than at crossfade time — a cold WebGL context/shader
+  compile is slow enough to stutter if triggered at the one moment this has to look instant. Purely a
+  progressive enhancement: if the CDN is slow/blocked, `fogEffect` stays `null` and the bloom-only
+  crossfade below is already a complete transition on its own — nothing waits on it, nothing breaks
+  without it. Destroyed (`fogEffect.destroy()`) and removed from the DOM after the crossfade tail, same
+  timing as the bloom's cleanup, so the WebGL context doesn't linger.
+- `.seq-bloom` — the original warm radial-gradient light swell, sits above the fog in z-index so it
+  still reads as "passing through light."
 
-**Gotcha:** the in-app preview browser freezes CSS animation clocks (and likely `<video>` playback
-state) while its tab is backgrounded — verify end-of-sequence state programmatically
-(`video.currentTime`, `video.ended`, computed opacity) rather than trusting a screenshot taken after
-switching tabs away and back.
+**Gotcha found building this:** the `pause` event safety-net on the `<video>` element (added so a
+tab-backgrounded mid-play pause doesn't strand the user on a frozen frame) was firing on the *initial*
+blocked-autoplay attempt too — Chrome/WebKit dispatch a real `pause` event as part of rejecting
+`video.play()`, not just a rejected promise. That raced ahead of the `.catch()` → fallback-timer path
+and skipped straight to `startCrossfade()` in ~30ms instead of waiting the intended ~3s, in any
+environment where autoplay gets blocked (this preview pane always blocks it — see gotcha below — but
+it's not pane-specific). Fixed with a `videoStarted` flag set only inside `video.play().then()`, so the
+pause listener only acts on a genuine mid-stream interruption.
+
+**Gotcha (pane-specific):** the in-app preview browser reports `document.hidden: true` /
+`document.visibilityState: 'hidden'` even when actively navigated to and screenshotted, which triggers
+Chrome's "video-only background media paused to save power" intervention — `<video>` autoplay is
+always rejected here, and CSS animation clocks freeze (rAF never fires) for the same reason. Not a real
+bug; verify end-of-sequence state programmatically (`video.currentTime`, `video.ended`, computed
+opacity, `canvas` element presence for the fog) rather than trusting a screenshot, and don't be alarmed
+when the fallback-timer path is what actually runs in this pane.
 
 ---
 

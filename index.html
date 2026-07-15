@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="/src/css/globals.css">
   <link rel="stylesheet" href="/src/css/opening-sequence.css">
   <link rel="stylesheet" href="/src/css/home.css">
-  <noscript><style>#opening-sequence,.seq-bloom{display:none!important}#site-content{opacity:1!important}#site-header{opacity:1!important;pointer-events:auto!important}.hero-label,.hero-title,.hero-sub,.hero-ctas{opacity:1!important;animation:none!important}.hero-bg{transform:scale(1.04)!important}</style></noscript>
+  <noscript><style>#opening-sequence,.seq-bloom,#seq-fog{display:none!important}#site-content{opacity:1!important}#site-header{opacity:1!important;pointer-events:auto!important}.hero-label,.hero-title,.hero-sub,.hero-ctas{opacity:1!important;animation:none!important}.hero-bg{transform:scale(1.04)!important}</style></noscript>
   <script src="/src/js/partials.js"></script>
 </head>
 <body>
@@ -50,6 +50,12 @@
 
   </div>
   <!-- /Opening Sequence -->
+
+  <!-- Fog bridge: WebGL (Vanta.js FOG) drifting mist, pre-warmed hidden well before
+       crossfade so there's no WebGL cold-start stutter at reveal — just fades in/out
+       like the bloom below. Desktop only (see opening-sequence.js): skips the
+       Three.js/WebGL weight entirely on mobile, which has no video to bridge from yet. -->
+  <div id="seq-fog" aria-hidden="true"></div>
 
   <!-- Light-bloom bridge: swells at crossfade-start, dissolves over the blend
        (see opening-sequence.css). Removed from the DOM once the site is revealed. -->
