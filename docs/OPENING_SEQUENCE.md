@@ -90,7 +90,7 @@ Run this per aspect ratio (16:9 desktop, 9:16 mobile) — four source clips in, 
 window (`CROSSFADE_DURATION` in `opening-sequence.js`). Both layers visible during the overlap, so
 the seam is forgiving of a frame early/late — important on mobile where video timing can stutter.
 
-Implemented (dev `de2de55`, `42469dc`, `[fog commit]`): `startCrossfade()` in
+Implemented (dev `de2de55`, `42469dc`, `faaebd6`): `startCrossfade()` in
 [`src/js/opening-sequence.js`](../src/js/opening-sequence.js) fires the fog + bloom bridge (below),
 fades `#opening-sequence` out, and fades `#site-content` in — which simultaneously gates the hero's
 entrance cascade and kicks the `hero-bg` 1→1.04 scale drift, so the video's push-in momentum carries
