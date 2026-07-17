@@ -65,12 +65,14 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  /* The actual bug: mobile rubber-band/elastic overscroll let you scroll past the
-     real end of the document (past the footer/copyright) into whatever's behind
-     the page. overscroll-behavior-y: none is what stops that scroll from
-     happening at all (Chrome/Android + Safari 16+). The background match below
-     is just a fallback in case any bounce still slips through on an older
-     browser — it was never the actual fix, just what color you'd see during it. */
+  /* Mobile rubber-band/elastic overscroll let you scroll past the real end of
+     the document (past the footer/copyright) into whatever's behind the page.
+     overscroll-behavior-y: none stops that on Chrome/Android + desktop Safari,
+     but iOS Safari/Chrome (WebKit) only honor overscroll-behavior on nested
+     scroll containers, not the root html/body scroller — the bounce still gets
+     through there. main.js's touchmove guard is the actual fix on iOS; this is
+     defense-in-depth for everywhere else, plus what color shows if any bounce
+     still slips through. */
   background: var(--ink);
   overscroll-behavior-y: none;
 }
@@ -85,6 +87,11 @@ body {
   overflow-x: hidden;
   overscroll-behavior-y: none;
 }
+
+/* Set by opening-sequence.js for the intro's duration, and by main.js's mobile
+   nav toggle — belt-and-suspenders alongside the touchmove guard above (that
+   guard alone handles iOS; this covers wheel/keyboard scroll on desktop). */
+body.is-scroll-locked { overflow: hidden; }
 
 img, video, svg { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }

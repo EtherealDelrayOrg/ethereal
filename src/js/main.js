@@ -5,6 +5,34 @@
 (function () {
   'use strict';
 
+  // ── Overscroll guard ──────────────────────────────────────
+  // Safari/Chrome on iOS (both WebKit) don't reliably honor overscroll-behavior
+  // on the root html/body scroller — only on nested scroll containers — so the
+  // rubber-band bounce can still scroll past the real top/bottom of the page
+  // there even with overscroll-behavior-y: none set in globals.css. This
+  // touchmove guard stops the bounce directly. It also fully blocks scrolling
+  // while body has .is-scroll-locked (opening-sequence.js, during the intro).
+  let touchStartY = 0;
+
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 1) return; // don't interfere with pinch-zoom
+    if (document.body.classList.contains('is-scroll-locked')) {
+      e.preventDefault();
+      return;
+    }
+    const doc = document.documentElement;
+    const atTop = window.scrollY <= 0;
+    const atBottom = window.scrollY + window.innerHeight >= doc.scrollHeight - 1;
+    const deltaY = e.touches[0].clientY - touchStartY;
+    if ((atTop && deltaY > 0) || (atBottom && deltaY < 0)) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
   // ── Nav scroll state ──────────────────────────────────────
   const header = document.getElementById('site-header');
 
@@ -29,7 +57,7 @@
     toggle.setAttribute('aria-expanded', 'true');
     toggle.setAttribute('aria-label', 'Close navigation menu');
     mobileNav.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
+    document.body.classList.add('is-scroll-locked');
     // Move focus to first link
     const first = mobileNav.querySelector('a');
     if (first) first.focus();
@@ -40,7 +68,7 @@
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-label', 'Open navigation menu');
     mobileNav.classList.remove('is-open');
-    document.body.style.overflow = '';
+    document.body.classList.remove('is-scroll-locked');
     toggle.focus();
   }
 

@@ -18,6 +18,13 @@
 
   if (!seq || !content) return;
 
+  // Locked for the sequence's full duration, not just some part of it —
+  // site-content stays aria-hidden underneath until reveal, so nothing back
+  // there should be scrollable in the meantime either. revealSite() below is
+  // the single unlock point every path converges on. See main.js for the
+  // touchmove guard that makes this actually hold on iOS.
+  document.body.classList.add('is-scroll-locked');
+
   // ── Accessibility: skip if user prefers reduced motion ────
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     revealSite();
@@ -88,6 +95,7 @@
   }
 
   function revealSite() {
+    document.body.classList.remove('is-scroll-locked');
     // Remove seq from DOM entirely to free memory
     if (seq && seq.parentNode) seq.parentNode.removeChild(seq);
     content.classList.add('is-visible');
