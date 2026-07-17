@@ -105,10 +105,18 @@ See [TECH_STACK.md](TECH_STACK.md#connecting-wix-domain--netlify) for step-by-st
 
 ---
 
-## Analytics (optional, TBD)
+## Analytics — Google Analytics 4 (LIVE, main branch only)
 
-If the client wants traffic analytics:
-- **Plausible** or **Fathom** — privacy-first, lightweight, GDPR-compliant (recommended)
-- **Google Analytics 4** — if client specifically requests it
+**GA4 is live as of Jul 2026** (main commit `ecbe7f3`). Measurement ID: `G-NDDQ1KQZ8R`.
 
-To be discussed. See [QUESTIONS.md](QUESTIONS.md).
+- The `gtag.js` snippet sits right after `<meta charset="UTF-8">` in the `<head>` of **all 9 public
+  pages individually** (index, 404, and the 7 `pages/*.html`) — this is a static multi-page site with
+  no shared `<head>` partial (`partials.js` only covers header/footer), so there is no single place
+  to add it. **Any new page must get the snippet added by hand.** `test.html` (dev scratch page) is
+  intentionally excluded.
+- **Main branch only, by design** — the client wants real-visit tracking on the live site; `dev` is a
+  preview branch and would pollute the data. **When merging main→dev, make sure the GA tags don't
+  ride along** (or accept them consciously).
+- The GA4 property was created under the developer's own Google account (client wasn't ready to).
+  GA4 has no true "transfer property" feature — the handoff plan is to grant the client
+  **Account-level Administrator** access once they're ready, which is full practical control.

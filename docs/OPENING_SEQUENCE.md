@@ -90,26 +90,51 @@ Run this per aspect ratio (16:9 desktop, 9:16 mobile) — four source clips in, 
 window (`CROSSFADE_DURATION` in `opening-sequence.js`). Both layers visible during the overlap, so
 the seam is forgiving of a frame early/late — important on mobile where video timing can stutter.
 
-Implemented (dev `de2de55`, `42469dc`, `faaebd6`): `startCrossfade()` in
-[`src/js/opening-sequence.js`](../src/js/opening-sequence.js) fires the fog + bloom bridge (below),
-fades `#opening-sequence` out, and fades `#site-content` in — which simultaneously gates the hero's
-entrance cascade and kicks the `hero-bg` 1→1.04 scale drift, so the video's push-in momentum carries
-across the seam into the hero. Nav (`#site-header`) is revealed in the same tick.
+Implemented (dev `de2de55`, `42469dc`, `faaebd6`, reworked in `cf1db3d` + `596e4a7`):
+`startCrossfade()` in [`src/js/opening-sequence.js`](../src/js/opening-sequence.js) fires the fog +
+bloom bridge (below), fades `#opening-sequence` out, and fades `#site-content` in — which
+simultaneously gates the hero's entrance cascade and kicks the `hero-bg` 1→1.04 scale drift, so the
+video's push-in momentum carries across the seam into the hero. Nav (`#site-header`) is revealed in
+the same tick.
 
-**Fog + bloom bridge (desktop only)** — two layered atmosphere effects at the crossfade moment
-instead of a flat color fade:
+**Fog + bloom bridge (desktop only)** — layered atmosphere at the crossfade instead of a flat color
+fade:
 - `#seq-fog` — [Vanta.js FOG](https://www.vantajs.com/?effect=fog) (Three.js r134 + `vanta.fog.min.js`
-  0.5.24, loaded off CDN, desktop-only so mobile never downloads it). Warm amber/brass drifting mist,
-  composited via `mix-blend-mode: screen` over a near-black `baseColor` so only the light mist glows
-  through rather than a visible canvas box. **Pre-warmed on page load** (created immediately, hidden
-  at `opacity: 0`, already rendering) rather than at crossfade time — a cold WebGL context/shader
-  compile is slow enough to stutter if triggered at the one moment this has to look instant. Purely a
-  progressive enhancement: if the CDN is slow/blocked, `fogEffect` stays `null` and the bloom-only
-  crossfade below is already a complete transition on its own — nothing waits on it, nothing breaks
-  without it. Destroyed (`fogEffect.destroy()`) and removed from the DOM after the crossfade tail, same
-  timing as the bloom's cleanup, so the WebGL context doesn't linger.
+  0.5.24, loaded off CDN, desktop-only so mobile never downloads it). Composited via
+  `mix-blend-mode: screen` over a near-black `baseColor` so only the lit mist glows through rather
+  than a visible canvas box. Purely a progressive enhancement: if the CDN is slow/blocked,
+  `fogEffect` stays `null` and the bloom-only crossfade is already a complete transition on its own.
+
+  **Three-phase choreography** (`cf1db3d` — the original single 420ms half-opacity swell was gone by
+  the crossfade's midpoint, exactly when the seam is hardest to hide):
+  1. *Rise* (`is-rising`, from `FOG_RISE_LEAD` = 2.6s before video end): mist creeps up **inside** the
+     video's final approach to opacity 0.35 over 1100ms, so the handoff is anticipated rather than
+     the fog popping in at the cut.
+  2. *Peak* (`is-active`, at crossfade): swells to 0.85 in 400ms and holds `FOG_PEAK_HOLD` = 500ms —
+     the actual video→hero handoff happens behind near-full mist cover.
+  3. *Dissolve* (class removed): 1700ms (`FOG_DISSOLVE`), deliberately outliving the 1.4s crossfade so
+     the hero is revealed through thinning fog rather than a hard edge.
+
+  **Dynamic color arc:** the video ends on the teal/gold stained-glass rosette; the hero rests in
+  candlelight brass. The fog starts in rosette colors (`FOG_SEAM_COLORS`, incl. `--mosaic-teal`) and
+  during the dissolve `warmFogColors()` lerps the shader's color uniforms per-frame (smoothstep,
+  rAF) to `FOG_SETTLE_COLORS` — Vanta has no color-animation API, so its `Vector3` uniforms
+  (`highlightColor` etc., normalized RGB in x/y/z) are mutated directly. The mist itself carries the
+  palette across the seam and warms as it thins.
+
+  **Dormant pre-warm** (`596e4a7` — the fix for fog-induced video lag): the original pre-warm
+  (full-size init at page load, rendering every frame while invisible) competed with video decode for
+  the whole 10s and its full-viewport WebGL init landed as a visible stutter ~1s into playback. Now
+  `initFog()` runs in a **2px container** (context + shader compile still paid up front, ~20ms,
+  canvas clamped to the 200px minimum instead of full viewport) and the render loop is **cancelled
+  immediately** (`cancelAnimationFrame(fogEffect.req)`). `wakeFog()` restores full-bleed size
+  (`resize()`, ~1–3ms) and restarts the loop (`animationLoop()`) at the rise trigger, where the first
+  full-res frame hides behind the 1100ms fade-in from opacity 0. `startCrossfade()` also calls
+  `wakeFog()` defensively for the fallback/skip paths. Teardown (destroy + DOM removal) happens after
+  the full dissolve tail (`FOG_PEAK_HOLD + FOG_DISSOLVE − CROSSFADE_DURATION + 300` after reveal),
+  and cancels any in-flight color lerp.
 - `.seq-bloom` — the original warm radial-gradient light swell, sits above the fog in z-index so it
-  still reads as "passing through light."
+  still reads as "passing through light." Unchanged timing (fast 320ms swell, 1150ms dissolve).
 
 **Gotcha found building this:** the `pause` event safety-net on the `<video>` element (added so a
 tab-backgrounded mid-play pause doesn't strand the user on a frozen frame) was firing on the *initial*
