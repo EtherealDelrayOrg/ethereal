@@ -137,13 +137,23 @@
 }
 
 /* === Fog bridge (Vanta.js FOG, desktop only) ===
-   Drifting warm mist beneath the bloom — replaces a flat color fade with actual
+   Drifting mist beneath the bloom — replaces a flat color fade with actual
    texture/depth for the crossfade. Vanta's canvas isn't natively transparent, so
    this leans on mix-blend-mode: screen + a near-black baseColor (opening-sequence.js)
-   to make the dark areas disappear and only the warm highlight/midtone mist glow
-   through — same trick as the bloom's radial-gradient, just with motion and grain.
+   to make the dark areas disappear and only the lit mist glow through — same trick
+   as the bloom's radial-gradient, just with motion and grain.
    Pre-warmed hidden (opacity, never display:none — Vanta needs real layout size to
-   measure) well before crossfade so there's no WebGL init stutter at reveal time. */
+   measure) well before crossfade so there's no WebGL init stutter at reveal time.
+
+   Three phases, driven by opening-sequence.js (colors move too — see the color
+   arc there: rosette teal/gold at the seam, warming to hero candlelight):
+     is-rising  — the video's final approach: mist creeps up INSIDE the video,
+                  so the transition is anticipated rather than appearing from
+                  nothing at the cut
+     is-active  — the seam itself: near-full cover while the video hands off to
+                  the hero, carrying the luminance drop from the bright rosette
+     (neither)  — slow dissolve, deliberately outliving the 1.4s crossfade so
+                  the hero is revealed through thinning mist, not a hard edge */
 #seq-fog {
   position: fixed;
   inset: 0;
@@ -151,11 +161,15 @@
   pointer-events: none;
   mix-blend-mode: screen;
   opacity: 0;
-  transition: opacity 1150ms ease;
+  transition: opacity 1700ms ease;
+}
+#seq-fog.is-rising {
+  opacity: 0.35;
+  transition: opacity 1100ms ease-in;
 }
 #seq-fog.is-active {
-  opacity: 0.5;
-  transition: opacity 380ms ease-out;
+  opacity: 0.85;
+  transition: opacity 400ms ease-out;
 }
 #seq-fog canvas {
   display: block;

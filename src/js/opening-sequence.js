@@ -12,6 +12,17 @@
   const SEQUENCE_DURATION = 3000; // ms — fallback-path time before crossfade starts
   const CROSSFADE_DURATION = 1400; // ms — must match CSS transition
   const VIDEO_CROSSFADE_LEAD = 1.4; // s — start crossfade this long before video ends
+  const FOG_RISE_LEAD = 2.6;        // s — mist starts creeping up inside the video this
+                                    //     long before it ends (must be > CROSSFADE_LEAD)
+  const FOG_PEAK_HOLD = 500;        // ms — full-cover dwell at the seam before dissolve
+  const FOG_DISSOLVE = 1700;        // ms — must match #seq-fog's default CSS transition
+
+  // Fog color arc — the video ends on the backlit stained-glass rosette (teal
+  // mosaic in gold), the hero rests in warm candlelight. The mist carries one
+  // into the other: rosette colors while rising/at the seam, warming to brass
+  // as it dissolves. Teal is --mosaic-teal, brass tones are the site tokens.
+  const FOG_SEAM_COLORS   = { highlight: 0xf2d08a, midtone: 0x4f8a88, lowlight: 0x2d5a54 };
+  const FOG_SETTLE_COLORS = { highlight: 0xe0a85a, midtone: 0xc49140, lowlight: 0x8a6428 };
 
   const seq          = document.getElementById('opening-sequence');
   const content       = document.getElementById('site-content');
@@ -79,14 +90,44 @@
       gyroControls: false,
       minHeight: 200,
       minWidth: 200,
-      highlightColor: 0xe0a85a,
-      midtoneColor: 0xc49140,
-      lowlightColor: 0x8a6428,
+      // Starts in seam colors — the fog is first seen rising inside the
+      // video's rosette approach; the warm-up happens during the dissolve.
+      highlightColor: FOG_SEAM_COLORS.highlight,
+      midtoneColor: FOG_SEAM_COLORS.midtone,
+      lowlightColor: FOG_SEAM_COLORS.lowlight,
       baseColor: 0x0a0807,
-      blurFactor: 0.6,
-      speed: 1.2,
+      blurFactor: 0.7,
+      speed: 1.4,
       zoom: 1
     });
+  }
+
+  // Drives the seam→settle color drift by mutating the fog shader's color
+  // uniforms (Vector3, normalized RGB) per frame — Vanta has no built-in color
+  // animation. Runs over the dissolve window so the mist visibly warms from
+  // stained-glass teal/gold to candlelight brass as it thins out.
+  let fogLerpFrame = null;
+  function warmFogColors(duration) {
+    if (!fogEffect || !fogEffect.uniforms) return;
+    const chan = (hex) => [(hex >> 16 & 255) / 255, (hex >> 8 & 255) / 255, (hex & 255) / 255];
+    const pairs = [
+      { u: fogEffect.uniforms.highlightColor, from: chan(FOG_SEAM_COLORS.highlight), to: chan(FOG_SETTLE_COLORS.highlight) },
+      { u: fogEffect.uniforms.midtoneColor,   from: chan(FOG_SEAM_COLORS.midtone),   to: chan(FOG_SETTLE_COLORS.midtone) },
+      { u: fogEffect.uniforms.lowlightColor,  from: chan(FOG_SEAM_COLORS.lowlight),  to: chan(FOG_SETTLE_COLORS.lowlight) }
+    ];
+    const t0 = performance.now();
+    function step(now) {
+      if (!fogEffect) return; // destroyed mid-drift — stop quietly
+      const raw = Math.min((now - t0) / duration, 1);
+      const t = raw * raw * (3 - 2 * raw); // smoothstep
+      pairs.forEach(p => p.u.value.set(
+        p.from[0] + (p.to[0] - p.from[0]) * t,
+        p.from[1] + (p.to[1] - p.from[1]) * t,
+        p.from[2] + (p.to[2] - p.from[2]) * t
+      ));
+      if (raw < 1) fogLerpFrame = requestAnimationFrame(step);
+    }
+    fogLerpFrame = requestAnimationFrame(step);
   }
 
   // ── Skip button ───────────────────────────────────────────
@@ -146,8 +187,15 @@
     let videoStarted = false;
 
     video.addEventListener('timeupdate', () => {
-      if (!crossfadeStarted && video.duration &&
-          (video.duration - video.currentTime) <= VIDEO_CROSSFADE_LEAD) {
+      if (crossfadeStarted || !video.duration) return;
+      const remaining = video.duration - video.currentTime;
+      // Mist creeps up inside the video's final approach, so the handoff is
+      // anticipated instead of the fog popping in from nothing at the cut.
+      if (remaining <= FOG_RISE_LEAD && fogEffect && fogEl &&
+          !fogEl.classList.contains('is-rising')) {
+        fogEl.classList.add('is-rising');
+      }
+      if (remaining <= VIDEO_CROSSFADE_LEAD) {
         startCrossfade();
       }
     });
@@ -183,11 +231,18 @@
     // background's slow 1 → 1.04 drift that carries the video's push-in
     // direction across the seam.
     content.classList.add('is-visible');
-    // Fog bridge: same asymmetric swell/dissolve timing as the bloom below, so
-    // the two read as one atmosphere rather than two separate effects.
+    // Fog bridge: swell from the rise level to near-full cover for the seam
+    // itself, hold a beat so the video→hero handoff happens behind the mist,
+    // then release into the long dissolve — which is when the colors warm from
+    // rosette teal/gold to hero candlelight (warmFogColors runs over the same
+    // window, so the drift is felt as the mist thins).
     if (fogEl && fogEffect) {
+      fogEl.classList.remove('is-rising');
       fogEl.classList.add('is-active');
-      setTimeout(() => fogEl.classList.remove('is-active'), 420);
+      setTimeout(() => {
+        fogEl.classList.remove('is-active');
+        warmFogColors(FOG_DISSOLVE);
+      }, FOG_PEAK_HOLD);
     }
     // Light-bloom bridge: fast swell, then the slow dissolve runs over the
     // crossfade window (asymmetric transition speeds live in the CSS).
@@ -215,14 +270,17 @@
         if (bloom.parentNode) bloom.parentNode.removeChild(bloom);
       }, 400);
     }
-    // Same tail-outlive delay as the bloom, then tear down the WebGL context —
-    // it's rendering every frame and would otherwise leak on repeat visits.
+    // Fog outlives the crossfade by design: peak hold (500ms) + dissolve
+    // (1700ms) ends ~800ms after this function runs at the 1400ms mark. Tear
+    // down the WebGL context only once the dissolve tail is fully done —
+    // destroying at the bloom's 400ms mark would visibly clip the mist.
     if (fogEffect) {
       setTimeout(() => {
+        if (fogLerpFrame) cancelAnimationFrame(fogLerpFrame);
         fogEffect.destroy();
         fogEffect = null;
         if (fogEl && fogEl.parentNode) fogEl.parentNode.removeChild(fogEl);
-      }, 400);
+      }, FOG_PEAK_HOLD + FOG_DISSOLVE - CROSSFADE_DURATION + 300);
     }
     content.classList.add('is-visible');
     content.removeAttribute('aria-hidden');
