@@ -77,12 +77,18 @@
     });
   }
 
-  // Pre-warm: init immediately (hidden at opacity:0, still fully laid out and
-  // rendering) rather than waiting for crossfade — a cold WebGL context/shader
-  // compile takes long enough to be visible if triggered at the reveal moment
-  // itself, which is the one instant this can't afford to stutter.
+  // Pre-warm, but dormant: the expensive parts of WebGL init (context creation,
+  // shader compile) are paid up front at page load — in a 2px container, so no
+  // full-viewport framebuffer is allocated (~20ms vs a visible hitch) — and the
+  // render loop is halted immediately after. A hidden fog rendering the whole
+  // viewport every frame for the video's full 10s is pure GPU/decode competition
+  // (it was showing up as video lag); wakeFog() below resizes to full-bleed and
+  // restarts the loop only when the mist is actually about to be seen.
+  let fogAwake = false;
   function initFog() {
     if (!fogEl || !window.VANTA || crossfadeStarted) return;
+    fogEl.style.width = '2px';
+    fogEl.style.height = '2px';
     fogEffect = VANTA.FOG({
       el: fogEl,
       mouseControls: false,
@@ -100,6 +106,21 @@
       speed: 1.4,
       zoom: 1
     });
+    if (typeof fogEffect.req === 'number') cancelAnimationFrame(fogEffect.req);
+  }
+
+  // Bring the dormant fog to full-bleed and restart its render loop. Called at
+  // the rise trigger (2.6s before video end) — the resize (~3ms) and first
+  // full-res frame land behind the 1100ms opacity ease-in from 0, so any
+  // dropped frame here is invisible, unlike at page load where it fought the
+  // video's own startup.
+  function wakeFog() {
+    if (!fogEffect || fogAwake) return;
+    fogAwake = true;
+    fogEl.style.width = '';
+    fogEl.style.height = '';
+    if (typeof fogEffect.resize === 'function') fogEffect.resize();
+    if (typeof fogEffect.animationLoop === 'function') fogEffect.animationLoop();
   }
 
   // Drives the seam→settle color drift by mutating the fog shader's color
@@ -193,6 +214,7 @@
       // anticipated instead of the fog popping in from nothing at the cut.
       if (remaining <= FOG_RISE_LEAD && fogEffect && fogEl &&
           !fogEl.classList.contains('is-rising')) {
+        wakeFog();
         fogEl.classList.add('is-rising');
       }
       if (remaining <= VIDEO_CROSSFADE_LEAD) {
@@ -237,6 +259,7 @@
     // rosette teal/gold to hero candlelight (warmFogColors runs over the same
     // window, so the drift is felt as the mist thins).
     if (fogEl && fogEffect) {
+      wakeFog(); // no-op if the rise already woke it; covers fallback/skip paths
       fogEl.classList.remove('is-rising');
       fogEl.classList.add('is-active');
       setTimeout(() => {
