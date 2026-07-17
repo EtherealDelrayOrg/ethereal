@@ -146,18 +146,23 @@ when the fallback-timer path is what actually runs in this pane.
 
 ## Assets
 
-**Desktop (16:9) — DONE.** Delivered as a single pre-reversed, pre-spliced 10.04s master
-(clockwise-generated rewind plate reversed + push-in spliced, already assembled before handoff —
-the two-job/ffmpeg-splice step below wasn't needed for this one, only re-encode). Archived at
-`_reference/video/opening-desktop-master.mp4` (26.5MB source). Encoded deliverables in
-`src/assets/video/`: `opening-desktop.mp4` (4.2MB, H.264 CRF 25), `opening-desktop.webm` (3.9MB,
-VP9 CRF 34), `opening-desktop-poster.jpg` (extracted first frame). Hand-rotation direction verified
-correct (counter-clockwise) by frame sampling.
+**Desktop (16:9) — DONE (revised Jul 2026, `iterate2.mp4`).** Delivered as a single pre-reversed,
+pre-spliced 10.04s master, already assembled before handoff — the two-job/ffmpeg-splice step wasn't
+needed client-side, only re-encode. Archived at `_reference/video/opening-desktop-master.mp4` (78MB
+source — this replaced the original 26.5MB master from the first iteration). Encoded deliverables in
+`src/assets/video/`: `opening-desktop.mp4` (4.4MB, H.264 CRF 27), `opening-desktop.webm` (4.0MB,
+VP9 CRF 40), `opening-desktop-poster.jpg`. Hand-rotation direction re-verified correct
+(counter-clockwise) by frame sampling — checked at three well-separated timestamps at full crop
+resolution after an initial pixel-centroid-angle approach proved too noisy (camera zoom + imprecise
+crop centering threw it off; direct visual reads at full resolution were the reliable method).
 
-**Mobile (9:16) — NOT YET PRODUCED.** Site currently falls back to the CSS clock placeholder on
-mobile viewports (`<768px`) until this clip exists. See `_reference/images/` for the older approved-stills
-list (transparent gold-hands clock PNG, 16:9/9:16 start frames, 16:9/9:16 rosette end frames) — the
-9:16 pair from that list is still what's needed to produce the mobile clip via the two-job pipeline.
+**Mobile (9:16) — DONE (Jul 2026, `vertical_v1.mp4`).** Same treatment: archived at
+`_reference/video/opening-mobile-master.mp4` (72.6MB source, 10.04s). Encoded to
+`opening-mobile.mp4` (2.85MB, H.264 CRF 29), `opening-mobile.webm` (2.4MB, VP9 CRF 42),
+`opening-mobile-poster.jpg`. Direction verified correct the same way. `opening-sequence.js` now
+plays a video on *every* viewport size — matchMedia picks the source/poster pair
+(`opening-desktop*` vs `opening-mobile*`) — with the CSS clock reserved purely as the
+autoplay-blocked/load-failure fallback on either size, not a mobile-specific placeholder anymore.
 
 ---
 
@@ -168,11 +173,11 @@ list (transparent gold-hands clock PNG, 16:9/9:16 start frames, 16:9/9:16 rosett
    `index.html` / `opening-sequence.css` / `opening-sequence.js` (full-bleed `<video>`, matchMedia-gated
    to desktop, crossfade driven off `timeupdate`, graceful fallback to CSS clock if autoplay is blocked
    or the tab is backgrounded mid-play)
-3. [ ] Generate mobile (9:16) Job 1 (rewind plate) + Job 2 (push-in) via Higgsfield/Seedance 2.0
-4. [ ] Reverse Job 1, splice with Job 2, encode mobile deliverables (`ffmpeg`, see pipeline above)
-5. [ ] Generate mobile poster image
-6. [ ] Extend `opening-sequence.js` matchMedia gate to also play video on mobile once the clip exists
-7. [ ] Test on Chrome, Safari (iOS/macOS), Firefox, Edge — verify programmatically, not just by eye
+3. [x] Mobile video: receive (`vertical_v1.mp4`, already reversed/spliced), verify direction, archive
+   master, encode deliverables, generate poster
+4. [x] Extend `opening-sequence.js` matchMedia gate to play a video on every viewport size — desktop
+   and mobile each get their own source/poster pair, CSS clock is now purely the failure fallback
+5. [ ] Test on Chrome, Safari (iOS/macOS), Firefox, Edge — verify programmatically, not just by eye
    (in-app preview browsers can report `document.hidden: true` and block autoplay — not a real bug,
    confirm on an actual foreground browser tab before treating it as one)
-8. [ ] Performance audit (Lighthouse)
+6. [ ] Performance audit (Lighthouse)

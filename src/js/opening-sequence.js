@@ -1,8 +1,9 @@
 /* ============================================================
    OPENING SEQUENCE
-   Desktop: full-bleed AI video, crossfade timed off video playback.
-   Mobile (no 9:16 clip yet) + video-load failure: CSS clock placeholder
-   on a fixed timer. Both paths converge on the same startCrossfade().
+   Full-bleed AI video on both desktop and mobile (separate 16:9/9:16
+   sources), crossfade timed off video playback. Video-load/autoplay
+   failure: CSS clock placeholder on a fixed timer, either viewport
+   size. Both paths converge on the same startCrossfade().
    ============================================================ */
 
 (function () {
@@ -37,7 +38,7 @@
   let crossfadeStarted = false;
   const isDesktop = window.matchMedia('(min-width: 768px)').matches;
 
-  if (video && isDesktop) {
+  if (video) {
     playVideoSequence();
   } else {
     startFallbackTimer();
@@ -117,7 +118,7 @@
     autoTimer = setTimeout(startCrossfade, SEQUENCE_DURATION);
   }
 
-  // ── Video path: desktop only (no mobile 9:16 clip yet) ─────
+  // ── Video path: desktop and mobile each get their own clip ──
   // Tagline and progress bar are dropped here — they read as clutter over
   // the video's own full-bleed art; the fallback CSS-clock path still shows
   // them since that placeholder needs the loading cue.
@@ -126,7 +127,8 @@
     if (brand) brand.style.display = 'none';
     if (progressBar) progressBar.style.display = 'none';
 
-    const src = '/src/assets/video/opening-desktop';
+    const src = isDesktop ? '/src/assets/video/opening-desktop' : '/src/assets/video/opening-mobile';
+    video.poster = src + '-poster.jpg';
     const webm = document.createElement('source');
     webm.src = src + '.webm'; webm.type = 'video/webm';
     const mp4 = document.createElement('source');
