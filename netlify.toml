@@ -1,6 +1,17 @@
 [build]
   publish = "."
 
+# DEV BRANCH ONLY — keep this preview site out of search engines entirely.
+# X-Robots-Tag (not robots.txt) is deliberate: a robots.txt Disallow would stop
+# Google from crawling but the URL could still appear in results; noindex
+# de-indexes, and crawlers must be able to fetch the page to see it. The site
+# stays reachable by direct URL. Do NOT let this block spread to main's
+# netlify.toml during main→dev merges (same siloing rule as GA4, in reverse).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
 # Cache static assets aggressively, never cache HTML
 [[headers]]
   for = "/src/assets/*"
