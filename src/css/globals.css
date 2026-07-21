@@ -736,6 +736,16 @@ site-header, site-footer { display: contents; }
     --nav-height: 64px;
   }
 
+  /* Give the bar top breathing room so the wordmark isn't jammed against the top
+     edge (the ~47px logo in a 64px bar sat only ~8px from the top). The offset is
+     applied as header padding above the fixed-height nav-inner, so the centered
+     logo AND the vertically-centered hamburger move down together, staying aligned.
+     env(safe-area-inset-top) also drops the logo clear of the iPhone notch. */
+  #site-header {
+    height: auto;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 10px);
+  }
+
   /* Mobile bar reverts to a single row, logo centered — the hamburger is pulled out of
      flow and pinned to the right edge so the logo can sit truly centered in the bar
      rather than sharing a space-between row with it. */
@@ -745,6 +755,7 @@ site-header, site-footer { display: contents; }
     justify-content: center;
     gap: 0;
     padding: 0 1.25rem;
+    height: var(--nav-height);
   }
   /* 60vw keeps ~19px clearance to the hamburger on a 375px phone; the 250px cap
      does the same on wider phones. ~47px tall in the 64px bar. */
