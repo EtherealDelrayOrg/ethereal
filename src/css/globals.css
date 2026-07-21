@@ -344,7 +344,7 @@ site-header, site-footer { display: contents; }
      fixed-height nav-inner so the centered logo and the vertically-centered hamburger
      move down together. env(safe-area-inset-top) also clears the iPhone notch. */
   height: auto;
-  padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
+  padding-top: calc(env(safe-area-inset-top, 0px) + 10px);
   /* Transparent by default so the homepage hero can run edge-to-edge behind the nav.
      The solid bar comes from either .nav-solid (subpages render with it permanently —
      their content is ink-on-ink and would scroll illegibly under a transparent header)
@@ -745,7 +745,7 @@ site-header, site-footer { display: contents; }
   /* A bit more top offset than desktop so the wordmark clears the top edge / notch
      with room to spare (base #site-header handles the mechanism). */
   #site-header {
-    padding-top: calc(env(safe-area-inset-top, 0px) + 26px);
+    padding-top: calc(env(safe-area-inset-top, 0px) + 13px);
   }
 
   /* Mobile bar reverts to a single row, logo centered — the hamburger is pulled out of
