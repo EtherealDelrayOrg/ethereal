@@ -338,7 +338,13 @@ site-header, site-footer { display: contents; }
      place throughout removes the jump entirely and the existing hamburger-to-X toggle
      doubles as the close control, since it's now actually visible above the overlay. */
   z-index: 160;
-  height: var(--nav-height);
+  /* The bar's own height is carried by .nav-inner (var(--nav-height)); the header
+     itself is auto so this top padding can drop the whole nav block down off the top
+     edge — the wordmark otherwise reads too close to the screen edge. Applied above a
+     fixed-height nav-inner so the centered logo and the vertically-centered hamburger
+     move down together. env(safe-area-inset-top) also clears the iPhone notch. */
+  height: auto;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 10px);
   /* Transparent by default so the homepage hero can run edge-to-edge behind the nav.
      The solid bar comes from either .nav-solid (subpages render with it permanently —
      their content is ink-on-ink and would scroll illegibly under a transparent header)
@@ -383,7 +389,7 @@ site-header, site-footer { display: contents; }
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  height: 100%;
+  height: var(--nav-height);
   padding: 0.5rem 2rem;
   max-width: var(--container);
   margin: 0 auto;
@@ -734,6 +740,12 @@ site-header, site-footer { display: contents; }
   :root {
     --section-v: 64px;
     --nav-height: 64px;
+  }
+
+  /* A bit more top offset than desktop so the wordmark clears the top edge / notch
+     with room to spare (base #site-header handles the mechanism). */
+  #site-header {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 13px);
   }
 
   /* Mobile bar reverts to a single row, logo centered — the hamburger is pulled out of
