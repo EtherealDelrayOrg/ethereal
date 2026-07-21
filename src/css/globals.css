@@ -338,7 +338,13 @@ site-header, site-footer { display: contents; }
      place throughout removes the jump entirely and the existing hamburger-to-X toggle
      doubles as the close control, since it's now actually visible above the overlay. */
   z-index: 160;
-  height: var(--nav-height);
+  /* The bar's own height is carried by .nav-inner (var(--nav-height)); the header
+     itself is auto so this top padding can drop the whole nav block down off the top
+     edge — the wordmark otherwise reads too close to the screen edge. Applied above a
+     fixed-height nav-inner so the centered logo and the vertically-centered hamburger
+     move down together. env(safe-area-inset-top) also clears the iPhone notch. */
+  height: auto;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
   /* Transparent by default so the homepage hero can run edge-to-edge behind the nav.
      The solid bar comes from either .nav-solid (subpages render with it permanently —
      their content is ink-on-ink and would scroll illegibly under a transparent header)
@@ -383,7 +389,7 @@ site-header, site-footer { display: contents; }
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  height: 100%;
+  height: var(--nav-height);
   padding: 0.5rem 2rem;
   max-width: var(--container);
   margin: 0 auto;
@@ -736,14 +742,10 @@ site-header, site-footer { display: contents; }
     --nav-height: 64px;
   }
 
-  /* Give the bar top breathing room so the wordmark isn't jammed against the top
-     edge (the ~47px logo in a 64px bar sat only ~8px from the top). The offset is
-     applied as header padding above the fixed-height nav-inner, so the centered
-     logo AND the vertically-centered hamburger move down together, staying aligned.
-     env(safe-area-inset-top) also drops the logo clear of the iPhone notch. */
+  /* A bit more top offset than desktop so the wordmark clears the top edge / notch
+     with room to spare (base #site-header handles the mechanism). */
   #site-header {
-    height: auto;
-    padding-top: calc(env(safe-area-inset-top, 0px) + 10px);
+    padding-top: calc(env(safe-area-inset-top, 0px) + 26px);
   }
 
   /* Mobile bar reverts to a single row, logo centered — the hamburger is pulled out of
@@ -755,7 +757,6 @@ site-header, site-footer { display: contents; }
     justify-content: center;
     gap: 0;
     padding: 0 1.25rem;
-    height: var(--nav-height);
   }
   /* 60vw keeps ~19px clearance to the hamburger on a 375px phone; the 250px cap
      does the same on wider phones. ~47px tall in the 64px bar. */
