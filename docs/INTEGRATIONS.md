@@ -77,12 +77,38 @@ degrades to a normal navigation that still books, rather than becoming a dead co
 Resy's embed key is referrer-restricted. Loading the modal from `http://localhost` returns a
 full-page **"Access denied — Error 15"** inside the widget iframe. This is expected and is not
 a bug in our integration — the DOM wiring can be verified locally (the modal mounts with the
-correct `venueId`), but the booking UI itself only renders on an allowlisted domain.
+correct `venueId`), but the booking UI itself only renders from a real deployed domain.
 
-**Therefore:** confirm with the client that both the production domain **and** the dev preview
-domain (`etherealdelray-dev.netlify.app`) are allowlisted in their Resy dashboard. If the dev
-domain is not, the button will show Error 15 on the preview site while still working in
-production.
+**The deployed dev domain is fine** — `etherealdelray-dev.netlify.app` loads the widget with no
+Error 15, so no domain allowlisting was needed. Test there, not on localhost.
+
+### Blocker — the venue is not live on Resy yet (as of July 2026)
+
+Our side is done and verified. What's outstanding is entirely on the client's Resy account:
+
+- `https://resy.com/cities/delray-beach-fl/venues/ethereal` renders Resy's **"Sorry, but we
+  can't find that page"** — the venue is not published. (Note: `curl` reports HTTP 200 because
+  the page is a SPA that renders its 404 client-side; check the rendered text, not the status.)
+- The booking modal opens but **hangs on a loading spinner** and never renders a calendar —
+  including when the widget URL is loaded directly on `widgets.resy.com`, i.e. with our site
+  out of the picture entirely. That points at no bookable inventory for `venueId` 98608.
+
+The client has clearly been provisioned (a real `venueId` and embed key were issued), but the
+venue still needs to be switched live with inventory loaded. What has to be true before the
+button does anything useful:
+
+1. Venue **published / live** on Resy (its public page must resolve).
+2. **Inventory configured** in ResyOS — floor plan/tables, service periods (shifts), seating
+   times, party-size range.
+3. **Booking window open** (how far ahead guests may reserve). With no open window a live venue
+   still shows an empty widget.
+
+Resy onboarding is account-manager driven rather than fully self-serve, so the fastest path is
+for the client to ask their Resy account manager to confirm venue 98608 is live with shifts and
+a booking window configured.
+
+**When it goes live, re-check the venue slug** in the anchor's `href` — the current slug is
+unverified precisely because the page 404s, and it may differ from the final published URL.
 
 ### Still open
 - Reservation note, party size, and dress code on the page remain `[ placeholder ]` copy.
