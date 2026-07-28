@@ -37,31 +37,18 @@
             <p class="content-ph">[ Reservation note — e.g., "We recommend reserving at least two weeks in advance for weekend dining. Walk-ins are welcome based on availability." ]</p>
           </div>
 
-          <!-- Resy embed goes here -->
-          <!-- Replace the placeholder below with your Resy widget code -->
-          <!--
-          <script type="text/javascript"
-            src="https://widgets.resy.com/embed.js"
-            async=""
-            defer="">
-          </script>
-          <a href="https://resy.com/cities/[city]/[venue-slug]"
-             class="resy-button"
-             data-url="https://resy.com/cities/[city]/[venue-slug]"
-             data-notify-id="[notify-id]"
-             data-color-primary="#c4a440"
-             data-color-secondary="#0d0b09">
-            Make a Reservation
-          </a>
-          -->
-
+          <!-- Resy booking widget. The anchor is a real, working link to the venue's
+               Resy page on its own — resyWidget.addButton() upgrades it in place to
+               open the booking modal without leaving the site. If widgets.resy.com
+               is slow, blocked, or errors, the plain link is the fallback and still
+               books; see the guard on the call below. -->
           <div style="text-align:center; padding:1rem 0;">
-            <a href="#" class="btn btn--filled is-coming-soon" style="padding:16px 38px;" aria-disabled="true" title="Coming soon">
-              Make a Reservation on Resy<span class="coming-soon-badge">Coming Soon</span>
+            <a href="https://resy.com/cities/delray-beach-fl/venues/ethereal"
+               id="resyButton-FeXsTN-RqxalWcsqzodtj"
+               class="btn btn--filled"
+               style="padding:16px 38px;">
+              Make a Reservation on Resy
             </a>
-            <p style="margin-top:1rem; font-family:var(--font-ui); font-size:11px; letter-spacing:0.12em; color:var(--brass-dark); text-transform:uppercase;">
-              Placeholder — replace with Resy widget when venue is live
-            </p>
           </div>
 
           <div class="resy-info-grid">
@@ -100,5 +87,36 @@
   <site-footer></site-footer>
 
   <script src="/src/js/main.js"></script>
+
+  <!-- Resy widget — venueId/apiKey supplied by the client from their Resy
+       dashboard. The apiKey is a public embed key (it ships in the page by
+       design, like any Resy booking button) and is referrer-restricted on
+       Resy's side, so the domain must be allowlisted in their dashboard.
+
+       We deliberately do NOT use resyWidget.addButton(): it injects Resy's own
+       red #FF462D 200x50 branded button — with `replace: true` it swaps out our
+       anchor entirely (losing both the site's styling and the href fallback),
+       and with `replace: false` it appends the red button *inside* ours. Binding
+       the modal to our own button instead keeps the reservations page on-palette.
+
+       Progressive enhancement: the anchor is a real link to the venue's Resy
+       page, and we only preventDefault when the widget actually loaded and
+       exposes openModal — so a slow/blocked/changed embed.js degrades to a
+       normal navigation that still books, rather than a dead button. -->
+  <script src="https://widgets.resy.com/embed.js"></script>
+  <script>
+    (function () {
+      var btn = document.getElementById('resyButton-FeXsTN-RqxalWcsqzodtj');
+      if (!btn) return;
+      btn.addEventListener('click', function (e) {
+        if (!window.resyWidget || typeof resyWidget.openModal !== 'function') return;
+        e.preventDefault();
+        resyWidget.openModal({
+          venueId: 98608,
+          apiKey: '12m41wFYzrqYB8D1dFhLaAoGU1UXG71e'
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

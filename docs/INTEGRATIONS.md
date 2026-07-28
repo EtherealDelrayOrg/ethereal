@@ -36,39 +36,56 @@ The iframe will show Toast's own UI — we cannot override their internal styles
 
 ## Resy — Reservations
 
+**Status: LIVE on `dev`** (client supplied the embed snippet July 2026). Implemented in
+`pages/reservations.html` — replaced the old "Coming Soon" placeholder button.
+
 **What it is:** Resy is a reservation management platform used by fine dining restaurants.
 
-### Integration Methods
+### Client-supplied values
 
-**Option A — Resy booking button (simplest)**
-```html
-<!-- Drop this script in <head> -->
-<script type="text/javascript"
-  src="https://widgets.resy.com/embed.js"
-  async=""
-  defer="">
-</script>
+| Value | |
+|---|---|
+| Venue page | `https://resy.com/cities/delray-beach-fl/venues/ethereal` |
+| `venueId` | `98608` |
+| `apiKey` | `12m41wFYzrqYB8D1dFhLaAoGU1UXG71e` |
 
-<!-- Drop this where the button should appear -->
-<a href="https://resy.com/cities/[city]/[venue-slug]"
-   class="resy-button"
-   data-url="https://resy.com/cities/[city]/[venue-slug]"
-   data-notify-id="[notify-id]"
-   data-color-primary="#c9a84c"
-   data-color-secondary="#080706">
-  Make a Reservation
-</a>
-```
+The `apiKey` is a **public embed key** — it ships in the page source by design, exactly like
+any Resy booking button, and only grants widget booking. It is not a secret. Resy restricts it
+**by referrer domain** instead (see the gotcha below).
 
-The `data-color-primary` and `data-color-secondary` attributes let us match our palette.
+### How it's wired
 
-**Option B — Inline widget**
-Resy also provides a modal or inline datepicker widget. Requires venue to be live on Resy.
+The client's snippet used `resyWidget.addButton(el, {…, replace: true})`. We deliberately do
+**not** use `addButton`, because it injects Resy's own red `#FF462D` 200×50 branded button:
 
-### What we need from client
-- Resy venue URL and venue slug
-- Resy notify ID (from their dashboard)
-- Confirmation: are they live on Resy, or is this a future integration?
+- `replace: true` — swaps our anchor out entirely, losing both the site styling and the
+  `href` fallback.
+- `replace: false` — appends the red button *inside* ours, so you get both.
+
+Neither survives contact with the dark/gold palette. Instead we bind Resy's own public
+`resyWidget.openModal({venueId, apiKey})` to our standard `.btn.btn--filled` anchor, which
+opens the identical booking modal (fixed overlay, `z-index: 9999999`) while keeping the page
+on-brand.
+
+**Progressive enhancement:** the anchor is a real link to the venue's Resy page. The click
+handler only calls `preventDefault()` once it has confirmed `resyWidget.openModal` exists —
+so if `widgets.resy.com` is slow, blocked, or ever changes its API surface, the button
+degrades to a normal navigation that still books, rather than becoming a dead control.
+
+### Gotcha — the widget cannot be tested from localhost
+
+Resy's embed key is referrer-restricted. Loading the modal from `http://localhost` returns a
+full-page **"Access denied — Error 15"** inside the widget iframe. This is expected and is not
+a bug in our integration — the DOM wiring can be verified locally (the modal mounts with the
+correct `venueId`), but the booking UI itself only renders on an allowlisted domain.
+
+**Therefore:** confirm with the client that both the production domain **and** the dev preview
+domain (`etherealdelray-dev.netlify.app`) are allowlisted in their Resy dashboard. If the dev
+domain is not, the button will show Error 15 on the preview site while still working in
+production.
+
+### Still open
+- Reservation note, party size, and dress code on the page remain `[ placeholder ]` copy.
 
 ---
 
