@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="/src/css/globals.css">
   <link rel="stylesheet" href="/src/css/opening-sequence.css">
   <link rel="stylesheet" href="/src/css/home.css">
-  <noscript><style>#opening-sequence{display:none!important}#site-content{opacity:1!important}#site-header{opacity:1!important;pointer-events:auto!important}</style></noscript>
+  <noscript><style>#opening-sequence,.seq-bloom,#seq-fog{display:none!important}#site-content{opacity:1!important}#site-header{opacity:1!important;pointer-events:auto!important}.hero-label,.hero-title,.hero-sub,.hero-ctas{opacity:1!important;animation:none!important}.hero-bg{transform:scale(1.04)!important}</style></noscript>
   <script src="/src/js/partials.js"></script>
 </head>
 <body>
@@ -36,8 +36,14 @@
   <!-- ── Opening Sequence ─────────────────────────────── -->
   <div id="opening-sequence" role="presentation" aria-hidden="true">
 
-    <!-- Real clock face — replaced by <video> when AI video is ready -->
-    <div class="seq-clock">
+    <!-- Full-bleed AI video — desktop/mobile source and poster picked and set
+         by opening-sequence.js (matchMedia), which also plays it. -->
+    <video id="opening-video" muted playsinline webkit-playsinline
+           preload="auto" aria-hidden="true"></video>
+
+    <!-- Static clock fallback — only shown if autoplay gets blocked or the
+         clip fails to load, on either viewport size -->
+    <div class="seq-clock" id="seq-clock-fallback">
       <img src="/src/assets/images/clock-face-transparent.png" alt="" aria-hidden="true">
     </div>
 
@@ -54,6 +60,16 @@
   </div>
   <!-- /Opening Sequence -->
 
+  <!-- Fog bridge: WebGL (Vanta.js FOG) drifting mist, pre-warmed hidden well before
+       crossfade so there's no WebGL cold-start stutter at reveal — just fades in/out
+       like the bloom below. Desktop only (see opening-sequence.js): skips the
+       Three.js/WebGL weight entirely on mobile, which has no video to bridge from yet. -->
+  <div id="seq-fog" aria-hidden="true"></div>
+
+  <!-- Light-bloom bridge: swells at crossfade-start, dissolves over the blend
+       (see opening-sequence.css). Removed from the DOM once the site is revealed. -->
+  <div class="seq-bloom" id="seq-bloom" aria-hidden="true"></div>
+
   <!-- ── Site Content ──────────────────────────────────── -->
   <div id="site-content" aria-hidden="true">
 
@@ -65,12 +81,16 @@
     <main id="main-content">
 
       <!-- ── Hero ─────────────────────────────────────── -->
-      <section id="hero" aria-labelledby="hero-title">
+      <section id="hero" aria-label="Ethereal">
         <div class="hero-bg" aria-hidden="true"></div>
         <div class="hero-scrim" aria-hidden="true"></div>
         <div class="hero-content">
           <span class="hero-label">Coming Soon</span>
-          <h1 class="hero-title" id="hero-title">Where time<br>breathes.</h1>
+          <!-- Hero heading removed at client request (was "Where time breathes.").
+               Deliberately left with no replacement copy for now. The .hero-title
+               styles + entrance animation stay in home.css so restoring it is just
+               putting the <h1 class="hero-title" id="hero-title"> back here (and
+               switching the section above back to aria-labelledby="hero-title"). -->
           <div class="hero-ctas">
             <a href="/pages/reservations.html" class="btn btn--filled is-coming-soon" aria-disabled="true" title="Coming soon">Reserve a Table<span class="coming-soon-badge">Coming Soon</span></a>
             <a href="/pages/menu.html" class="btn btn--ghost is-coming-soon" aria-disabled="true" title="Coming soon">View the Menu<span class="coming-soon-badge">Coming Soon</span></a>

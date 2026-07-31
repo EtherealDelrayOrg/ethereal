@@ -58,19 +58,26 @@
 }
 
 
-/* When the real video replaces the clock SVG */
+/* Full-bleed AI video — sits behind the clock fallback/brand/skip/progress
+   chrome (z-index below them), hidden until JS confirms desktop + playable */
 #opening-video {
+  display: none;
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  z-index: 1;
+}
+#opening-video.is-active {
+  display: block;
 }
 
 /* === Brand text === */
 .seq-brand {
   text-align: center;
   opacity: 0;
+  z-index: 2;
   animation: seqFadeUp 900ms 600ms var(--ease) forwards;
 }
 
@@ -90,6 +97,7 @@
   position: absolute;
   top: 1.5rem;
   right: 2rem;
+  z-index: 3;
   font-family: var(--font-ui);
   font-size: 12px;
   font-weight: 500;
@@ -119,12 +127,84 @@
   width: 120px;
   height: 1px;
   background: rgba(138, 100, 40, 0.2);
+  z-index: 3;
 }
 .seq-progress-fill {
   height: 100%;
   background: var(--brass);
   width: 0%;
   transition: width linear;
+}
+
+/* === Fog bridge (Vanta.js FOG, desktop only) ===
+   Drifting mist beneath the bloom — replaces a flat color fade with actual
+   texture/depth for the crossfade. Vanta's canvas isn't natively transparent, so
+   this leans on mix-blend-mode: screen + a near-black baseColor (opening-sequence.js)
+   to make the dark areas disappear and only the lit mist glow through — same trick
+   as the bloom's radial-gradient, just with motion and grain.
+   Pre-warmed hidden (opacity, never display:none — Vanta needs real layout size to
+   measure) well before crossfade so there's no WebGL init stutter at reveal time.
+
+   Three phases, driven by opening-sequence.js (colors move too — see the color
+   arc there: rosette teal/gold at the seam, warming to hero candlelight):
+     is-rising  — the video's final approach: mist creeps up INSIDE the video,
+                  so the transition is anticipated rather than appearing from
+                  nothing at the cut
+     is-active  — the seam itself: near-full cover while the video hands off to
+                  the hero, carrying the luminance drop from the bright rosette
+     (neither)  — slow dissolve, deliberately outliving the 1.4s crossfade so
+                  the hero is revealed through thinning mist, not a hard edge */
+#seq-fog {
+  position: fixed;
+  inset: 0;
+  z-index: 590;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 1700ms ease;
+}
+#seq-fog.is-rising {
+  opacity: 0.35;
+  transition: opacity 1100ms ease-in;
+}
+#seq-fog.is-active {
+  opacity: 0.85;
+  transition: opacity 400ms ease-out;
+}
+#seq-fog canvas {
+  display: block;
+}
+@media (prefers-reduced-motion: reduce) {
+  #seq-fog { display: none !important; }
+}
+
+/* === Light-bloom bridge ===
+   A warm wash that swells at crossfade-start and dissolves over the blend.
+   The opening video ends on warm light through stained glass; this bloom makes
+   the handoff read as passing THROUGH that light into the site, and it masks
+   the scale mismatch between the video's macro close-up and the wide hero.
+   Sits above both the sequence overlay (z 500) and the site, ignores clicks.
+   In/out speeds are asymmetric: fast swell, slow dissolve. */
+.seq-bloom {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  pointer-events: none;
+  background: radial-gradient(ellipse 85% 75% at 50% 45%,
+    rgba(232, 186, 110, 0.5) 0%,
+    rgba(224, 168, 90, 0.28) 38%,
+    rgba(224, 168, 90, 0.08) 62%,
+    transparent 82%);
+  opacity: 0;
+  transition: opacity 1150ms ease;
+}
+.seq-bloom.is-active {
+  opacity: 1;
+  transition: opacity 320ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seq-bloom { display: none !important; }
 }
 
 /* === Keyframes === */
