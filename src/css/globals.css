@@ -644,6 +644,18 @@ site-header, site-footer { display: contents; }
   margin-bottom: 1.25rem;
 }
 
+/* While the tagline is a placeholder it carries .content-ph, so a search for the
+   class still finds every outstanding copy gap. Its rule-bar + indent are meant
+   for prose blocks though — here they'd shift the tagline out of line with the
+   wordmark above and the social link below, reading as a layout bug rather than
+   a deliberate marker. Bracket text alone is the signal in this slot. */
+.footer-tagline.content-ph {
+  border-left: none;
+  padding: 0;
+  font-size: clamp(1.05rem, 1.7vw, 1.375rem);
+  color: var(--ivory-dark);
+}
+
 .footer-social {
   display: flex;
   gap: 1rem;
