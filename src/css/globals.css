@@ -47,7 +47,12 @@
   --transition-fast: 400ms cubic-bezier(0.25, 0.1, 0.1, 1);
 
   --container:    1320px;
-  --nav-height:   112px;
+  /* Height of the nav bar itself (.nav-inner). #site-header sits --nav-offset-top
+     below the viewport edge on top of this, so the wordmark isn't jammed against
+     the top; #mobile-nav reuses both so the overlay's first link clears the logo
+     by the same amount no matter which one changes. */
+  --nav-height:   136px;
+  --nav-offset-top: 10px;
   --section-v:    110px;
 }
 
@@ -344,7 +349,7 @@ site-header, site-footer { display: contents; }
      fixed-height nav-inner so the centered logo and the vertically-centered hamburger
      move down together. env(safe-area-inset-top) also clears the iPhone notch. */
   height: auto;
-  padding-top: calc(env(safe-area-inset-top, 0px) + 10px);
+  padding-top: calc(env(safe-area-inset-top, 0px) + var(--nav-offset-top));
   /* Transparent by default so the homepage hero can run edge-to-edge behind the nav.
      The solid bar comes from either .nav-solid (subpages render with it permanently —
      their content is ink-on-ink and would scroll illegibly under a transparent header)
@@ -388,7 +393,11 @@ site-header, site-footer { display: contents; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  /* Matches .hero-title's 1.85rem margin-bottom (the catchphrase→buttons gap in
+     home.css) so the nav links sit the same distance under the wordmark as the
+     hero CTAs sit under the hero heading. --nav-height is sized to fit this;
+     raising the gap without raising --nav-height overflows the bar. */
+  gap: 1.85rem;
   height: var(--nav-height);
   padding: 0.5rem 2rem;
   max-width: var(--container);
@@ -503,12 +512,31 @@ site-header, site-footer { display: contents; }
   z-index: 150;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 2.5rem;
+  /* NOT justify-content: center — see the auto margins below. */
+  justify-content: flex-start;
+  gap: 2rem;
   opacity: 0;
   pointer-events: none;
   transition: opacity 400ms var(--ease);
+  /* The overlay is inset:0, but #site-header sits ON TOP of it (z-index 160 vs
+     150) so the wordmark stays visible while the menu is open. Without this
+     padding the links ride up underneath the logo — which they did as soon as
+     the list got long or the phone short. Reserve the header's full footprint
+     (offset + bar), then 1.5rem: the wordmark's glyphs stop ~8px short of the
+     bar's bottom edge, so 1.5rem of bar clearance lands the first link ~2rem
+     below the visible logo — matching the 2rem gap between the links. */
+  padding-top: calc(env(safe-area-inset-top, 0px) + var(--nav-offset-top) + var(--nav-height) + 1.5rem);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem);
+  /* Long list on a short phone: scroll rather than clip. */
+  overflow-y: auto;
 }
+/* Centres the list when there's spare room, but collapses to 0 when there isn't,
+   so the list can only ever grow downward into the scroll. `justify-content:
+   center` cannot do this — a centred flex column overflows equally in BOTH
+   directions, pushing the first link up under the logo and out of scroll reach
+   exactly when the menu is too tall to fit. */
+#mobile-nav > :first-child { margin-top: auto; }
+#mobile-nav > :last-child  { margin-bottom: auto; }
 #mobile-nav.is-open {
   opacity: 1;
   pointer-events: auto;
@@ -532,7 +560,8 @@ site-header, site-footer { display: contents; }
   color: var(--brass) !important;
   border: 1px solid var(--brass-dark);
   padding: 12px 32px;
-  margin-top: 1rem;
+  /* No extra margin-top: the overlay's own gap is the single spacing rule, so
+     every item in the menu is evenly spaced including this one. */
 }
 #mobile-nav .mobile-reserve:hover {
   background: var(--brass);
@@ -732,20 +761,19 @@ site-header, site-footer { display: contents; }
   :root {
     --container:  1440px;
     --section-v:  128px;
-    --nav-height: 120px;
+    --nav-height: 144px;
   }
 }
 
 @media (max-width: 900px) {
   :root {
     --section-v: 64px;
+    /* Single row here (no links under the wordmark), so the bar doesn't need the
+       desktop height that the 1.85rem logo→links gap requires. */
     --nav-height: 64px;
-  }
-
-  /* A bit more top offset than desktop so the wordmark clears the top edge / notch
-     with room to spare (base #site-header handles the mechanism). */
-  #site-header {
-    padding-top: calc(env(safe-area-inset-top, 0px) + 13px);
+    /* A bit more top offset than desktop so the wordmark clears the top edge /
+       notch with room to spare. #site-header and #mobile-nav both read this. */
+    --nav-offset-top: 13px;
   }
 
   /* Mobile bar reverts to a single row, logo centered — the hamburger is pulled out of
