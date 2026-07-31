@@ -51,9 +51,10 @@
           <div class="footer-brand">
             <a href="/" class="footer-logo"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal" class="logo-img"></a>
             <!-- PLACEHOLDER: "Where time breathes." retired at client request, new
-                 tagline TBD. Uses the site's usual visible [ bracket ] convention
-                 since this is on-page copy the client scans for gaps. -->
-            <p class="footer-tagline content-ph">[ Tagline TBD ]</p>
+                 tagline TBD. Deliberately renders as empty space — no visible
+                 placeholder text here, since visitors see this footer on every
+                 page. Drop the new tagline between the tags when it lands. -->
+            <p class="footer-tagline"></p>
             <div class="footer-social"><a href="https://www.instagram.com/etherealdelray" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a></div>
           </div>
           <nav class="footer-nav" aria-label="Footer navigation">
