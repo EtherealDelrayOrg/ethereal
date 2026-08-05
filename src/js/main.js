@@ -178,4 +178,53 @@
     }, { passive: true });
   }
 
+  // ── Resy booking widget ───────────────────────────────────
+  // Every "Reserve" CTA on the site opens Resy's booking modal in place —
+  // there's no reservations page on this branch yet, so the widget IS the
+  // reservation flow. Marked up as [data-resy-book] so the CTAs stay plain
+  // anchors and only this one place knows the venue credentials.
+  //
+  // embed.js is injected here rather than pasted into nine <head>s by hand:
+  // main.js already loads on every page (the same problem GA4 had, solved the
+  // other way because that one has to run before page render and this doesn't).
+  //
+  // Progressive enhancement: each CTA's href is a real link to the venue's Resy
+  // page, and the click is only intercepted once the widget has actually loaded
+  // AND exposes openModal — so a slow, blocked, or changed embed.js degrades to
+  // a normal navigation that still books, rather than a dead button.
+  const RESY = { venueId: 98608, apiKey: '12m41wFYzrqYB8D1dFhLaAoGU1UXG71e' };
+  if (document.querySelector('[data-resy-book]')) {
+    const s = document.createElement('script');
+    s.src = 'https://widgets.resy.com/embed.js';
+    s.async = true;
+    document.head.appendChild(s);
+
+    // Delegated: the header/footer CTAs are injected by partials.js, and the
+    // mobile-nav one lives in an overlay, so binding per-element at load is
+    // fragile. One listener covers every current and future trigger.
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest('[data-resy-book]');
+      if (!trigger) return;
+      if (!window.resyWidget || typeof resyWidget.openModal !== 'function') return;
+
+      // Resy's widget refuses to open its modal on narrow/mobile viewports —
+      // openModal() returns normally and simply mounts nothing (verified: modal
+      // mounts at 1280px, does nothing at 375px, no error either way). Left
+      // unhandled that turns every Reserve button on a phone into a dead
+      // control, which is most of a restaurant's traffic.
+      //
+      // Rather than hard-code Resy's breakpoint (undocumented, and theirs to
+      // change), just look at whether a frame actually appeared and navigate to
+      // the venue page if it didn't. Resy's own site is mobile-optimised and
+      // hands off to their app, so that's the better mobile flow anyway. The
+      // modal mounts synchronously, so this check is reliable.
+      const framesBefore = document.querySelectorAll('iframe').length;
+      resyWidget.openModal(RESY);
+      if (document.querySelectorAll('iframe').length > framesBefore) {
+        e.preventDefault(); // modal is up — stay on the site
+      }
+      // else: let the click through to the href as a normal navigation
+    });
+  }
+
 })();

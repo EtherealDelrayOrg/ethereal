@@ -36,39 +36,68 @@ The iframe will show Toast's own UI — we cannot override their internal styles
 
 ## Resy — Reservations
 
-**What it is:** Resy is a reservation management platform used by fine dining restaurants.
+**Status: LIVE.** The venue went active on Resy in Aug 2026, and every "Reserve" CTA on the
+site now opens Resy's booking modal in place. **There is no reservations page on `main`** — the
+widget *is* the reservation flow here, so all CTAs point straight at Resy.
 
-### Integration Methods
+### Venue values
 
-**Option A — Resy booking button (simplest)**
-```html
-<!-- Drop this script in <head> -->
-<script type="text/javascript"
-  src="https://widgets.resy.com/embed.js"
-  async=""
-  defer="">
-</script>
+| Value | |
+|---|---|
+| `venueId` | `98608` |
+| `apiKey` | `12m41wFYzrqYB8D1dFhLaAoGU1UXG71e` |
+| Venue page | `https://resy.com/cities/delray-beach-fl/venues/ethereal` |
 
-<!-- Drop this where the button should appear -->
-<a href="https://resy.com/cities/[city]/[venue-slug]"
-   class="resy-button"
-   data-url="https://resy.com/cities/[city]/[venue-slug]"
-   data-notify-id="[notify-id]"
-   data-color-primary="#c9a84c"
-   data-color-secondary="#080706">
-  Make a Reservation
-</a>
+The `apiKey` is a **public embed key** — it ships in page source by design, like any Resy
+booking button, and only grants widget booking. Resy restricts it by referrer domain instead.
+
+Resy's API reports the canonical slug as `.../cities/dlr/venues/ethereal` (city code `dlr`), but
+**both forms resolve** — we use the longer one because that's what the client's ResyOS dashboard
+generates. To re-check the venue's status or slug at any time:
+
+```bash
+curl -s "https://api.resy.com/3/venue?id=98608" -H 'Authorization: ResyAPI api_key="12m41wFYzrqYB8D1dFhLaAoGU1UXG71e"'
 ```
 
-The `data-color-primary` and `data-color-secondary` attributes let us match our palette.
+A `404` with `"Venue is inactive or not found."` means the venue isn't live — that is the single
+most useful check when the widget "won't load", and it distinguishes a venue problem from a code
+problem instantly. A `401` instead would mean the key itself is bad.
 
-**Option B — Inline widget**
-Resy also provides a modal or inline datepicker widget. Requires venue to be live on Resy.
+### How it's wired
 
-### What we need from client
-- Resy venue URL and venue slug
-- Resy notify ID (from their dashboard)
-- Confirmation: are they live on Resy, or is this a future integration?
+All nine CTAs (nav, mobile nav, footer, hero, and the buttons/inline links on about, menu ×2,
+gallery, contact) are plain anchors marked `data-resy-book`. One delegated handler in
+`src/js/main.js` owns the behaviour, so the venue credentials live in exactly one place and the
+markup stays clean. `embed.js` is injected by that same code rather than pasted into nine
+`<head>`s by hand — `main.js` already loads everywhere. (GA4 couldn't be done this way because
+it must run before render; this doesn't.)
+
+We deliberately avoid `resyWidget.addButton()`, which injects Resy's own red `#FF462D` branded
+button — `replace: true` swaps out our anchor entirely (losing the styling *and* the href
+fallback), `replace: false` nests the red button inside ours. Binding `resyWidget.openModal()`
+to our own buttons keeps the site on-palette.
+
+### Gotcha — the modal does not open on mobile viewports
+
+**Verified:** `openModal()` mounts the modal at 1280px wide and does **nothing** at 375px — it
+returns normally, throws no error, and mounts no frame. Unhandled, that makes every Reserve
+button a dead control on phones, i.e. most of a restaurant's traffic.
+
+The handler therefore counts iframes before and after the call and only calls `preventDefault()`
+if a frame actually appeared. When it didn't, the click falls through to the anchor's `href` and
+the guest lands on Resy's own venue page — which is mobile-optimised and hands off to their app,
+so it's the better mobile flow regardless. This deliberately avoids hard-coding Resy's
+breakpoint, which is undocumented and theirs to change.
+
+The same fall-through covers a slow, blocked, or changed `embed.js`: the CTA degrades to a normal
+navigation that still books, rather than a dead button.
+
+### Gotcha — cannot be tested from localhost
+
+Resy's embed key is referrer-restricted; from `http://localhost` the modal renders a full-page
+**"Access denied — Error 15"**. The wiring can still be verified locally (the modal mounts with
+the correct `venueId`), but the booking UI itself only renders from a real deployed domain. The
+deployed domains work with no allowlisting needed.
 
 ---
 

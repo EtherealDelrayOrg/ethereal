@@ -31,7 +31,7 @@
           <ul role="list">
             <li><a href="/pages/gallery.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">Gallery<span class="coming-soon-badge">Coming Soon</span></a></li>
             <li><a href="/pages/about.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">About Us<span class="coming-soon-badge">Coming Soon</span></a></li>
-            <li><a href="/pages/reservations.html" class="nav-reserve is-coming-soon" aria-disabled="true" title="Coming soon">Reserve<span class="coming-soon-badge">Coming Soon</span></a></li>
+            <li><a href="https://resy.com/cities/delray-beach-fl/venues/ethereal" class="nav-reserve" data-resy-book>Reserve</a></li>
           </ul>
         </nav>
       </div>
@@ -40,7 +40,7 @@
     <div id="mobile-nav" role="dialog" aria-label="Navigation menu" aria-modal="true">
       <a href="/pages/gallery.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">Gallery<span class="coming-soon-badge">Coming Soon</span></a>
       <a href="/pages/about.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">About Us<span class="coming-soon-badge">Coming Soon</span></a>
-      <a href="/pages/reservations.html" class="mobile-reserve is-coming-soon" aria-disabled="true" title="Coming soon">Reserve a Table<span class="coming-soon-badge">Coming Soon</span></a>
+      <a href="https://resy.com/cities/delray-beach-fl/venues/ethereal" class="mobile-reserve" data-resy-book>Reserve a Table</a>
     </div>
   `;
 
@@ -76,7 +76,7 @@
             <h3>Contact</h3>
             <p><a href="mailto:info@etherealdelray.com">info@etherealdelray.com</a></p>
             <p><a href="tel:+15612702738">(561) 270-2738</a></p>
-            <a href="/pages/reservations.html" class="footer-reserve-link is-coming-soon" aria-disabled="true" title="Coming soon">Reserve a Table<span class="coming-soon-badge">Coming Soon</span></a>
+            <a href="https://resy.com/cities/delray-beach-fl/venues/ethereal" class="footer-reserve-link" data-resy-book>Reserve a Table</a>
           </div>
         </div>
         <div class="footer-bottom">
