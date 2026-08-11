@@ -70,7 +70,7 @@
               <p>324 NE 3rd Ave #1</p>
               <p>Delray Beach, FL 33444</p>
             </address>
-            <p style="margin-top:1rem;">Mon–Sun &middot; 4pm – 11pm</p>
+            <p style="margin-top:1rem;">Mon–Sun &middot; 5pm – 11pm</p>
           </div>
           <div class="footer-contact">
             <h3>Contact</h3>
