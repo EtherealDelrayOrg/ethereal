@@ -37,16 +37,16 @@
             <p class="content-ph">[ Reservation note — e.g., "We recommend reserving at least two weeks in advance for weekend dining. Walk-ins are welcome based on availability." ]</p>
           </div>
 
-          <!-- Resy booking widget. The anchor is a real, working link to the venue's
-               Resy page on its own — resyWidget.addButton() upgrades it in place to
-               open the booking modal without leaving the site. If widgets.resy.com
-               is slow, blocked, or errors, the plain link is the fallback and still
-               books; see the guard on the call below. -->
+          <!-- Resy booking widget — behaviour lives in main.js under
+               [data-resy-book], shared with the gallery's closing CTA so the venue
+               credentials and the mobile fallback exist in one place only. The
+               anchor's href is a real link to the venue's Resy page and is what
+               runs when the widget can't open. -->
           <div style="text-align:center; padding:1rem 0;">
             <a href="https://resy.com/cities/delray-beach-fl/venues/ethereal"
-               id="resyButton-FeXsTN-RqxalWcsqzodtj"
                class="btn btn--filled"
-               style="padding:16px 38px;">
+               style="padding:16px 38px;"
+               data-resy-book>
               Make a Reservation on Resy
             </a>
           </div>
@@ -86,37 +86,11 @@
 
   <site-footer></site-footer>
 
+  <!-- The Resy embed script and click handling now live in main.js, keyed off
+       [data-resy-book] — this page previously carried its own copy, which was a
+       second place to keep the venue credentials in sync and, more importantly,
+       preventDefault()ed unconditionally: on a phone, where Resy's widget mounts
+       no modal, that left the button doing nothing at all. -->
   <script src="/src/js/main.js"></script>
-
-  <!-- Resy widget — venueId/apiKey supplied by the client from their Resy
-       dashboard. The apiKey is a public embed key (it ships in the page by
-       design, like any Resy booking button) and is referrer-restricted on
-       Resy's side, so the domain must be allowlisted in their dashboard.
-
-       We deliberately do NOT use resyWidget.addButton(): it injects Resy's own
-       red #FF462D 200x50 branded button — with `replace: true` it swaps out our
-       anchor entirely (losing both the site's styling and the href fallback),
-       and with `replace: false` it appends the red button *inside* ours. Binding
-       the modal to our own button instead keeps the reservations page on-palette.
-
-       Progressive enhancement: the anchor is a real link to the venue's Resy
-       page, and we only preventDefault when the widget actually loaded and
-       exposes openModal — so a slow/blocked/changed embed.js degrades to a
-       normal navigation that still books, rather than a dead button. -->
-  <script src="https://widgets.resy.com/embed.js"></script>
-  <script>
-    (function () {
-      var btn = document.getElementById('resyButton-FeXsTN-RqxalWcsqzodtj');
-      if (!btn) return;
-      btn.addEventListener('click', function (e) {
-        if (!window.resyWidget || typeof resyWidget.openModal !== 'function') return;
-        e.preventDefault();
-        resyWidget.openModal({
-          venueId: 98608,
-          apiKey: '12m41wFYzrqYB8D1dFhLaAoGU1UXG71e'
-        });
-      });
-    })();
-  </script>
 </body>
 </html>

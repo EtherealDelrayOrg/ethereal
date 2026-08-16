@@ -178,4 +178,46 @@
     }, { passive: true });
   }
 
+  // ── Resy booking widget ───────────────────────────────────
+  // Any CTA marked [data-resy-book] opens Resy's booking modal in place instead
+  // of navigating. Shared by the reservations page and the gallery's closing CTA,
+  // so the venue credentials live in exactly one spot.
+  //
+  // embed.js is injected here rather than added to each page's <head> by hand —
+  // main.js already loads everywhere, and the script is only fetched on pages
+  // that actually have a booking CTA.
+  //
+  // Progressive enhancement: each CTA's href is a real link to the venue's Resy
+  // page, and the click is only intercepted once the widget has loaded AND
+  // exposes openModal — so a slow, blocked, or changed embed.js degrades to a
+  // normal navigation that still books, rather than a dead button.
+  const RESY = { venueId: 98608, apiKey: '12m41wFYzrqYB8D1dFhLaAoGU1UXG71e' };
+  if (document.querySelector('[data-resy-book]')) {
+    const s = document.createElement('script');
+    s.src = 'https://widgets.resy.com/embed.js';
+    s.async = true;
+    document.head.appendChild(s);
+
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest('[data-resy-book]');
+      if (!trigger) return;
+      if (!window.resyWidget || typeof resyWidget.openModal !== 'function') return;
+
+      // Resy's widget refuses to open its modal on narrow/mobile viewports —
+      // openModal() returns normally and mounts nothing (verified: mounts at
+      // 1280px, does nothing at 375px, no error either way). Left unhandled that
+      // makes every Reserve button a dead control on phones.
+      //
+      // Rather than hard-code Resy's breakpoint (undocumented, and theirs to
+      // change), check whether a frame actually appeared and fall through to the
+      // href if it didn't. Resy's own site is mobile-optimised and hands off to
+      // their app, so that's the better mobile flow anyway.
+      const framesBefore = document.querySelectorAll('iframe').length;
+      resyWidget.openModal(RESY);
+      if (document.querySelectorAll('iframe').length > framesBefore) {
+        e.preventDefault(); // modal is up — stay on the site
+      }
+    });
+  }
+
 })();

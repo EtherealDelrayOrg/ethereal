@@ -230,10 +230,11 @@
         <div class="ornament reveal"><div class="ornament-glyph"></div></div>
 
         <div class="reveal" style="text-align:center;">
-          <p class="body-text" style="margin-bottom:2rem; max-width:480px; margin-left:auto; margin-right:auto;">
-            <span class="content-ph">[ Gallery note — e.g., "Photography by [Photographer Name]." ]</span>
-          </p>
-          <a href="/pages/reservations.html" class="btn">Reserve Your Experience</a>
+          <!-- Opens the Resy booking modal in place (main.js, [data-resy-book])
+               rather than sending the visitor off to the reservations page. The
+               href is the real venue link, used as the fallback when the widget
+               can't open — see the handler for why that matters on mobile. -->
+          <a href="https://resy.com/cities/delray-beach-fl/venues/ethereal" class="btn" data-resy-book>Reserve Your Experience</a>
         </div>
 
       </div>
