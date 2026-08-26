@@ -28,6 +28,13 @@
   [headers.values]
     Cache-Control = "no-cache, must-revalidate"
 
+# CSS/JS are cached for a day, but the HTML that references them is not — so the
+# two can fall out of step: a returning visitor could pick up new markup while
+# still holding yesterday's stylesheet, and render a half-styled page. The
+# ?v=<date> query on every <link>/<script> in the HTML is what prevents that:
+# HTML always revalidates, so a version bump makes browsers fetch the new asset
+# immediately while unchanged ones stay cached. BUMP THAT VERSION whenever a
+# file under /src/css or /src/js changes.
 [[headers]]
   for = "/src/css/*"
   [headers.values]

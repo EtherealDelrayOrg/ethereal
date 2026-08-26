@@ -135,6 +135,41 @@
     });
   });
 
+  // ── Dress code notice ─────────────────────────────────────
+  // Expand/collapse only. The panel is absolutely positioned and drops over the
+  // page, so nothing here touches layout — see the contract note in globals.css.
+  const dc    = document.getElementById('dresscode');
+  const dcBar = dc && dc.querySelector('.dresscode-bar');
+
+  if (dc && dcBar) {
+    const setDressCode = (open) => {
+      dc.classList.toggle('is-open', open);
+      dcBar.setAttribute('aria-expanded', String(open));
+    };
+
+    dcBar.addEventListener('click', () => {
+      setDressCode(dcBar.getAttribute('aria-expanded') !== 'true');
+    });
+
+    // Escape closes, and focus goes back to the control that opened it.
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && dc.classList.contains('is-open')) {
+        setDressCode(false);
+        dcBar.focus();
+      }
+    });
+
+    // Click anywhere off the notice dismisses it, the way a menu would. Guarded
+    // on is-open so this doesn't run on every click on every page.
+    document.addEventListener('click', (e) => {
+      if (!dc.classList.contains('is-open')) return;
+      if (!dc.contains(e.target)) setDressCode(false);
+    });
+
+    // Opening the mobile menu would otherwise leave the panel hanging over it.
+    if (toggle) toggle.addEventListener('click', () => setDressCode(false));
+  }
+
   // ── Active nav link ───────────────────────────────────────
   const currentPath = window.location.pathname;
   document.querySelectorAll('#nav-links a, #mobile-nav a').forEach(link => {

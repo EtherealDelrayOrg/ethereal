@@ -53,6 +53,10 @@
      by the same amount no matter which one changes. */
   --nav-height:   136px;
   --nav-offset-top: 10px;
+  /* Height of the dress-code bar that sits above #site-header. Everything in
+     the masthead stack and every page's top padding is offset by this, so it
+     must stay in sync with .dresscode-bar's height. */
+  --dc-bar-h:     42px;
   --section-v:    110px;
 }
 
@@ -333,7 +337,6 @@ site-header, site-footer { display: contents; }
 
 #site-header {
   position: fixed;
-  top: 0;
   left: 0;
   right: 0;
   /* Above #mobile-nav (z-index 150) so the header — logo, hamburger/X toggle — stays
@@ -349,7 +352,11 @@ site-header, site-footer { display: contents; }
      fixed-height nav-inner so the centered logo and the vertically-centered hamburger
      move down together. env(safe-area-inset-top) also clears the iPhone notch. */
   height: auto;
-  padding-top: calc(env(safe-area-inset-top, 0px) + var(--nav-offset-top));
+  /* Offset by the dress-code bar above it. The bar carries the safe-area inset
+     now (it's the topmost fixed element), so this padding is just the visual
+     drop that keeps the wordmark off the bar's edge. */
+  top: calc(env(safe-area-inset-top, 0px) + var(--dc-bar-h));
+  padding-top: var(--nav-offset-top);
   /* Transparent by default so the homepage hero can run edge-to-edge behind the nav.
      The solid bar comes from either .nav-solid (subpages render with it permanently —
      their content is ink-on-ink and would scroll illegibly under a transparent header)
@@ -525,7 +532,7 @@ site-header, site-footer { display: contents; }
      (offset + bar), then 1.5rem: the wordmark's glyphs stop ~8px short of the
      bar's bottom edge, so 1.5rem of bar clearance lands the first link ~2rem
      below the visible logo — matching the 2rem gap between the links. */
-  padding-top: calc(env(safe-area-inset-top, 0px) + var(--nav-offset-top) + var(--nav-height) + 1.5rem);
+  padding-top: calc(env(safe-area-inset-top, 0px) + var(--dc-bar-h) + var(--nav-offset-top) + var(--nav-height) + 1.5rem);
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem);
   /* Long list on a short phone: scroll rather than clip. */
   overflow-y: auto;
@@ -572,7 +579,7 @@ site-header, site-footer { display: contents; }
    PAGE HEADER (subpages)
    ============================================================ */
 .page-header {
-  padding-top: calc(var(--nav-height) + 80px);
+  padding-top: calc(var(--dc-bar-h) + var(--nav-height) + 80px);
   padding-bottom: 64px;
   text-align: center;
   border-bottom: 1px solid var(--brass-dark);
@@ -771,6 +778,7 @@ site-header, site-footer { display: contents; }
     /* Single row here (no links under the wordmark), so the bar doesn't need the
        desktop height that the 1.85rem logo→links gap requires. */
     --nav-height: 64px;
+    --dc-bar-h:   38px;
     /* A bit more top offset than desktop so the wordmark clears the top edge /
        notch with room to spare. #site-header and #mobile-nav both read this. */
     --nav-offset-top: 13px;
@@ -818,7 +826,7 @@ site-header, site-footer { display: contents; }
   }
 
   .page-header {
-    padding-top: calc(var(--nav-height) + 48px);
+    padding-top: calc(var(--dc-bar-h) + var(--nav-height) + 48px);
     padding-bottom: 40px;
   }
 }
@@ -907,4 +915,199 @@ site-header, site-footer { display: contents; }
 #nav-links .is-coming-soon:focus-visible .coming-soon-badge,
 #nav-links .is-coming-soon.is-touched .coming-soon-badge {
   transform: translate(-50%, 0);
+}
+
+/* ============================================================
+   DRESS CODE NOTICE
+   Fixed bar at the very top of the masthead stack, above #site-header.
+
+   Layout contract: the bar's height is the --dc-bar-h token and must stay
+   constant. #site-header's `top` and every page's top padding are offset by
+   it, so if opening the panel changed the bar's height the entire site would
+   jump. The panel therefore drops OVER the page (absolutely positioned)
+   rather than pushing anything down.
+
+   The bar also owns env(safe-area-inset-top) now — it's the topmost fixed
+   element, so it clears the notch and #site-header no longer needs to.
+   ============================================================ */
+
+.dresscode {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* Above #site-header (160) so the panel can drop over the nav, but below
+     #opening-sequence (500) so it stays behind the homepage intro video. */
+  z-index: 170;
+  padding-top: env(safe-area-inset-top, 0px);
+  background: linear-gradient(180deg, rgba(35, 74, 63, 0.62) 0%, rgba(10, 8, 7, 0.97) 100%);
+  border-bottom: 1px solid rgba(196, 145, 64, 0.42);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  /* Same WebKit fix as #site-header: position:fixed + backdrop-filter can
+     visually detach during iOS momentum scrolling unless it owns a layer. */
+  transform: translateZ(0);
+}
+
+.dresscode-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+  height: var(--dc-bar-h);
+  padding: 0 1rem;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  overflow: hidden;
+  font-family: var(--font-ui);
+  /* Whole bar is the target — a 12px chevron alone is far too small on touch. */
+  -webkit-tap-highlight-color: transparent;
+  /* It's a control, not copy: without this a tap-drag selects "Dress Code" and
+     leaves a highlight sitting in the masthead. */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Slow brass sweep — the "catch attention" beat. Deliberately long and low
+   contrast so it reads as candlelight moving across metal, not as a banner ad. */
+.dresscode-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg,
+    transparent 0%, transparent 38%,
+    rgba(220, 176, 106, 0.16) 50%,
+    transparent 62%, transparent 100%);
+  transform: translateX(-100%);
+  animation: dcSweep 9s var(--ease) infinite;
+  pointer-events: none;
+}
+
+@keyframes dcSweep {
+  0%, 62%  { transform: translateX(-100%); }
+  100%     { transform: translateX(100%); }
+}
+
+.dresscode-label {
+  /* 12px / 0.16em — inside the design system's 12–13px, 0.12–0.18em band for
+     uppercase labels. Narrow screens give back tracking rather than size; the
+     spec's floor is a hard one and there's width to spare either way. */
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brass-light);
+  white-space: nowrap;
+  transition: color var(--transition-fast);
+}
+
+/* An inline SVG rather than the usual border-triangle trick: a rotated bordered
+   box lands on half-pixels at these sizes and reads as a lopsided or broken
+   glyph. A stroked path with round caps stays clean at any size or zoom, and
+   rotating it about its own centre keeps it visually anchored. */
+.dresscode-arrow {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  color: var(--brass);
+  transform-origin: 50% 50%;
+  transform: rotate(0deg);
+  transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.dresscode-bar[aria-expanded="true"] .dresscode-arrow {
+  transform: rotate(180deg);
+}
+
+.dresscode-bar:hover .dresscode-label,
+.dresscode-bar:focus-visible .dresscode-label { color: var(--brass); }
+.dresscode-bar:hover .dresscode-arrow,
+.dresscode-bar:focus-visible .dresscode-arrow { color: var(--brass-light); }
+
+/* ── Panel ───────────────────────────────────────────────────
+   visibility (not display/hidden) so it can animate out and still leave the
+   a11y tree + tab order when closed. */
+.dresscode-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  /* Fully opaque, not rgba: this drops straight over the gold wordmark, and even
+     at 0.97 alpha the logo ghosted through behind the text. */
+  background: linear-gradient(180deg, var(--emerald-deep) 0%, var(--ink) 100%);
+  border-bottom: 1px solid var(--brass-dark);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast),
+              visibility 0s var(--transition-fast);
+  /* A long policy on a short phone scrolls inside the panel instead of running
+     off the bottom of the screen. */
+  max-height: calc(100vh - var(--dc-bar-h) - env(safe-area-inset-top, 0px) - 1rem);
+  /* dvh accounts for mobile browser chrome that comes and goes. Declared second
+     so browsers without it keep the vh line above rather than dropping the
+     max-height entirely and losing the panel's internal scroll. */
+  max-height: calc(100dvh - var(--dc-bar-h) - env(safe-area-inset-top, 0px) - 1rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.dresscode.is-open .dresscode-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition-delay: 0s, 0s, 0s;
+}
+
+.dresscode-panel-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.6rem 1.5rem 1.75rem;
+}
+
+.dresscode-text {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.8;
+  letter-spacing: 0.012em;
+  color: var(--ivory-dark);
+  margin: 0;
+}
+
+/* Scanning aids only — the wording is the client's, verbatim. */
+.dresscode-em {
+  color: var(--ivory);
+  font-weight: 600;
+  border-bottom: 1px solid var(--terracotta);
+  padding-bottom: 1px;
+}
+
+.dresscode-em--yes { border-bottom-color: var(--emerald-lit); }
+
+@media (max-width: 900px) {
+  .dresscode-panel-inner { padding: 1.4rem 1.25rem 1.55rem; }
+}
+
+/* One centred label + arrow, so nothing needs hiding at any width — the pair
+   just scales down. At 320px this measures ~250px against a 288px content box. */
+@media (max-width: 420px) {
+  .dresscode-bar { gap: 0.45rem; padding: 0 0.75rem; }
+  .dresscode-label { letter-spacing: 0.12em; }
+  .dresscode-arrow { width: 14px; height: 14px; }
+  .dresscode-text { font-size: 14.5px; line-height: 1.75; }
+}
+
+@media (max-width: 340px) {
+  .dresscode-label { letter-spacing: 0.09em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dresscode-bar::after { animation: none; }
+  .dresscode-panel { transition: opacity 1ms, visibility 0s 1ms; transform: none; }
+  .dresscode.is-open .dresscode-panel { transform: none; }
 }
