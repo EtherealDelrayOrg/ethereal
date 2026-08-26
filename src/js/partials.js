@@ -24,10 +24,10 @@
          rather than floating over the video. -->
     <div class="dresscode" id="dresscode">
       <button class="dresscode-bar" type="button" aria-expanded="false" aria-controls="dresscode-panel">
-        <span class="dresscode-label">Dress Code</span>
-        <span class="dresscode-orn" aria-hidden="true">&#279;</span>
-        <span class="dresscode-teaser">Elegant chic attire<span class="dresscode-more"> &mdash; read the full policy</span></span>
-        <span class="dresscode-chev" aria-hidden="true"></span>
+        <span class="dresscode-label">Elegant Casual Dress Code</span>
+        <svg class="dresscode-arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path d="M3.5 6 L8 10.5 L12.5 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </button>
       <!-- Drops over the page rather than pushing it down: the bar's height is a
            fixed token (--dc-bar-h) that the header and every page's top padding
