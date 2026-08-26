@@ -24,7 +24,7 @@
          rather than floating over the video. -->
     <div class="dresscode" id="dresscode">
       <button class="dresscode-bar" type="button" aria-expanded="false" aria-controls="dresscode-panel">
-        <span class="dresscode-label">Elegant Casual Dress Code</span>
+        <span class="dresscode-label">Elegant Chic Dress Code</span>
         <svg class="dresscode-arrow" width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
           <path d="M3.5 6 L8 10.5 L12.5 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
