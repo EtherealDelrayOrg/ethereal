@@ -17,6 +17,29 @@
   'use strict';
 
   const HEADER = (opening) => `
+    <!-- Dress code notice — sits above the header in the fixed masthead stack.
+         Rendered here rather than per-page so it appears everywhere the nav does.
+         On the homepage this whole element is inside #site-content, which starts
+         at opacity 0, so it fades in with the site after the opening sequence
+         rather than floating over the video. -->
+    <div class="dresscode" id="dresscode">
+      <button class="dresscode-bar" type="button" aria-expanded="false" aria-controls="dresscode-panel">
+        <span class="dresscode-label">Dress Code</span>
+        <span class="dresscode-orn" aria-hidden="true">&#279;</span>
+        <span class="dresscode-teaser">Elegant chic attire<span class="dresscode-more"> &mdash; read the full policy</span></span>
+        <span class="dresscode-chev" aria-hidden="true"></span>
+      </button>
+      <!-- Drops over the page rather than pushing it down: the bar's height is a
+           fixed token (--dc-bar-h) that the header and every page's top padding
+           are offset by, so opening this must not change it or the whole site
+           shifts underneath the reader. -->
+      <div class="dresscode-panel" id="dresscode-panel" role="region" aria-label="Dress code policy">
+        <div class="dresscode-panel-inner">
+          <p class="dresscode-text">&#279;TH&#279;R&#279;AL embraces an elegant chic dress code to preserve a refined atmosphere. Athletic apparel (gym clothes, joggers, athletic shorts, yoga pants, sports bras, etc.), beachwear (swim trunks, swimsuits, etc.), flip-flops, baseball hats, sports jerseys, graphic shirts (oversized slogans and logos) and similarly casual attire are <span class="dresscode-em">not permitted</span>. Dress shorts, dress sandals, and sneakers <span class="dresscode-em dresscode-em--yes">are permitted</span>. Management reserves the right to deny entry when attire does not meet these guidelines.</p>
+        </div>
+      </div>
+    </div>
+
     <header id="site-header" class="${opening ? 'nav-hidden' : 'nav-solid'}" role="banner">
       <div class="nav-inner">
         <a href="/" class="nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal" class="logo-img"></a>
