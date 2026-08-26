@@ -48,9 +48,15 @@
            preload="auto" aria-hidden="true"></video>
 
     <!-- Static clock fallback — only shown if autoplay gets blocked or the
-         clip fails to load, on either viewport size -->
+         clip fails to load, on either viewport size.
+
+         data-src, not src: this path is the exception, not the rule, but a plain
+         src makes every visitor download the image during preload — before any
+         script can hide it — so the common (video) path was paying for an asset
+         it never shows. opening-sequence.js promotes data-src to src at the
+         moment the fallback is actually needed. -->
     <div class="seq-clock" id="seq-clock-fallback">
-      <img src="/src/assets/images/clock-face-transparent.png" alt="" aria-hidden="true">
+      <img data-src="/src/assets/images/clock-face-transparent.webp" alt="" aria-hidden="true">
     </div>
 
     <div class="seq-brand">

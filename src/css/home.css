@@ -28,7 +28,7 @@
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('/src/assets/images/bg-brand.png');
+  background-image: url('/src/assets/images/bg-brand.webp');
   background-size: cover;
   /* Top-weighted: a plain center crop clips the crane's crown on wide viewports — both
      birds' heads sit in the top third of the square (1024×1024) source. */

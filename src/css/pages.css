@@ -172,7 +172,7 @@
 .coming-soon-bg {
   position: absolute;
   inset: 0;
-  background-image: url('/src/assets/images/bg-brand.png');
+  background-image: url('/src/assets/images/bg-brand.webp');
   background-size: cover;
   background-position: center;
   filter: brightness(0.12) saturate(0.5);

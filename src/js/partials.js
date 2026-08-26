@@ -19,7 +19,7 @@
   const HEADER = (opening) => `
     <header id="site-header" class="${opening ? 'nav-hidden' : 'nav-solid'}" role="banner">
       <div class="nav-inner">
-        <a href="/" class="nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal" class="logo-img"></a>
+        <a href="/" class="nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo-wordmark.webp" alt="Ethereal" class="logo-img"></a>
 
         <button class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-links">
           <span class="hamburger-line"></span>
@@ -49,7 +49,7 @@
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            <a href="/" class="footer-logo"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal" class="logo-img"></a>
+            <a href="/" class="footer-logo"><img src="/src/assets/images/logo-wordmark.webp" alt="Ethereal" class="logo-img"></a>
             <!-- PLACEHOLDER: "Where time breathes." retired at client request, new
                  tagline TBD. Deliberately renders as empty space — no visible
                  placeholder text here, since visitors see this footer on every

@@ -57,9 +57,27 @@
   let crossfadeStarted = false;
   const isDesktop = window.matchMedia('(min-width: 768px)').matches;
 
+  // The fallback clock's <img> ships with data-src instead of src so the common
+  // video path never downloads it (see index.html). Every path that actually
+  // puts the clock on screen goes through here first. Idempotent: promoting an
+  // already-promoted src is a no-op, so callers don't need to coordinate.
+  function showClockFallback() {
+    if (clockFallback) {
+      const img = clockFallback.querySelector('img[data-src]');
+      if (img) {
+        img.src = img.dataset.src;
+        img.removeAttribute('data-src');
+      }
+      clockFallback.style.display = '';
+    }
+    if (brand) brand.style.display = '';
+    if (progressBar) progressBar.style.display = '';
+  }
+
   if (video) {
     playVideoSequence();
   } else {
+    showClockFallback();
     startFallbackTimer();
   }
 
@@ -198,7 +216,7 @@
     if (progressBar) progressBar.style.display = 'none';
 
     const src = isDesktop ? '/src/assets/video/opening-desktop' : '/src/assets/video/opening-mobile';
-    video.poster = src + '-poster.jpg';
+    video.poster = src + '-poster.webp';
     const webm = document.createElement('source');
     webm.src = src + '.webm'; webm.type = 'video/webm';
     const mp4 = document.createElement('source');
@@ -242,11 +260,10 @@
       videoStarted = true;
       video.classList.add('is-active');
     }).catch(() => {
-      // Autoplay blocked or clip failed to load — fall back to the static clock
+      // Autoplay blocked or clip failed to load — fall back to the static clock.
+      // This is where its image is actually fetched; until now it cost nothing.
       video.classList.remove('is-active');
-      if (clockFallback) clockFallback.style.display = '';
-      if (brand) brand.style.display = '';
-      if (progressBar) progressBar.style.display = '';
+      showClockFallback();
       startFallbackTimer();
     });
   }
