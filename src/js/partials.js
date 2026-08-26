@@ -35,7 +35,7 @@
            shifts underneath the reader. -->
       <div class="dresscode-panel" id="dresscode-panel" role="region" aria-label="Dress code policy">
         <div class="dresscode-panel-inner">
-          <p class="dresscode-text">&#279;TH&#279;R&#279;AL embraces an elegant chic dress code to preserve a refined atmosphere. Athletic apparel (gym clothes, joggers, athletic shorts, yoga pants, sports bras, etc.), beachwear (swim trunks, swimsuits, etc.), flip-flops, baseball hats, sports jerseys, graphic shirts (oversized slogans and logos) and similarly casual attire are <span class="dresscode-em">not permitted</span>. Dress shorts, dress sandals, and sneakers <span class="dresscode-em dresscode-em--yes">are permitted</span>. Management reserves the right to deny entry when attire does not meet these guidelines.</p>
+          <p class="dresscode-text">&#279;TH&#279;R&#279;AL embraces an elegant chic dress code to preserve a refined atmosphere. We politely request that guests refrain from athletic apparel (gym clothes, joggers, athletic shorts, yoga pants, sports bras, etc.), beachwear (swim trunks, swimsuits, etc.), flip-flops, baseball hats, sports jerseys, graphic shirts (oversized slogans and logos) and similarly casual attire, <span class="dresscode-em">none of which are permitted</span>. Dress shorts, dress sandals, and sneakers <span class="dresscode-em dresscode-em--yes">are permitted</span>. Management reserves the right to deny entry when attire does not meet these guidelines. Your understanding is much appreciated.</p>
         </div>
       </div>
     </div>
