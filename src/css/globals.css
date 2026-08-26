@@ -1047,6 +1047,10 @@ site-header, site-footer { display: contents; }
               visibility 0s var(--transition-fast);
   /* A long policy on a short phone scrolls inside the panel instead of running
      off the bottom of the screen. */
+  max-height: calc(100vh - var(--dc-bar-h) - env(safe-area-inset-top, 0px) - 1rem);
+  /* dvh accounts for mobile browser chrome that comes and goes. Declared second
+     so browsers without it keep the vh line above rather than dropping the
+     max-height entirely and losing the panel's internal scroll. */
   max-height: calc(100dvh - var(--dc-bar-h) - env(safe-area-inset-top, 0px) - 1rem);
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -1072,7 +1076,26 @@ site-header, site-footer { display: contents; }
   line-height: 1.8;
   letter-spacing: 0.012em;
   color: var(--ivory-dark);
-  margin: 0;
+  /* Split into blocks — statement, what to avoid, what's fine — so the long
+     middle list isn't a wall. Modest gap: the panel is height-constrained on
+     short screens and airier spacing costs scroll. */
+  margin: 0 0 0.85rem;
+}
+
+.dresscode-text:last-of-type { margin-bottom: 0; }
+
+/* Closing courtesy, set apart: centred, and in the display serif rather than
+   the UI sans, so it reads as the restaurant's voice rather than more policy.
+   Cormorant needs size to work — 18px, per the type scale. */
+.dresscode-close {
+  margin: 1.2rem 0 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--brass-light);
 }
 
 /* Scanning aids only — the wording is the client's, verbatim. */
@@ -1095,7 +1118,8 @@ site-header, site-footer { display: contents; }
   .dresscode-bar { gap: 0.45rem; padding: 0 0.75rem; }
   .dresscode-label { letter-spacing: 0.12em; }
   .dresscode-arrow { width: 14px; height: 14px; }
-  .dresscode-text { font-size: 14.5px; line-height: 1.75; }
+  .dresscode-text { font-size: 14.5px; line-height: 1.75; margin-bottom: 0.7rem; }
+  .dresscode-close { font-size: 17px; margin-top: 1rem; }
 }
 
 @media (max-width: 340px) {
