@@ -18,6 +18,17 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# ...except the menu. The rule above marks assets immutable for a year, which is
+# right for images and the opening video (they get replaced under new filenames)
+# but wrong for a menu: it is re-issued at the SAME path, and `immutable` tells
+# browsers not to even revalidate. On dev that also makes it impossible to
+# re-test a new build on a device that has already loaded the old one.
+# Declared after the broader rule so it wins for this path.
+[[headers]]
+  for = "/src/assets/menu/*"
+  [headers.values]
+    Cache-Control = "no-cache, must-revalidate"
+
 [[headers]]
   for = "/*.html"
   [headers.values]
