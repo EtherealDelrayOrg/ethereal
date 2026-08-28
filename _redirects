@@ -20,8 +20,13 @@
 # Resy embed credentials and docs/QUESTIONS.md is open questions for the client,
 # so neither belongs on the public site.
 # (On Cloudflare these never deploy at all — see .assetsignore.)
-/docs/*          /404.html  404
-/README.md       /404.html  404
-/MIGRATION.md    /404.html  404
-/test.html       /404.html  404
-/wrangler.jsonc  /404.html  404
+# The trailing ! is load-bearing. Netlify only consults _redirects for paths
+# that do NOT match a file in the publish directory, and every path below IS a
+# real file — so without the force flag these rules never fire and the files
+# keep serving. Verified: they still returned 200 after a successful deploy of
+# the unforced version.
+/docs/*          /404.html  404!
+/README.md       /404.html  404!
+/MIGRATION.md    /404.html  404!
+/test.html       /404.html  404!
+/wrangler.jsonc  /404.html  404!
