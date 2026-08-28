@@ -1,0 +1,21 @@
+# Files in the project root that must NOT be served to visitors.
+# `assets.directory` is "." (the repo root), so without this every one of these
+# would be publicly fetchable — which is already true on Netlify today, where
+# publish = "." serves /docs/QUESTIONS.md and /README.md with a 200.
+#
+# _headers and _redirects are deliberately NOT listed: Cloudflare reads them as
+# configuration from the assets directory and never serves them.
+
+# Build / deploy config
+wrangler.jsonc
+netlify.toml
+.assetsignore
+.gitignore
+
+# Internal documentation — client questions, design notes, integration keys
+docs/
+README.md
+MIGRATION.md
+
+# Standalone dev scratch page, not part of the site
+test.html
