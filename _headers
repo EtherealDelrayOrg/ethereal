@@ -1,29 +1,38 @@
-# Cloudflare equivalent of netlify.toml's [[headers]] blocks.
-# Rules are applied top-down and later matches override earlier ones for the
-# same header, so general rules come first and specific overrides after —
-# the same ordering netlify.toml relied on.
+# Cloudflare applies EVERY matching rule and concatenates the values rather than
+# letting a later, more specific rule override an earlier one — which is how
+# netlify.toml behaved. So these paths are kept deliberately non-overlapping;
+# a broad /src/assets/* rule alongside /src/assets/menu/* produced
+# "max-age=31536000, immutable, max-age=3600, must-revalidate" on the menu,
+# an ambiguous header where the immutable half would very likely win.
 
-/src/assets/*
-  Cache-Control: public, max-age=31536000, immutable
+# Root: does not match /*.html, so it needs its own entry or it falls through to
+# Cloudflare's default.
+/
+  Cache-Control: no-cache, must-revalidate
 
-# ...except the menu. The rule above marks assets immutable for a year, which is
-# right for images and the opening video (they get replaced under new filenames)
-# but wrong for a menu: the restaurant re-issues it at the SAME path, and
-# `immutable` tells browsers not to even revalidate.
-/src/assets/menu/*
-  Cache-Control: public, max-age=3600, must-revalidate
-
+# `*` spans path separators here, so this covers /pages/*.html too.
 /*.html
   Cache-Control: no-cache, must-revalidate
 
-/pages/*.html
-  Cache-Control: no-cache, must-revalidate
+# Long-lived assets, listed per directory rather than as /src/assets/* so the
+# menu below is not double-matched. Add a line here for any new asset folder.
+/src/assets/images/*
+  Cache-Control: public, max-age=31536000, immutable
 
-# CSS/JS cached for a day while the HTML referencing them is not, so the two can
-# fall out of step and render a half-styled page. The ?v=<date> query on every
-# <link>/<script> is what prevents that: HTML always revalidates, so a version
-# bump fetches the new asset immediately while unchanged ones stay cached.
-# BUMP THAT VERSION whenever a file under /src/css or /src/js changes.
+/src/assets/video/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/src/assets/gallery/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# The menu is re-issued at the SAME path when the restaurant updates it, so it
+# must revalidate — `immutable` would pin a stale menu for up to a year.
+/src/assets/menu/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# Cached for a day while the HTML referencing them is not, so the two can drift
+# and render a half-styled page. The ?v=<date> query on every <link>/<script> is
+# what prevents that — BUMP IT whenever a file under /src/css or /src/js changes.
 /src/css/*
   Cache-Control: public, max-age=86400
 
