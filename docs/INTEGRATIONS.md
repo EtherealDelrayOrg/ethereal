@@ -101,32 +101,39 @@ deployed domains work with no allowlisting needed.
 
 ---
 
-## Netlify Forms — Contact & Shop Signup
+## Forms — REMOVED (both pages), pending the Cloudflare migration
 
-**What it is:** Both `/pages/contact.html` (the contact form) and `/pages/shop.html` (the "notify me" email signup) submit through [Netlify Forms](https://docs.netlify.com/forms/setup/) — no backend, database, or third-party form service needed. Netlify's build system detects any `<form data-netlify="true">` in the static HTML at deploy time and starts capturing submissions automatically from then on.
+**Status: no forms on the site.** `/pages/contact.html` and `/pages/shop.html`
+previously submitted through Netlify Forms (`contact` and `shop-notify`). Both
+were removed on the `cloudflare-migration` branch, because Netlify Forms is a
+Netlify platform feature with no Cloudflare equivalent — carried across as-is,
+each form would have become a POST into nothing, which is worse than no form.
 
-Each form:
-- Has a unique `name` (`contact`, `shop-notify`) and a matching hidden `<input name="form-name">`, both required for Netlify to register and correctly attribute submissions.
-- Has a honeypot field (`data-netlify-honeypot="bot-field"` + a hidden `bot-field` input) for basic spam filtering.
-- Submits via `fetch()` to `/` instead of a normal page navigation, so the visitor sees an inline confirmation message (`.form-status`) instead of being sent to Netlify's generic default success page.
+Removed rather than replaced by a `mailto:` at the client's call: neither was
+needed at this stage, and the contact page already lists the email address,
+phone number, address and hours as real, tappable links.
 
-### Where submissions go
+What that changed:
+- **Contact page** — the form was the right-hand column of `.contact-grid`. The
+  map moved into that column rather than leaving the contact blocks stranded at
+  half width, so the two-column layout still reads as intentional. `.contact-map`
+  lost its `margin-top: 2rem`, which only made sense while it was stacked
+  underneath the contact blocks; the grid gap handles spacing now.
+- **Shop page** — the "notify me when the shop opens" block came out whole,
+  leaving the coming-soon message.
 
-**Storage is automatic** — as soon as the site is deployed with these forms in place, every submission is captured under **Site → Forms** in the Netlify dashboard (viewable individually, exportable as CSV). No further setup required for this part.
+**The CSS is deliberately still there** (`.contact-form`, `.form-group`,
+`.email-form`, `.form-honeypot`, `.form-status` in `pages.css`). It costs a few
+hundred bytes and means re-adding a form later is markup only.
 
-**Emailing the client on every submission is a one-time manual step** (can't be done from code — it's an account/site-level setting):
-1. Netlify dashboard → the site → **Site configuration → Forms → Form notifications**
-2. **Add notification → Email notification**
-3. Choose the form (`contact` or `shop-notify`) and enter the client's email address
-4. Repeat for the other form
+### Putting forms back
 
-Once set up, every new submission auto-emails that address with the submitted fields. Submissions remain stored in the dashboard either way, so nothing is lost if this step is skipped or done later.
-
-### Netlify Forms cost
-
-Free and unlimited on Netlify's current (credit-based) pricing plans. (Only older "legacy" Netlify plans meter form submissions — not a concern at this site's expected volume regardless.)
-
----
+Whatever the site is hosted on, a static page needs a third-party endpoint or a
+serverless function. The options priced up during the migration:
+- **Web3Forms / Formspree free tier** — swap the `action` to their endpoint,
+  ~50 submissions/month free. Least work.
+- **A Cloudflare Worker** that accepts the POST and sends mail — no third party,
+  but it is real code to write and maintain.
 
 ## DNS & Domain (Wix → Netlify)
 

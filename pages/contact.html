@@ -88,81 +88,24 @@
               </p>
             </div>
 
-            <!-- Map — stylized Leaflet/OpenStreetMap (no API key). Click/tap opens the
-                 location in the device's native maps app (Apple Maps on Apple devices,
-                 Google Maps elsewhere). See the script at the bottom of this file. -->
-            <div
-              class="contact-map"
-              id="map-card"
-              role="link"
-              tabindex="0"
-              aria-label="Open Ethereal — 324 NE 3rd Ave #1, Delray Beach, FL 33444 — in your maps app"
-            >
-              <div id="leaflet-map" class="contact-map-canvas" aria-hidden="true"></div>
-              <span class="contact-map-overlay" aria-hidden="true">
-                <span class="contact-map-addr">324 NE 3rd Ave #1<br>Delray Beach, FL 33444</span>
-                <span class="contact-map-cta">Get Directions →</span>
-              </span>
-            </div>
           </div>
 
-          <!-- Contact Form -->
-          <div class="reveal" data-delay="100">
-            <span class="label">Send a Message</span>
-            <h2 class="section-heading" style="margin-bottom:2rem; font-size:clamp(1.5rem,3vw,2.2rem);">We'd love<br>to hear from you.</h2>
-
-            <!-- Netlify form — captured automatically once deployed (Site → Forms in the
-                 Netlify dashboard). Email notifications to the client's inbox are a separate
-                 one-time dashboard step; see docs/INTEGRATIONS.md. -->
-            <form
-              class="contact-form"
-              name="contact"
-              method="POST"
-              data-netlify="true"
-              data-netlify-honeypot="bot-field"
-              aria-label="Contact form"
-              novalidate
-            >
-              <input type="hidden" name="form-name" value="contact">
-              <p class="form-honeypot" hidden>
-                <label>Don't fill this out if you're human: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
-              </p>
-
-              <div class="form-group">
-                <label for="name">Your Name</label>
-                <input type="text" id="name" name="name" placeholder="How should we address you?" autocomplete="name" required>
-              </div>
-
-              <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email" required>
-              </div>
-
-              <div class="form-group">
-                <label for="subject">Subject</label>
-                <select id="subject" name="subject" required>
-                  <option value="" disabled selected>Select a topic</option>
-                  <option value="general">General Inquiry</option>
-                  <option value="reservations">Reservations</option>
-                  <option value="events">Private Events</option>
-                  <option value="press">Press &amp; Media</option>
-                  <option value="careers">Careers</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="message">Message</label>
-                <textarea id="message" name="message" placeholder="Tell us what's on your mind…" required></textarea>
-              </div>
-
-              <div class="form-submit">
-                <button type="submit" class="btn btn--filled">Send Message</button>
-              </div>
-            </form>
-            <p class="form-status" role="status" aria-live="polite" hidden></p>
+          <!-- Map — stylized Leaflet/OpenStreetMap (no API key). Click/tap opens the
+               location in the device's native maps app (Apple Maps on Apple devices,
+               Google Maps elsewhere). See the script at the bottom of this file. -->
+          <div
+            class="contact-map"
+            id="map-card"
+            role="link"
+            tabindex="0"
+            aria-label="Open Ethereal — 324 NE 3rd Ave #1, Delray Beach, FL 33444 — in your maps app"
+          >
+            <div id="leaflet-map" class="contact-map-canvas" aria-hidden="true"></div>
+            <span class="contact-map-overlay" aria-hidden="true">
+              <span class="contact-map-addr">324 NE 3rd Ave #1<br>Delray Beach, FL 33444</span>
+              <span class="contact-map-cta">Get Directions →</span>
+            </span>
           </div>
-
         </div>
       </div>
     </section>
