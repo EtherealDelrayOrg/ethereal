@@ -1,0 +1,13 @@
+# Clean URLs — same set netlify.toml served. 200 = rewrite (URL stays clean in
+# the address bar) rather than a visible redirect.
+/menu           /pages/menu.html          200
+/gallery        /pages/gallery.html       200
+/about          /pages/about.html         200
+/shop           /pages/shop.html          200
+/careers        /pages/careers.html       200
+/contact        /pages/contact.html       200
+/reservations   /pages/reservations.html  200
+
+# No /* -> /404.html rule needed here: Cloudflare serves a root 404.html for
+# unmatched paths natively (not_found_handling in wrangler.jsonc below), and a
+# catch-all rewrite would shadow every real asset path.

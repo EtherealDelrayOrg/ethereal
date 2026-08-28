@@ -1,0 +1,31 @@
+# Cloudflare equivalent of netlify.toml's [[headers]] blocks.
+# Rules are applied top-down and later matches override earlier ones for the
+# same header, so general rules come first and specific overrides after —
+# the same ordering netlify.toml relied on.
+
+/src/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# ...except the menu. The rule above marks assets immutable for a year, which is
+# right for images and the opening video (they get replaced under new filenames)
+# but wrong for a menu: the restaurant re-issues it at the SAME path, and
+# `immutable` tells browsers not to even revalidate.
+/src/assets/menu/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/*.html
+  Cache-Control: no-cache, must-revalidate
+
+/pages/*.html
+  Cache-Control: no-cache, must-revalidate
+
+# CSS/JS cached for a day while the HTML referencing them is not, so the two can
+# fall out of step and render a half-styled page. The ?v=<date> query on every
+# <link>/<script> is what prevents that: HTML always revalidates, so a version
+# bump fetches the new asset immediately while unchanged ones stay cached.
+# BUMP THAT VERSION whenever a file under /src/css or /src/js changes.
+/src/css/*
+  Cache-Control: public, max-age=86400
+
+/src/js/*
+  Cache-Control: public, max-age=86400
