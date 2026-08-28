@@ -320,7 +320,9 @@
   display: block;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  margin-top: 2rem;
+  /* No top offset: this sits in its own grid column now rather than stacked
+     under the contact blocks, so the column tops align and the grid gap does
+     the spacing. */
   border: 1px solid var(--brass-dark);
   border-radius: 2px;
   background: var(--char);
