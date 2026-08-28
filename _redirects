@@ -11,3 +11,17 @@
 # No /* -> /404.html rule needed here: Cloudflare serves a root 404.html for
 # unmatched paths natively (not_found_handling in wrangler.jsonc below), and a
 # catch-all rewrite would shadow every real asset path.
+
+# Keep repo files that ship with the site but are not part of it out of public
+# reach. Netlify's publish directory is the repo root and it has no equivalent of
+# Cloudflare's .assetsignore, so the only way to hide these is to serve a 404.
+# Verified exposed with a 200 before this rule: all seven docs/, README.md,
+# MIGRATION.md, test.html and wrangler.jsonc. docs/INTEGRATIONS.md carries the
+# Resy embed credentials and docs/QUESTIONS.md is open questions for the client,
+# so neither belongs on the public site.
+# (On Cloudflare these never deploy at all — see .assetsignore.)
+/docs/*          /404.html  404
+/README.md       /404.html  404
+/MIGRATION.md    /404.html  404
+/test.html       /404.html  404
+/wrangler.jsonc  /404.html  404
