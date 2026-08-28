@@ -10,8 +10,12 @@
 /
   Cache-Control: no-cache, must-revalidate
 
-# `*` spans path separators here, so this covers /pages/*.html too.
-/*.html
+# Cloudflare strips .html and serves pages at extensionless paths (/pages/about,
+# not /pages/about.html), so the rule has to target what is actually served. A
+# /*.html rule matches only the 307 redirect, which carries no body — the header
+# on it is irrelevant. This is the one place Cloudflare and Netlify genuinely
+# differ in behaviour rather than syntax.
+/pages/*
   Cache-Control: no-cache, must-revalidate
 
 # Long-lived assets, listed per directory rather than as /src/assets/* so the
