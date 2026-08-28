@@ -109,9 +109,14 @@ were removed on the `cloudflare-migration` branch, because Netlify Forms is a
 Netlify platform feature with no Cloudflare equivalent — carried across as-is,
 each form would have become a POST into nothing, which is worse than no form.
 
-Removed rather than replaced by a `mailto:` at the client's call: neither was
-needed at this stage, and the contact page already lists the email address,
-phone number, address and hours as real, tappable links.
+Each is replaced by a plain `mailto:` CTA — same pattern the careers page
+already uses for applications (`<a href="mailto:…?subject=…" class="btn">`), so
+it needs no new styling and has no backend to migrate:
+- Contact → **Send a Message**, `?subject=General Inquiry — Ethereal`
+- Shop → **Email Me When It Opens**, `?subject=Notify me when the shop opens — Ethereal`
+
+The contact page also still lists the email, phone, address and hours as real,
+tappable links independently of this.
 
 What that changed:
 - **Contact page** — the form was the right-hand column of `.contact-grid`. The
