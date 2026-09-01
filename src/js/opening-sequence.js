@@ -217,10 +217,25 @@
 
     const src = isDesktop ? '/src/assets/video/opening-desktop' : '/src/assets/video/opening-mobile';
     video.poster = src + '-poster.webp';
+
+    // Three encodes, smallest first — the browser takes the first it can decode.
+    // AV1 is both smaller AND measurably closer to the master than either of the
+    // others (mobile: 1.53 MB at SSIM 0.963, vs the VP9 webm's 2.36 MB at 0.919),
+    // so this is not a quality-for-bytes trade. The webm stays as the middle rung:
+    // without it, a browser with VP9 but no AV1 would fall all the way to the
+    // much larger h264.
+    //
+    // The codecs= parameter on the AV1 source is load-bearing. Declared as plain
+    // 'video/mp4' it would MATCH in browsers that do MP4 but not AV1 (older
+    // Safari) — they would select it, fail to decode, and never reach the h264
+    // fallback below. The full string makes them skip it instead.
+    const av1 = document.createElement('source');
+    av1.src = src + '-av1.mp4'; av1.type = 'video/mp4; codecs="av01.0.08M.08"';
     const webm = document.createElement('source');
     webm.src = src + '.webm'; webm.type = 'video/webm';
     const mp4 = document.createElement('source');
     mp4.src = src + '.mp4'; mp4.type = 'video/mp4';
+    video.appendChild(av1);
     video.appendChild(webm);
     video.appendChild(mp4);
     video.muted = true;
