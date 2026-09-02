@@ -1,112 +1,95 @@
 # Ethereal — outstanding work
 
-Last updated: 28 Aug 2026. This file is **not served** on the live site
-(`_redirects` 404s it), so it can hold internal detail.
-
-## Decision made: staying on Netlify
-
-Cloudflare was fully built and verified, then abandoned — **not** on technical
-grounds. Wix does not permit changing nameservers on domains registered with
-them ("Currently, it's not possible to change name servers (edit NS records)
-for a Wix domain"), and Cloudflare Workers custom domains require the zone to
-be on Cloudflare nameservers. The only route was transferring the registrar,
-which would have split `etherealdelray.com` away from the two other domains in
-the company's Wix account (`etherealrestaurant.com`, `glimmercafedelray.com`) —
-two registrars to maintain instead of one, to save ~$97/yr.
-
-Netlify Personal ($9/mo) it is. After the payload work, usage is ~231 credits
-against a 1,000 allowance, so there is roughly a 4x margin.
-
-**Revisit if** traffic passes ~10,000 visits/mo, where Netlify pushes to Pro at
-$20/mo. At that point moving all three domains to one real registrar plus free
-Cloudflare hosting becomes worth doing as a single deliberate project.
+Updated 2 Sep 2026. **Not served** on the live site (`_redirects` 404s it), so it can hold
+internal detail.
 
 ---
 
-## NEXT: move the site to a restaurant-owned Netlify account
+## Where hosting stands
 
-The site currently lives on the developer's **personal** Netlify account. The
-repo (`EtherealDelrayOrg/ethereal`) and the Cloudflare account are already
-Ethereal-owned; Netlify is the last piece that is not.
+**Netlify, on the restaurant-owned account.** The site was moved off the developer's
+personal account on 30 Aug 2026; the old projects are deleted. Four hostnames on one
+site and one certificate: `etherealdelray.com`, `www`, `etherealrestaurant.com`, `www`.
 
-Likely mechanism is Netlify's *Site configuration → General → Transfer site to
-another team*, which needs you to be a member of both teams. Verify before
-relying on it. Things to watch:
+**Cloudflare was evaluated and abandoned — for a non-technical reason.** The Worker was
+built and verified 25/25, but Wix does not permit changing nameservers on domains
+registered with them, and Cloudflare Workers custom domains require the zone to be on
+Cloudflare nameservers. Cloudflare Registrar cannot be the transfer target either, since
+it requires the zone Active first. The only route is transferring the registrar, which
+would split `etherealdelray.com` from the two other domains in the company's Wix account.
 
-- **The $9 Personal plan is attached to the current team.** The new team starts
-  on Free (300 credits), which is *not* enough headroom — see the credit notes
-  below. Budget for the plan to be re-purchased on the new team.
-- **Re-install the Netlify GitHub App** on `EtherealDelrayOrg` for the new team.
-  This exact step was missed after the repo transfer and left Netlify silently
-  stuck three commits behind while still reporting healthy.
-- **DNS may not need to change.** The apex A record points to Netlify's load
-  balancer (`75.2.60.5`) and `www` CNAMEs to `ethereal-delray.netlify.app`. If
-  the site keeps its subdomain through the transfer, DNS is untouched. Confirm
-  the subdomain survives; if it changes, the `www` CNAME at Wix must follow.
-- `etherealrestaurant.com` points at the same Netlify site and its redirect is
-  configured **inside Netlify**, so it moves with the site — re-check it after.
-
-**Verify after the move:** every page 200, the menu PDF still 1,177,374 bytes,
-internal docs still 404, and `etherealrestaurant.com` still redirects.
+**This is still worth revisiting**, because the economics changed after the restaurant
+opened. See below.
 
 ---
 
-## Cloudflare teardown
+## URGENT: the plan
 
-Safe to do now that Netlify deploys again. In order:
+Traffic since opening is running **~150 GB/month** — roughly 40× the pre-launch estimate.
+That is ~3,100 credits/month.
 
-1. Delete the **DNS zone** for `etherealdelray.com`. It is stuck in "pending
-   nameserver update" forever, generates nagging email, and is the one artifact
-   that could tempt someone into changing nameservers later.
-2. Delete the **Worker** (`ethereal`).
-3. **Uninstall the Cloudflare GitHub App** from `EtherealDelrayOrg`, or every
-   push keeps triggering a build that now fails — Cloudflare's `_redirects`
-   parser accepts only 200/301/302/303/307/308, and the doc-hiding rules use
-   `404!`, which is Netlify-only syntax.
+- **Free = 300 credits.** Already exceeded. Free *suspends* rather than bills; the site
+  has been through that outage once.
+- **Personal ($9) = 1,000 credits** — about 9 days at this rate.
+- **Pro ($20) = 3,000 credits** — roughly covers the month, with little headroom.
 
-**Keep the Cloudflare account itself.** Free, Ethereal-owned, and an empty
-account confuses nobody — a half-configured zone does.
+**Buy Pro.** Then decide about Cloudflare, where static bandwidth is unmetered and free.
 
-Then remove the now-dead scaffolding from the repo: `wrangler.jsonc`,
-`.assetsignore`, this file, and their matching `404!` lines in `_redirects`.
-**`_headers` and `_redirects` must stay** — `netlify.toml` was deleted and those
-two files are what configure Netlify now.
+At this traffic the comparison is **$240/yr on Netlify vs $0 on Cloudflare**, and the
+registrar transfer (~$11, ~a week, mostly waiting) pays for itself almost immediately.
+Moving all three domains together avoids the split-registrar problem that made this a
+close call before.
+
+Optimisation cannot substitute for that decision: even rebuilding the menu as HTML and
+shipping AV1 to every visitor still lands on Pro.
 
 ---
 
 ## Also outstanding
 
-- **GA4 handoff.** Property `G-NDDQ1KQZ8R` sits under the developer's personal
-  Google account. Grant the Ethereal Google account **Account-level
-  Administrator**, then remove the personal one. GA4 has no true property
-  transfer. No technical dependency on anything else — purely a don't-forget.
-- **`dev` is well behind `main`**: no `?v=` asset versioning, still carries
-  `netlify.toml` (with its deliberate `noindex` block — keep that dev-only), and
-  its 13 MB of gallery images have never had the optimisation pass that took
-  `main` from ~8 MB to ~3 MB per visit.
-- **Contact map is broken on both branches.** CARTO now requires an API key and
-  returns watermarked "API KEY REQUIRED" tiles with an HTTP **200**, so nothing
-  errors — it silently degrades. Live now at `/contact`. Fix is a design call: a
-  free CARTO key preserves the exact muted `voyager_nolabels` look, Stadia's
-  free tier is close, plain OpenStreetMap is keyless but bright and label-heavy
-  against the dark palette.
-- **Deploys cost 15 credits each** — 38% of the August burn, more than the
-  bandwidth of ~7 GB. Batch pushes rather than shipping one commit at a time.
-- **No DKIM or DMARC** on `etherealdelray.com` (SPF is present). Pre-existing and
-  unrelated to hosting, but it means mail from `info@etherealdelray.com` is more
-  likely to land in spam — which matters now that both site CTAs point there.
-  One for whoever administers the Google Workspace account.
+- **Merge `dev` into `main`.** `dev` has the finished gallery (30 client photographs,
+  filter + lightbox) **and the client's real About copy** — `main` still shows 12
+  placeholders there. But `dev` lacks the `?v=` cache busting, the `_headers`/`_redirects`
+  config and the asset optimisation, and still carries `netlify.toml` with a deliberate
+  dev-only `noindex`. The merge needs care in both directions.
+- **GA4 handoff.** Property `G-NDDQ1KQZ8R` is under the developer's personal Google
+  account. Grant the Ethereal account **Account-level Administrator**, then remove the
+  personal one — GA4 has no true property transfer. No dependency on anything else.
+- **Contact map is broken** on both branches. CARTO now requires an API key and returns
+  watermarked tiles with an HTTP **200**, so nothing errors — it silently degrades. A
+  design call: free CARTO key keeps the exact muted look, Stadia is close, plain OSM is
+  keyless but bright against the dark palette.
+- **Delete the Cloudflare leftovers** if the move is ruled out for good: `wrangler.jsonc`,
+  `.assetsignore`, and their `404!` lines in `_redirects`. **`_headers` and `_redirects`
+  must stay** — `netlify.toml` was deleted and those two files are what configure Netlify
+  now. Also uninstall the Cloudflare GitHub App from `EtherealDelrayOrg`, or every push
+  keeps triggering a build that fails on the `404!` syntax Cloudflare does not support.
+- **Instagram handle mismatch** — `/pages/contact.html` shows `[ @etherealdining ]` while
+  the footer links to `@etherealdelray`. One is wrong.
+- **No DKIM or DMARC** on the domain (SPF is present). Pre-existing and unrelated to
+  hosting, but mail from `info@etherealdelray.com` is likelier to land in spam — and both
+  site CTAs now point there.
+- **6.36 MB of unreferenced images still ship**: `logo.png` (2.12 MB — survives only in a
+  CSS comment), `clock-face.png` (2.13), `clock-face-bg.png` (1.59), `brand-mood.jpg`
+  (0.52). Deploy weight only, not bandwidth, since nothing fetches them — but they are
+  free to delete.
+- **Deploys cost 15 credits each.** Batch pushes rather than shipping one commit at a time.
 
 ---
 
-## Two traps that already bit, worth remembering
+## Traps that already bit — worth not repeating
 
-- **A green deploy proves nothing.** The first attempt at hiding the docs
-  deployed successfully and changed nothing: Netlify only consults `_redirects`
-  for paths that do *not* match a real file, so rules aimed at real files are
-  skipped silently. The trailing `!` forces it. Only re-testing the URLs caught
-  it.
+- **A green deploy proves nothing.** The first attempt at hiding the internal docs
+  deployed successfully and changed nothing: Netlify only consults `_redirects` for paths
+  that do *not* match a real file, so rules aimed at real files are skipped silently. The
+  trailing `!` forces it. Only re-testing the URLs caught it.
 - **One renderer agreeing does not mean another will.** A compressed menu was
-  pixel-identical under MuPDF and visibly broken under iOS PDFKit. See the
-  session notes on `_reference/menu-originals/shrink_images_only.py`, which
-  compresses images without letting any tool re-serialise page content streams.
+  pixel-identical under MuPDF and visibly broken under iOS PDFKit — heading "A"s and price
+  "1"s rendered black. Cause was `ez_save(clean=True)` re-serialising page content
+  streams. Use `_reference/menu-originals/shrink_images_only.py`, which asserts the
+  streams come out byte-identical, and verify on a real iPhone.
+- **GitHub App installations do not follow a repo transfer.** After moving to
+  `EtherealDelrayOrg`, Netlify silently stopped deploying while the site still looked
+  current. Three commits sat unshipped.
+- **`www` CNAMEs point at a Netlify *site name*.** Deleting or renaming that site releases
+  the name and breaks `www` on both domains. Check before deleting anything.

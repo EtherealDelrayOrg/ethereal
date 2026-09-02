@@ -1,5 +1,20 @@
 # PRE_DEV_RESOURCES — Ethereal Clock Project
 
+> ## ⚠️ SUPERSEDED — historical record only
+>
+> This describes the **original concept**, which was not built. Do not treat anything
+> below as current: the interactive clock, door-open animation, flying-bird burst and
+> circular navigation menu were all dropped. The tagline *"where time breathes"* was
+> retired at client request, and the fonts here (Cinzel) are not the ones in use.
+>
+> **What actually shipped:** a full-bleed AI opening video that crossfades into a
+> conventional hero and nav. Fonts are **Cormorant Garamond + Hanken Grotesk**.
+>
+> Kept because it records the original brief and the reference material the design grew
+> out of. For anything current see **DESIGN_SYSTEM.md**, **TECH_STACK.md** and
+> **OPENING_SEQUENCE.md**.
+
+
 ## Project Purpose
 
 **Ethereal** is a luxury brand web experience built around an animated, interactive clock that serves as the entry point to a navigation menu. The core concept: a dark, atmospheric landing page featuring a steampunk-styled mechanical clock face — clicking it triggers a cinematic "door open" animation, releases a flock of illustrated birds, and reveals a circular navigation menu. The aesthetic is dark, gothic-elegant with a gold/copper/brass palette, twinkling stars, floating dust particles, and rotating gear rings. The brand tagline is *"where time breathes."*

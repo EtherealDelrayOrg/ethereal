@@ -1,36 +1,43 @@
 # Third-party Integrations
 
-## Toast — Menu & Online Ordering
+## Menu — a PDF, not an embed (Toast was never used)
 
-**What it is:** Toast is a restaurant POS and online ordering platform. The restaurant already uses Toast for operations.
+**Status: live.** The menu is the client's own designed PDF at
+`/src/assets/menu/ethereal-menu.pdf`, linked directly from the hero's "View the Menu"
+CTA. There is no Toast embed, no online ordering, and no Toast dependency anywhere in the
+site. The earlier plan to embed Toast Tab was dropped when the client supplied artwork.
 
-**What we embed:** Toast Tab — their hosted ordering/menu page embedded in our site.
+### Compressing a new menu — use the script, not a generic tool
 
-### Integration Method
+Client PDFs arrive around 16 MB, which is far too heavy to link from the homepage of a
+site that gets mobile traffic. Compress with
+`_reference/menu-originals/shrink_images_only.py` (gitignored, alongside every previous
+build):
 
-Toast provides two embed approaches:
-
-**Option A — Iframe embed (recommended for menu page)**
-```html
-<iframe
-  src="https://www.toasttab.com/[restaurant-slug]/v3"
-  width="100%"
-  height="900"
-  style="border: none;"
-  title="Ethereal Menu & Ordering"
-></iframe>
+```bash
+python3 _reference/menu-originals/shrink_images_only.py <client.pdf> <out.pdf>
 ```
 
-**Option B — Redirect button**
-A "Order Online" CTA button that links directly to the Toast Tab URL. Simpler, no iframe styling issues.
+Latest run: **16.68 MB → 1.24 MB (7%)**, text character-identical, every aspect ratio
+preserved.
 
-### What we need from client
-- Their Toast Tab URL / restaurant slug (format: `toasttab.com/[name]/v3`)
-- Confirmation: do they want full online ordering embedded, or just menu display?
-- Their Toast account must have the Online Ordering module enabled
+**Why that script and not `pymupdf.rewrite_images()` or Ghostscript:** an earlier attempt
+used `ez_save(clean=True)`, which re-serialises every page content stream. iOS PDFKit
+renders the re-encoded streams differently and painted the "A" in headings and the "1" in
+prices **black instead of gold**. The text and colour values were never lost — the
+operators were byte-identical in value — but the re-encoding alone was enough to break
+it. The script avoids the whole class of problem by replacing image XObjects in place by
+xref and asserting on every run that page content streams come out byte-identical.
 
-### Styling note
-The iframe will show Toast's own UI — we cannot override their internal styles. We CAN style the container/frame around it to match our aesthetic.
+Two more rules it encodes, both learned by breaking things:
+- Size each image from its **largest** placement. One feather ornament is placed four
+  times from a single shared xref; sizing it per-placement compounded the downsample
+  (1049px → 263 → 66 → 17 → 5) and turned three of the four into flat colour blocks.
+- Use **one uniform scale factor**, flooring only the longer edge. Flooring each
+  dimension independently squashed that 1.3:1 feather into a 64×64 square.
+
+**Verify on a real iPhone after any menu change.** MuPDF agreeing with the original
+proves nothing about PDFKit — that is exactly how the black-glyph bug slipped through.
 
 ---
 
@@ -101,12 +108,12 @@ deployed domains work with no allowlisting needed.
 
 ---
 
-## Forms — REMOVED (both pages), pending the Cloudflare migration
+## Forms — REMOVED (both pages)
 
 **Status: no forms on the site.** `/pages/contact.html` and `/pages/shop.html`
 previously submitted through Netlify Forms (`contact` and `shop-notify`). Both
-were removed on the `cloudflare-migration` branch, because Netlify Forms is a
-Netlify platform feature with no Cloudflare equivalent — carried across as-is,
+were removed while evaluating a move off Netlify, because Netlify Forms is a
+platform-only feature with no equivalent elsewhere — carried across as-is,
 each form would have become a POST into nothing, which is worse than no form.
 
 Each is replaced by a plain `mailto:` CTA — same pattern the careers page
@@ -140,9 +147,36 @@ serverless function. The options priced up during the migration:
 - **A Cloudflare Worker** that accepts the POST and sends mail — no third party,
   but it is real code to write and maintain.
 
-## DNS & Domain (Wix → Netlify)
+## DNS & Hosting
 
-See [TECH_STACK.md](TECH_STACK.md#connecting-wix-domain--netlify) for step-by-step DNS setup.
+**Registrar + DNS: Wix.** `etherealdelray.com`, `etherealrestaurant.com` and
+`glimmercafedelray.com` all sit in the company's Wix account.
+
+**Hosting: Netlify, on the restaurant-owned account** since Aug 30 2026 (previously the
+developer's personal account).
+
+Four hostnames are attached to the one Netlify site, all on a single certificate:
+`etherealdelray.com`, `www.etherealdelray.com`, `etherealrestaurant.com`,
+`www.etherealrestaurant.com`. `etherealrestaurant.com` is **not** a redirect — it serves
+the same site at its own URL.
+
+### Things that will bite on any future host move
+
+- **The apex A record never needs to change.** `75.2.60.5` is Netlify's *shared* load
+  balancer; routing follows the custom-domain attachment, not DNS. Only the `www` CNAMEs
+  are site-specific.
+- **Both `www` records CNAME to `ethereal-delray.netlify.app`** — a Netlify *site name*.
+  Deleting or renaming that site releases the name and breaks `www` on both domains. When
+  the site was replaced, this was handled by renaming the old site to free the name and
+  renaming the new one to take it, so no Wix edit was needed.
+- **Wix will not let you change nameservers on a domain registered with them.** Their
+  docs are explicit; the only route is transferring the registrar. This is what blocked a
+  Cloudflare move, since Cloudflare Workers custom domains require the zone to be on
+  Cloudflare nameservers — and Cloudflare Registrar cannot be the transfer target either,
+  because it requires the zone to be Active first.
+- **Google Workspace email runs on this domain.** Any nameserver change must recreate all
+  five MX records and both TXT records (SPF + verification) *before* switching, or mail
+  stops. There is currently no DKIM or DMARC.
 
 ---
 

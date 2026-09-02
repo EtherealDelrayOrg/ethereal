@@ -10,29 +10,50 @@ A luxury, atmospheric web experience built around a cinematic opening sequence �
 
 | Page | Status | Notes |
 |------|--------|-------|
-| `/` | Built · minimal | Opening sequence + hero + footer only. Teaser sections removed until content is ready (CSS clock placeholder; AI video pending) |
-| `/gallery` | Built · in nav | Filterable photo grid (photography pending from client) |
-| `/about` | Built · in nav | Story, values, team bios (copy pending from client) |
-| `/reservations` | Built · in nav | Resy widget placeholder (venue slug pending from client) |
-| `/menu` | Built · hidden from nav | Toast embed placeholder (URL pending). Page kept, reachable by URL |
-| `/shop` | Built · hidden from nav | Coming soon placeholder with email capture. Page kept, reachable by URL |
-| `/careers` | Built · hidden from nav | Job listings + general application CTA. Page kept, reachable by URL |
-| `/contact` | Built · hidden from nav | Contact form + map. Page kept, reachable by URL |
+| `/` | Live | Opening sequence (AI video, AV1/VP9/h264) + hero. Hero CTAs go to Resy and the PDF menu |
+| `/gallery` | Built · nav shows "Coming Soon" | Filterable grid + lightbox. Complete on `dev` with 30 client photographs; `main` still has the placeholder |
+| `/about` | Built · nav shows "Coming Soon" | Client's verbatim story + team bios |
+| `/menu` | Built · not in nav | Placeholder page. The real menu is the client's PDF, linked straight from the hero |
+| `/reservations` | Built · not in nav | Resy is live, but every Reserve CTA opens the widget directly, so this page is bypassed |
+| `/shop` | Built · not in nav | Coming-soon page with a mailto CTA |
+| `/careers` | Built · not in nav | Job listings + mailto application CTA |
+| `/contact` | Built · not in nav | Address, hours, map, mailto CTA |
 
-> **Nav scope:** Only Gallery, About, and Reserve appear in the header/mobile/footer navigation. Menu, Shop, Careers, and Contact are built but intentionally hidden from nav until ready — their pages still exist and resolve by direct URL.
+> **Nav scope:** the header, mobile menu and footer show only **Gallery**, **About Us**
+> (both behind "Coming Soon" badges on `main`) and **Reserve**, which opens Resy.
+> Everything else resolves by direct URL or clean URL (`/menu`, `/shop`, …).
+
+> **Dress code banner:** a fixed bar sits above the header on every page, rendered by
+> `partials.js`. Collapsed it reads "Elegant Chic Dress Code" with a down arrow;
+> expanding drops the full policy over the page without shifting it.
+
+> **No forms anywhere.** Netlify Forms was removed during the hosting migration — it is a
+> Netlify-only feature and would not have survived a move. Contact and Shop use plain
+> `mailto:` CTAs with pre-filled subject lines instead.
 
 ## Tech Stack
 
-- **Language:** Vanilla HTML, CSS, JavaScript (no framework, no build tool)
-- **Hosting:** Netlify (free tier)
-- **Version control:** GitHub
-- **Domain:** Wix-managed DNS → Netlify
-- **Fonts:** Cormorant Garamond (display) + Hanken Grotesk (UI) — Google Fonts
+- **Language:** Vanilla HTML, CSS, JavaScript — no framework, no build step
+- **Hosting:** Netlify, on the restaurant-owned account (migrated from the developer's
+  personal account, Aug 2026)
+- **Deploy config:** `_headers` + `_redirects` at the repo root. There is **no
+  `netlify.toml`** — it was removed so the same files work on any static host
+- **Cache busting:** every `<link>`/`<script>` carries `?v=<date>`. CSS/JS are cached for
+  a day while HTML is not, so without the query a returning visitor can pick up new
+  markup against a stale stylesheet. **Bump it whenever anything under `/src/css` or
+  `/src/js` changes**
+- **Version control:** GitHub — `EtherealDelrayOrg/ethereal`
+- **Domain:** registered at Wix, DNS at Wix, pointed to Netlify
+- **Fonts:** Cormorant Garamond (display) + Hanken Grotesk (UI), via Google Fonts
 
 ## Third-party Integrations
 
-- **Toast** — online menu & ordering (`toasttab.com`)
-- **Resy** — reservations widget
+- **Resy** — reservations. Live. Every Reserve CTA opens the booking modal in place
+- **Google Analytics 4** — `G-NDDQ1KQZ8R`, `main` only
+- **Leaflet / CARTO** — the contact-page map. ⚠️ CARTO now requires an API key and serves
+  watermarked tiles; see INTEGRATIONS.md
+- ~~Toast~~ — never implemented. The client supplied a designed PDF menu instead, so
+  there is no ordering embed and no Toast dependency
 
 ## Local Development
 
@@ -57,7 +78,7 @@ ethereal/
 │   │   ├── partials.js          # Shared <site-header> / <site-footer> components
 │   │   └── opening-sequence.js  # Homepage intro orchestration
 │   └── assets/
-│       ├── images/         # logo.png, logo-wordmark.png (cropped nav mark), clock art…
+│       ├── images/         # logo-wordmark.webp (nav mark), bg-brand.webp (hero), clock art…
 │       ├── video/          # Opening sequence video
 │       └── fonts/
 ├── docs/                   # Project documentation
@@ -93,10 +114,12 @@ markup. **Edit the nav or footer in one place.**
 
 | Branch | Deploys to | Purpose |
 |--------|-----------|---------|
-| `main` | **etherealdelray.com** (Netlify production) | Cleaned, client-facing |
-| `dev`  | Netlify branch deploy (`dev--<site>.netlify.app`) | Active development / staging |
+| `main` | **etherealdelray.com** (+ `www`, `etherealrestaurant.com`, `www`) | Live site |
+| `dev`  | Netlify branch deploy | Staging — carries the finished gallery, not yet merged |
 
-Push to a branch on GitHub → Netlify auto-deploys it. Domain DNS is managed through Wix —
-records point to Netlify's load balancer.
+Push to GitHub → Netlify deploys. Note that `main` and `dev` have **diverged**: `dev` has
+the completed gallery but lacks the `?v=` cache busting, the `_headers`/`_redirects`
+config and the asset optimisation work. See MIGRATION.md.
 
-See [docs/TECH_STACK.md](docs/TECH_STACK.md) for full deployment details.
+**Deploys cost credits** (15 each on Netlify's credit model) — batch pushes rather than
+shipping one commit at a time.

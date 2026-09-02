@@ -45,7 +45,7 @@ The header (incl. mobile overlay) and footer are authored once in `partials.js`.
 
 | Concern | Solution |
 |---------|----------|
-| Hosting | **Netlify** (free tier, continuous deployment from GitHub) |
+| Hosting | **Netlify**, restaurant-owned account, continuous deployment from GitHub. Free tier is NOT sufficient — traffic since opening runs ~150 GB/mo (~3,100 credits) against Free's 300 |
 | Repo | **GitHub** |
 | Domain | Purchased via **Wix** — DNS managed in Wix dashboard |
 
@@ -65,15 +65,40 @@ The header (incl. mobile overlay) and footer are authored once in `partials.js`.
 | Branch | Netlify deploy | Purpose |
 |--------|----------------|---------|
 | `main` | Production → **etherealdelray.com** | Cleaned, client-facing |
-| `dev`  | Branch deploy → `dev--<site>.netlify.app` | Active development / staging |
+| `dev`  | Netlify branch deploy | Staging — carries the finished gallery, not yet merged |
 
-### Netlify Configuration
+`main` and `dev` have **diverged**: `dev` has the completed gallery but lacks the `?v=`
+cache busting, the `_headers`/`_redirects` config, and the asset optimisation. Merging
+needs care — see MIGRATION.md.
 
-`netlify.toml` (at project root) handles:
-- Clean-URL rewrites (`/menu` → `/pages/menu.html`, etc.)
-- 404 fallback page
-- Cache headers for assets (long-cache `src/assets`, no-cache HTML)
-- No build command (static site)
+### Deploy configuration
+
+**There is no `netlify.toml`.** It was deleted during the Aug 2026 hosting review and
+replaced by `_headers` and `_redirects` at the repo root — both are read natively by
+Netlify *and* by Cloudflare, so the site is not tied to one host.
+
+`_headers` — cache policy:
+- `/src/assets/images|video/*` — 1 year, `immutable` (replaced under new filenames)
+- `/src/assets/menu/*` — 1 hour, `must-revalidate` (re-issued at the *same* path, so it
+  must never be `immutable`)
+- `/src/css/*`, `/src/js/*` — 1 day
+- `/`, `/*.html`, `/pages/*` — `no-cache, must-revalidate`
+
+`_redirects`:
+- Clean URLs (`/menu` → `/pages/menu.html`, etc.)
+- `404!` rules hiding `docs/`, `README.md`, `MIGRATION.md`, `test.html`, `wrangler.jsonc`.
+  **The trailing `!` is load-bearing** — Netlify only consults `_redirects` for paths that
+  do *not* match a real file, so without the force flag these never fire and the files
+  keep serving with a 200.
+
+### Cache busting
+
+Every `<link>`/`<script>` carries `?v=<date>` (currently `20260901a`). CSS/JS are cached
+for a day while HTML is not, so the two can otherwise fall out of step and render a
+half-styled page. **Bump it whenever anything under `/src/css` or `/src/js` changes.**
+
+`wrangler.jsonc` and `.assetsignore` are leftovers from an evaluated Cloudflare move.
+They are inert on Netlify and can be deleted.
 
 ---
 
@@ -83,7 +108,7 @@ Google Fonts — loaded via `<link>` in `<head>`:
 - **Cormorant Garamond** — display headings, body text, descriptions (romantic high-contrast serif)
 - **Hanken Grotesk** — UI: nav, labels, buttons, addresses/contacts/hours, form fields (legible humanist sans)
 
-The logo is always an **image asset** (`logo.png` / `logo-wordmark.png`), never a web font. See [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) for the full type system.
+The logo is always an **image asset** (`logo-wordmark.webp`, near-lossless WebP), never a web font. See [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) for the full type system.
 
 ---
 
@@ -91,8 +116,10 @@ The logo is always an **image asset** (`logo.png` / `logo-wordmark.png`), never 
 
 See [INTEGRATIONS.md](INTEGRATIONS.md) for full embed details.
 
-- **Toast** — menu display + online ordering
-- **Resy** — reservation widget
+- **Resy** — reservations, live; every Reserve CTA opens the booking modal in place
+- **Google Analytics 4** — `G-NDDQ1KQZ8R`, `main` only
+- **Leaflet / CARTO** — contact-page map (⚠️ needs an API key, currently watermarked)
+- ~~Toast~~ — never implemented; the client supplied a designed PDF menu instead
 
 ---
 
