@@ -19,9 +19,15 @@ A luxury, atmospheric web experience built around a cinematic opening sequence �
 | `/careers` | Built · not in nav | Job listings + mailto application CTA |
 | `/contact` | Built · not in nav | Address, hours, map, mailto CTA |
 
-> **Nav scope:** the header, mobile menu and footer show only **Gallery**, **About Us**
-> (both behind "Coming Soon" badges on `main`) and **Reserve**, which opens Resy.
-> Everything else resolves by direct URL or clean URL (`/menu`, `/shop`, …).
+> **Nav scope:** the header, mobile menu and footer show **Gallery** (live), **About Us**
+> (behind a "Coming Soon" badge) and **Reserve**, which opens Resy. Everything else is
+> built and reachable by URL but not linked from the nav.
+
+> **URLs are clean.** Pages live in `/pages/` on disk but are served at `/gallery`,
+> `/about`, `/menu`, `/shop`, `/careers`, `/contact`, `/reservations` via 200-rewrites in
+> `_redirects`. **Link to the clean path, never `/pages/x.html`** — both work, but the
+> latter shows the ugly path in the address bar. Each page also carries a
+> `<link rel="canonical">` so the clean URL is the one search engines index.
 
 > **Dress code banner:** a fixed bar sits above the header on every page, rendered by
 > `partials.js`. Collapsed it reads "Elegant Chic Dress Code" with a down arrow;

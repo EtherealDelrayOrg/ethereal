@@ -85,11 +85,30 @@ Netlify *and* by Cloudflare, so the site is not tied to one host.
 - `/`, `/*.html`, `/pages/*` — `no-cache, must-revalidate`
 
 `_redirects`:
-- Clean URLs (`/menu` → `/pages/menu.html`, etc.)
+- **Clean URLs** — `/menu`, `/gallery`, `/about`, `/shop`, `/careers`, `/contact`,
+  `/reservations` are 200-rewrites onto the matching `/pages/*.html`. A rewrite (200),
+  not a redirect, so the clean path stays in the address bar.
 - `404!` rules hiding `docs/`, `README.md`, `MIGRATION.md`, `test.html`, `wrangler.jsonc`.
   **The trailing `!` is load-bearing** — Netlify only consults `_redirects` for paths that
   do *not* match a real file, so without the force flag these never fire and the files
   keep serving with a 200.
+
+### URL scheme
+
+**Every internal link uses the clean URL.** The files still live in `/pages/`, but
+nothing links to them by that path — `partials.js` and the page CTAs all point at
+`/gallery`, `/contact`, and so on. Keep it that way when adding links; a
+`/pages/*.html` href works but puts the ugly path in the visitor's address bar.
+
+The `.html` paths do still resolve (they are real files, and Netlify serves a matching
+file before consulting `_redirects`). Rather than redirect them, every page carries a
+`<link rel="canonical">` pointing at its clean URL, so search engines treat the clean one
+as authoritative and the two do not compete as duplicate content.
+
+Redirecting `/pages/*.html` → clean instead would need Netlify's `!` force flag, since a
+real file otherwise wins over the rule — and it would sit in tension with the 200-rewrite
+pointing the other way. The canonical achieves the same consolidation with nothing to
+loop.
 
 ### Cache busting
 
