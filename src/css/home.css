@@ -198,3 +198,97 @@
     padding: 8px 20px;
   }
 }
+
+/* ============================================================
+   HERO COCKTAILS
+   A single drink at a time at the foot of the hero, rising out of
+   fog tinted to that drink's own colour. Clicking opens the menu.
+   ============================================================ */
+.hero-cocktails {
+  --cocktail-fade: 1100ms;   /* keep in step with FADE in hero-cocktails.js */
+  --drink-glow: #c49140;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(190px, 26vh, 260px);
+  z-index: 3;                /* over .hero-scrim, under .hero-content */
+  pointer-events: none;      /* only the card itself is clickable */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* The WebGL canvas. Masked so the fog is dense at the very bottom and gone by
+   the top edge — otherwise it reads as a rectangle stuck on the photo rather
+   than something the drink is emerging from. */
+.cocktail-fog {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1600ms var(--ease);
+  mix-blend-mode: screen;    /* only lit mist shows against the dark hero */
+  -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0,0,0,0.75) 30%, transparent 78%);
+          mask-image: linear-gradient(to top, #000 0%, rgba(0,0,0,0.75) 30%, transparent 78%);
+}
+.cocktail-fog.is-lit { opacity: 0.52; }
+/* Vanta mounts here and sets position:relative on it — harmless, because the
+   wrapper above owns the positioning. */
+.cocktail-fog > div { width: 100%; height: 100%; }
+
+.cocktail-card {
+  position: relative;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1rem 1.1rem;
+  text-decoration: none;
+  /* the drink and its name move together as one unit */
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--cocktail-fade) var(--ease),
+              transform var(--cocktail-fade) var(--ease);
+}
+.hero-cocktails.is-in .cocktail-card { opacity: 1; transform: translateY(0); }
+
+.cocktail-name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(15px, 1.5vw, 19px);
+  letter-spacing: 0.02em;
+  color: var(--brass);
+  text-align: center;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.75);
+  transition: color var(--transition-fast);
+}
+
+.cocktail-img {
+  width: auto;
+  height: clamp(112px, 15vh, 150px);
+  /* a soft bloom in the drink's own colour: it grounds the glass in the fog,
+     and on mobile — where there is no WebGL fog — it is the whole effect */
+  filter: drop-shadow(0 6px 22px rgba(0, 0, 0, 0.55))
+          drop-shadow(0 0 26px var(--drink-glow));
+  transition: filter var(--cocktail-fade) var(--ease),
+              transform var(--transition-fast);
+}
+
+.cocktail-card:hover .cocktail-img,
+.cocktail-card:focus-visible .cocktail-img { transform: translateY(-4px) scale(1.03); }
+.cocktail-card:hover .cocktail-name,
+.cocktail-card:focus-visible .cocktail-name { color: var(--brass-light); }
+.cocktail-card:focus-visible { outline: 1px solid var(--brass); outline-offset: 6px; border-radius: 2px; }
+
+@media (max-width: 767px) {
+  .hero-cocktails { height: clamp(150px, 22vh, 200px); }
+  .cocktail-img   { height: clamp(92px, 13vh, 118px); }
+  .cocktail-name  { font-size: 14px; }
+}
+
+/* Someone who has asked for less motion gets a single drink, held still. */
+@media (prefers-reduced-motion: reduce) {
+  .cocktail-card { transition: none; opacity: 1; transform: none; }
+  .cocktail-fog  { display: none; }
+}
