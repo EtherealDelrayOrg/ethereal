@@ -55,7 +55,7 @@
 
         <nav id="nav-links" aria-label="Main navigation">
           <ul role="list">
-            <li><a href="/pages/gallery.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">Gallery<span class="coming-soon-badge">Coming Soon</span></a></li>
+            <li><a href="/pages/gallery.html">Gallery</a></li>
             <li><a href="/pages/about.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">About Us<span class="coming-soon-badge">Coming Soon</span></a></li>
             <li><a href="https://resy.com/cities/delray-beach-fl/venues/ethereal" class="nav-reserve" data-resy-book>Reserve</a></li>
           </ul>
@@ -64,7 +64,7 @@
     </header>
 
     <div id="mobile-nav" role="dialog" aria-label="Navigation menu" aria-modal="true">
-      <a href="/pages/gallery.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">Gallery<span class="coming-soon-badge">Coming Soon</span></a>
+      <a href="/pages/gallery.html">Gallery</a>
       <a href="/pages/about.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">About Us<span class="coming-soon-badge">Coming Soon</span></a>
       <a href="https://resy.com/cities/delray-beach-fl/venues/ethereal" class="mobile-reserve" data-resy-book>Reserve a Table</a>
     </div>
@@ -86,7 +86,7 @@
           <nav class="footer-nav" aria-label="Footer navigation">
             <h3>Navigate</h3>
             <ul role="list">
-              <li><a href="/pages/gallery.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">Gallery<span class="coming-soon-badge">Coming Soon</span></a></li>
+              <li><a href="/pages/gallery.html">Gallery</a></li>
               <li><a href="/pages/about.html" class="is-coming-soon" aria-disabled="true" title="Coming soon">About Us<span class="coming-soon-badge">Coming Soon</span></a></li>
             </ul>
           </nav>

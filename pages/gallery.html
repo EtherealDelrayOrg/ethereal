@@ -21,8 +21,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/src/css/globals.css?v=20260902a">
-  <link rel="stylesheet" href="/src/css/pages.css?v=20260902a">
+  <link rel="stylesheet" href="/src/css/globals.css?v=20260902b">
+  <link rel="stylesheet" href="/src/css/pages.css?v=20260902b">
   <style>
     .gallery-filter {
       display: flex;
@@ -49,7 +49,7 @@
       color: var(--brass);
     }
   </style>
-  <script src="/src/js/partials.js?v=20260902a"></script>
+  <script src="/src/js/partials.js?v=20260902b"></script>
 </head>
 <body>
 
@@ -68,85 +68,215 @@
       <div class="container">
 
         <div class="gallery-filter reveal" role="group" aria-label="Filter gallery by category">
-          <button class="filter-btn is-active" aria-pressed="true">All</button>
-          <button class="filter-btn" aria-pressed="false">Interior</button>
-          <button class="filter-btn" aria-pressed="false">Food &amp; Drink</button>
-          <button class="filter-btn" aria-pressed="false">Moments</button>
+          <button class="filter-btn is-active" type="button" data-filter="all" aria-pressed="true">All</button>
+          <button class="filter-btn" type="button" data-filter="dining" aria-pressed="false">Dining Room</button>
+          <button class="filter-btn" type="button" data-filter="bar" aria-pressed="false">The Bar</button>
+          <button class="filter-btn" type="button" data-filter="details" aria-pressed="false">Details</button>
         </div>
 
-        <div class="gallery-full-grid reveal" role="list" aria-label="Photo gallery">
+        <!-- Masonry (CSS columns): the set is 17 portrait to 13 landscape, so a fixed
+             square grid would crop into carefully composed architectural frames. Columns
+             keep every photo at its native ratio and leave no holes. -->
+        <div class="gallery-masonry" id="gallery-grid">
 
-          <div class="gallery-full-item wide" role="listitem">
-            <div class="img-ph">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg>
-              <span>Hero — Restaurant interior, wide shot</span>
-            </div>
-          </div>
-
-          <div class="gallery-full-item tall" role="listitem">
-            <div class="img-ph">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg>
-              <span>Portrait — Signature dish</span>
-            </div>
-          </div>
-
-          <div class="gallery-full-item" role="listitem">
-            <div class="img-ph">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg>
-              <span>Detail — Table setting</span>
-            </div>
-          </div>
-
-          <div class="gallery-full-item" role="listitem">
-            <div class="img-ph">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg>
-              <span>Ambiance — Candlelight</span>
-            </div>
-          </div>
-
-          <div class="gallery-full-item wide" role="listitem">
-            <div class="img-ph">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg>
-              <span>Wide — Bar or lounge area</span>
-            </div>
-          </div>
-
-          <div class="gallery-full-item" role="listitem">
-            <div class="img-ph">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg>
-              <span>Detail — Glassware</span>
-            </div>
-          </div>
-
-          <div class="gallery-full-item" role="listitem">
-            <div class="img-ph">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg>
-              <span>Dish — Course two</span>
-            </div>
-          </div>
-
-          <div class="gallery-full-item" role="listitem">
-            <div class="img-ph">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg>
-              <span>Moment — Guests dining</span>
-            </div>
-          </div>
-
-          <div class="gallery-full-item" role="listitem">
-            <div class="img-ph">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg>
-              <span>Exterior — Building or entrance</span>
-            </div>
-          </div>
+          <!-- Order is deliberate, not alphabetical. The first four are the client's
+               picks, in their order. The remaining 26 are woven so the categories
+               alternate: sorted by filename they arrived clumped (all dining, then all
+               bar), which read as three blocks rather than one gallery. Note the grid is
+               CSS columns, so DOM order is exactly what mobile sees at columns:1 — which
+               is ~87% of traffic. -->
+          <button class="gallery-item" type="button" data-cat="bar"
+                  data-full="/src/assets/gallery/full/the-bar-08.jpg"
+                  aria-label="View larger: The mosaic clock glimpsed through a gilded screen from the dining room">
+            <img src="/src/assets/gallery/thumb/the-bar-08.webp" alt="The mosaic clock glimpsed through a gilded screen from the dining room"
+                 width="467" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-19.jpg"
+                  aria-label="View larger: Dining room with the sculptural bare tree and palms rising between tables">
+            <img src="/src/assets/gallery/thumb/dining-room-19.webp" alt="Dining room with the sculptural bare tree and palms rising between tables"
+                 width="700" height="468" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="bar"
+                  data-full="/src/assets/gallery/full/the-bar-05.jpg"
+                  aria-label="View larger: The bar counter curving away beneath the painted tree mural">
+            <img src="/src/assets/gallery/thumb/the-bar-05.webp" alt="The bar counter curving away beneath the painted tree mural"
+                 width="700" height="467" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-14.jpg"
+                  aria-label="View larger: Teal upholstered chairs beneath rose glass lanterns and palm fronds">
+            <img src="/src/assets/gallery/thumb/dining-room-14.webp" alt="Teal upholstered chairs beneath rose glass lanterns and palm fronds"
+                 width="467" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-03.jpg"
+                  aria-label="View larger: Rows of dining tables lit by tiered crystal chandeliers">
+            <img src="/src/assets/gallery/thumb/dining-room-03.webp" alt="Rows of dining tables lit by tiered crystal chandeliers"
+                 width="463" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-11.jpg"
+                  aria-label="View larger: The dining room&#x27;s full span, gilded screens and chandeliers receding into the room">
+            <img src="/src/assets/gallery/thumb/dining-room-11.webp" alt="The dining room&#x27;s full span, gilded screens and chandeliers receding into the room"
+                 width="700" height="467" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="details"
+                  data-full="/src/assets/gallery/full/details-03.jpg"
+                  aria-label="View larger: The host stand beneath a framed portrait at the entrance">
+            <img src="/src/assets/gallery/thumb/details-03.webp" alt="The host stand beneath a framed portrait at the entrance"
+                 width="469" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-17.jpg"
+                  aria-label="View larger: A small table and chairs framed by ferns and gilded columns">
+            <img src="/src/assets/gallery/thumb/dining-room-17.webp" alt="A small table and chairs framed by ferns and gilded columns"
+                 width="466" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-05.jpg"
+                  aria-label="View larger: Rose-tinted pendant lamps above a dining table dressed with greenery">
+            <img src="/src/assets/gallery/thumb/dining-room-05.webp" alt="Rose-tinted pendant lamps above a dining table dressed with greenery"
+                 width="468" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="details"
+                  data-full="/src/assets/gallery/full/details-02.jpg"
+                  aria-label="View larger: Sculptural statuary and framed art beside a bare decorative tree">
+            <img src="/src/assets/gallery/thumb/details-02.webp" alt="Sculptural statuary and framed art beside a bare decorative tree"
+                 width="467" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-07.jpg"
+                  aria-label="View larger: Curved emerald velvet banquette with coral tufted ottomans and brass-topped tables">
+            <img src="/src/assets/gallery/thumb/dining-room-07.webp" alt="Curved emerald velvet banquette with coral tufted ottomans and brass-topped tables"
+                 width="700" height="467" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="bar"
+                  data-full="/src/assets/gallery/full/the-bar-03.jpg"
+                  aria-label="View larger: Teal bar stools along the counter, peacock mural and mosaic clock behind">
+            <img src="/src/assets/gallery/thumb/the-bar-03.webp" alt="Teal bar stools along the counter, peacock mural and mosaic clock behind"
+                 width="700" height="466" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-04.jpg"
+                  aria-label="View larger: The main dining room seen through gilded screens, chandeliers overhead">
+            <img src="/src/assets/gallery/thumb/dining-room-04.webp" alt="The main dining room seen through gilded screens, chandeliers overhead"
+                 width="468" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-13.jpg"
+                  aria-label="View larger: Dining tables and coral seating framed by a gilded screen">
+            <img src="/src/assets/gallery/thumb/dining-room-13.webp" alt="Dining tables and coral seating framed by a gilded screen"
+                 width="466" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="details"
+                  data-full="/src/assets/gallery/full/details-01.jpg"
+                  aria-label="View larger: Framed artwork above an emerald velvet banquette and coral ottoman">
+            <img src="/src/assets/gallery/thumb/details-01.webp" alt="Framed artwork above an emerald velvet banquette and coral ottoman"
+                 width="467" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-08.jpg"
+                  aria-label="View larger: Emerald banquette seating and coral ottomans beneath hanging foliage">
+            <img src="/src/assets/gallery/thumb/dining-room-08.webp" alt="Emerald banquette seating and coral ottomans beneath hanging foliage"
+                 width="700" height="467" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-16.jpg"
+                  aria-label="View larger: Close view of a booth set for dinner, foliage overhead and a coral ottoman alongside">
+            <img src="/src/assets/gallery/thumb/dining-room-16.webp" alt="Close view of a booth set for dinner, foliage overhead and a coral ottoman alongside"
+                 width="467" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="bar"
+                  data-full="/src/assets/gallery/full/the-bar-01.jpg"
+                  aria-label="View larger: The bar&#x27;s teal counter beneath the mosaic clock face">
+            <img src="/src/assets/gallery/thumb/the-bar-01.webp" alt="The bar&#x27;s teal counter beneath the mosaic clock face"
+                 width="467" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-06.jpg"
+                  aria-label="View larger: Crystal chandeliers and gilded screens above set dining tables">
+            <img src="/src/assets/gallery/thumb/dining-room-06.webp" alt="Crystal chandeliers and gilded screens above set dining tables"
+                 width="468" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-18.jpg"
+                  aria-label="View larger: Lounge seating in grey and green velvet around low tables">
+            <img src="/src/assets/gallery/thumb/dining-room-18.webp" alt="Lounge seating in grey and green velvet around low tables"
+                 width="467" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="bar"
+                  data-full="/src/assets/gallery/full/the-bar-06.jpg"
+                  aria-label="View larger: Backlit bottle shelves and the sculptural tree beside the bar">
+            <img src="/src/assets/gallery/thumb/the-bar-06.webp" alt="Backlit bottle shelves and the sculptural tree beside the bar"
+                 width="700" height="468" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-02.jpg"
+                  aria-label="View larger: Dining tables and coral velvet ottomans under the arched mirrored ceiling">
+            <img src="/src/assets/gallery/thumb/dining-room-02.webp" alt="Dining tables and coral velvet ottomans under the arched mirrored ceiling"
+                 width="467" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-10.jpg"
+                  aria-label="View larger: Symmetrical banquette alcove with coral ottomans and palm fronds">
+            <img src="/src/assets/gallery/thumb/dining-room-10.webp" alt="Symmetrical banquette alcove with coral ottomans and palm fronds"
+                 width="700" height="468" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="bar"
+                  data-full="/src/assets/gallery/full/the-bar-02.jpg"
+                  aria-label="View larger: The long bar counter with domed brass lamps and a backlit bottle display">
+            <img src="/src/assets/gallery/thumb/the-bar-02.webp" alt="The long bar counter with domed brass lamps and a backlit bottle display"
+                 width="700" height="467" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-01.jpg"
+                  aria-label="View larger: Corner banquette in emerald velvet beneath a fringed shell chandelier, framed by tropical foliage">
+            <img src="/src/assets/gallery/thumb/dining-room-01.webp" alt="Corner banquette in emerald velvet beneath a fringed shell chandelier, framed by tropical foliage"
+                 width="468" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="bar"
+                  data-full="/src/assets/gallery/full/the-bar-04.jpg"
+                  aria-label="View larger: The full length of the bar, mosaic clock centred above the back bar">
+            <img src="/src/assets/gallery/thumb/the-bar-04.webp" alt="The full length of the bar, mosaic clock centred above the back bar"
+                 width="700" height="468" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-15.jpg"
+                  aria-label="View larger: A set table before illuminated curio cabinets and a crystal chandelier">
+            <img src="/src/assets/gallery/thumb/dining-room-15.webp" alt="A set table before illuminated curio cabinets and a crystal chandelier"
+                 width="467" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-12.jpg"
+                  aria-label="View larger: Coral tufted ottomans drawn up to a dark marble table against emerald velvet">
+            <img src="/src/assets/gallery/thumb/dining-room-12.webp" alt="Coral tufted ottomans drawn up to a dark marble table against emerald velvet"
+                 width="700" height="467" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="bar"
+                  data-full="/src/assets/gallery/full/the-bar-07.jpg"
+                  aria-label="View larger: The bar seen head-on, mosaic clock and painted branches filling the wall">
+            <img src="/src/assets/gallery/thumb/the-bar-07.webp" alt="The bar seen head-on, mosaic clock and painted branches filling the wall"
+                 width="700" height="467" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-09.jpg"
+                  aria-label="View larger: Wide view of the dining room with sculptural statuary and layered lighting">
+            <img src="/src/assets/gallery/thumb/dining-room-09.webp" alt="Wide view of the dining room with sculptural statuary and layered lighting"
+                 width="700" height="467" loading="lazy" decoding="async">
+          </button>
 
         </div>
+
+        <p class="gallery-empty" id="gallery-empty" hidden>No photographs in this category yet.</p>
 
         <div class="ornament reveal"><div class="ornament-glyph"></div></div>
 
         <div class="reveal" style="text-align:center;">
-          <p class="body-text" style="margin-bottom:2rem; max-width:480px; margin-left:auto; margin-right:auto;">
-            <span class="content-ph">[ Gallery note — e.g., "Photography by [Photographer Name]." ]</span>
-          </p>
+          <!-- Opens the Resy booking modal in place (main.js, [data-resy-book])
+               rather than sending the visitor off to the reservations page. The
+               href is the real venue link, used as the fallback when the widget
+               can't open — see the handler for why that matters on mobile. -->
           <a href="https://resy.com/cities/delray-beach-fl/venues/ethereal" class="btn" data-resy-book>Reserve Your Experience</a>
         </div>
 
@@ -157,19 +287,21 @@
 
   <site-footer></site-footer>
 
-  <script src="/src/js/main.js?v=20260902a"></script>
-  <script>
-    // Filter buttons toggle (visual only — real filtering wired up when photos are added)
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => {
-          b.classList.remove('is-active');
-          b.setAttribute('aria-pressed', 'false');
-        });
-        btn.classList.add('is-active');
-        btn.setAttribute('aria-pressed', 'true');
-      });
-    });
-  </script>
+  <!-- Lightbox: built once here rather than injected, so it needs no JS to exist in
+       the DOM and screen readers see a real dialog. Hidden until opened. -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photograph viewer" hidden>
+    <button class="lightbox-close" type="button" aria-label="Close viewer">&times;</button>
+    <button class="lightbox-nav lightbox-prev" type="button" aria-label="Previous photograph">&#8249;</button>
+    <figure class="lightbox-figure">
+      <!-- No src attribute until a photo is chosen: an empty src= makes the
+           browser re-request the current page as an image. -->
+      <img id="lightbox-img" alt="">
+      <figcaption id="lightbox-caption"></figcaption>
+    </figure>
+    <button class="lightbox-nav lightbox-next" type="button" aria-label="Next photograph">&#8250;</button>
+  </div>
+
+  <script src="/src/js/main.js?v=20260902b"></script>
+  <script src="/src/js/gallery.js?v=20260902b"></script>
 </body>
 </html>

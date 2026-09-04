@@ -63,30 +63,185 @@
 /* ============================================================
    GALLERY PAGE
    ============================================================ */
-.gallery-full-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2px;
+/* ── Gallery filter bar ────────────────────────────────────
+   Lives here rather than in a <style> block on gallery.html, so the page keeps
+   to the same globals.css + pages.css pair every other subpage uses. */
+.gallery-filter {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+.filter-btn {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ivory-dark);
+  border: 1px solid var(--brass-dark);
+  padding: 9px 20px;
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast),
+              background var(--transition-fast);
+}
+.filter-btn:hover {
+  border-color: var(--brass);
+  color: var(--brass);
+}
+/* The active category reads as filled rather than merely outlined — with four
+   buttons in a row, a border colour change alone is too quiet to signal state. */
+.filter-btn.is-active {
+  border-color: var(--brass);
+  color: var(--ink);
+  background: var(--brass);
 }
 
-.gallery-full-item {
-  overflow: hidden;
+/* ── Gallery grid (masonry) ────────────────────────────────
+   CSS columns rather than a fixed grid: the photography is 17 portrait to 13
+   landscape, and square cells would crop into deliberately composed architectural
+   frames. Columns keep native ratios, pack without holes, and need no per-item
+   span classes. Reading order runs down each column, which is fine for a gallery. */
+.gallery-masonry {
+  columns: 3;
+  column-gap: 10px;
+}
+@media (max-width: 900px) { .gallery-masonry { columns: 2; } }
+@media (max-width: 520px) { .gallery-masonry { columns: 1; } }
+
+.gallery-item {
+  /* A real <button>: it opens a dialog, so it should be focusable and announced
+     as a control rather than being a div with a click handler. */
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  margin: 0 0 10px;
+  break-inside: avoid;
   position: relative;
-  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+  line-height: 0;
 }
-.gallery-full-item.wide { grid-column: span 2; aspect-ratio: 2 / 1; }
-.gallery-full-item.tall { grid-row: span 2; aspect-ratio: 1 / 2; }
-
-.gallery-full-item .img-ph { min-height: 100%; height: 100%; }
-
-@media (max-width: 700px) {
-  .gallery-full-grid { grid-template-columns: 1fr 1fr; }
-  .gallery-full-item.wide,
-  .gallery-full-item.tall { grid-column: span 1; grid-row: span 1; aspect-ratio: 1; }
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 900ms var(--ease), filter 600ms var(--ease);
 }
-@media (max-width: 480px) {
-  .gallery-full-grid { grid-template-columns: 1fr; }
-  .gallery-full-item { aspect-ratio: 4 / 3; }
+/* Warm candlelight lift on hover — the same brass glow used on buttons, kept
+   subtle so the photography stays the subject. */
+.gallery-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10,8,7,0.5) 0%, transparent 45%);
+  opacity: 0;
+  transition: opacity 600ms var(--ease);
+  pointer-events: none;
+}
+.gallery-item:hover img,
+.gallery-item:focus-visible img { transform: scale(1.045); filter: brightness(1.06); }
+.gallery-item:hover::after,
+.gallery-item:focus-visible::after { opacity: 1; }
+.gallery-item[hidden] { display: none; }
+
+.gallery-empty {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brass-dark);
+  text-align: center;
+  padding: 3rem 0;
+}
+
+/* ── Lightbox ──────────────────────────────────────────── */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;               /* above #site-header (160) */
+  background: rgba(6, 5, 3, 0.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  opacity: 0;
+  transition: opacity 320ms var(--ease);
+}
+.lightbox.is-open { opacity: 1; }
+.lightbox[hidden] { display: none; }
+
+.lightbox-figure {
+  max-width: min(1100px, 100%);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.lightbox-figure img {
+  max-width: 100%;
+  /* Leaves room for the caption below without the image ever overflowing. */
+  max-height: calc(100vh - 11rem);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.7);
+}
+.lightbox-figure figcaption {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  color: var(--ivory-dark);
+  text-align: center;
+  max-width: 60ch;
+}
+
+.lightbox-close,
+.lightbox-nav {
+  position: absolute;
+  background: transparent;
+  border: 1px solid var(--brass-dark);
+  color: var(--brass);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast),
+              background var(--transition-fast);
+}
+.lightbox-close:hover,
+.lightbox-nav:hover {
+  border-color: var(--brass);
+  background: rgba(196, 145, 64, 0.12);
+  color: var(--ivory);
+}
+.lightbox-close {
+  top: clamp(1rem, 3vw, 2rem);
+  right: clamp(1rem, 3vw, 2rem);
+  width: 44px;
+  height: 44px;
+  font-size: 26px;
+  line-height: 1;
+}
+.lightbox-nav {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 64px;
+  font-size: 30px;
+  line-height: 1;
+}
+.lightbox-prev { left: clamp(0.5rem, 2vw, 2rem); }
+.lightbox-next { right: clamp(0.5rem, 2vw, 2rem); }
+
+@media (max-width: 600px) {
+  /* Arrows move off the photo's sides on a narrow screen, where they would
+     otherwise sit on top of the image itself. */
+  .lightbox-nav { top: auto; bottom: 1rem; transform: none; width: 56px; height: 44px; }
+  .lightbox-figure img { max-height: calc(100vh - 14rem); }
 }
 
 /* ============================================================
