@@ -38,10 +38,14 @@
             <p class="body-text" style="margin-top:1.2rem;">Miralain first opened Glimmer Café in Delray Beach in 2025, followed by the opening of Ethereal in 2026 right across the street from Glimmer.</p>
           </div>
           <div class="img-wrap img-wrap--portrait reveal" data-delay="100">
-            <div class="img-ph" style="height:100%; min-height:500px;">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-4 4"/></svg>
-              <span>Portrait — Restaurant interior or founding moment</span>
-            </div>
+            <!-- Not lazy-loaded: this sits high enough on the page to be visible
+                 without scrolling on most viewports, and popping in would be worse
+                 than the few KB saved. .img-wrap--portrait is 4/5 while the source
+                 is 0.74, so object-fit: cover trims ~7.5% vertically, centred —
+                 both faces sit above the midline and survive the crop. -->
+            <img src="/src/assets/images/founders.webp"
+                 alt="Managing Partners Nick Alain and Chef Estuardo Mira raising glasses at a table in Ethereal's dining room"
+                 width="1100" height="1486" decoding="async">
           </div>
         </div>
       </div>
