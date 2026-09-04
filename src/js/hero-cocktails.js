@@ -14,7 +14,7 @@
     {
       "slug": "arabelle-loves-violets",
       "name": "Arabelle Loves Violets",
-      "w": 328,
+      "w": 322,
       "h": 360,
       "fog": {
         "highlight": "#f580a4",
@@ -25,7 +25,7 @@
     {
       "slug": "eden",
       "name": "Eden",
-      "w": 329,
+      "w": 326,
       "h": 360,
       "fog": {
         "highlight": "#f5ef8d",
@@ -36,7 +36,7 @@
     {
       "slug": "sex-and-the-city",
       "name": "Sex and the City",
-      "w": 351,
+      "w": 353,
       "h": 360,
       "fog": {
         "highlight": "#cc4540",
@@ -58,7 +58,7 @@
     {
       "slug": "peacock-oclock",
       "name": "Peacock O’Clock",
-      "w": 315,
+      "w": 323,
       "h": 360,
       "fog": {
         "highlight": "#69c6f5",
@@ -80,7 +80,7 @@
     {
       "slug": "make-me-blush",
       "name": "Make Me Blush",
-      "w": 231,
+      "w": 236,
       "h": 360,
       "fog": {
         "highlight": "#f59f9e",
@@ -102,7 +102,7 @@
     {
       "slug": "spice-girl-fall-edit",
       "name": "Spice Girl",
-      "w": 230,
+      "w": 235,
       "h": 360,
       "fog": {
         "highlight": "#f5935f",
@@ -113,7 +113,7 @@
     {
       "slug": "filthy-rich",
       "name": "Filthy Rich",
-      "w": 272,
+      "w": 270,
       "h": 360,
       "fog": {
         "highlight": "#f1c98b",
@@ -124,7 +124,7 @@
     {
       "slug": "passion-ash",
       "name": "Passion & Ash",
-      "w": 192,
+      "w": 198,
       "h": 360,
       "fog": {
         "highlight": "#f06e64",
@@ -135,7 +135,7 @@
     {
       "slug": "vanilla-chanel",
       "name": "Vanilla & Chanel",
-      "w": 220,
+      "w": 214,
       "h": 360,
       "fog": {
         "highlight": "#f5b681",
@@ -146,7 +146,7 @@
     {
       "slug": "palomas-give-you-wings",
       "name": "Palomas Give You Wings",
-      "w": 299,
+      "w": 304,
       "h": 360,
       "fog": {
         "highlight": "#f5b19a",
@@ -157,7 +157,7 @@
     {
       "slug": "pearfection",
       "name": "Pearfection",
-      "w": 222,
+      "w": 213,
       "h": 360,
       "fog": {
         "highlight": "#f5b066",
@@ -168,7 +168,7 @@
     {
       "slug": "tipsy-peach",
       "name": "Tipsy Peach",
-      "w": 321,
+      "w": 316,
       "h": 360,
       "fog": {
         "highlight": "#f58a56",
@@ -179,7 +179,7 @@
     {
       "slug": "spritz-me-im-fancy",
       "name": "Spritz Me, I’m Fancy",
-      "w": 262,
+      "w": 270,
       "h": 360,
       "fog": {
         "highlight": "#f58861",
@@ -190,7 +190,7 @@
     {
       "slug": "what-happens-in-pineapple-grove",
       "name": "What Happens in Pineapple Grove…",
-      "w": 240,
+      "w": 238,
       "h": 360,
       "fog": {
         "highlight": "#f5bf70",
