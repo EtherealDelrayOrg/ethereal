@@ -42,22 +42,34 @@
              keep every photo at its native ratio and leave no holes. -->
         <div class="gallery-masonry" id="gallery-grid">
 
-          <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-01.jpg"
-                  aria-label="View larger: Corner banquette in emerald velvet beneath a fringed shell chandelier, framed by tropical foliage">
-            <img src="/src/assets/gallery/thumb/dining-room-01.webp" alt="Corner banquette in emerald velvet beneath a fringed shell chandelier, framed by tropical foliage"
-                 width="468" height="700" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="details"
-                  data-full="/src/assets/gallery/full/details-01.jpg"
-                  aria-label="View larger: Framed artwork above an emerald velvet banquette and coral ottoman">
-            <img src="/src/assets/gallery/thumb/details-01.webp" alt="Framed artwork above an emerald velvet banquette and coral ottoman"
+          <!-- Order is deliberate, not alphabetical. The first four are the client's
+               picks, in their order. The remaining 26 are woven so the categories
+               alternate: sorted by filename they arrived clumped (all dining, then all
+               bar), which read as three blocks rather than one gallery. Note the grid is
+               CSS columns, so DOM order is exactly what mobile sees at columns:1 — which
+               is ~87% of traffic. -->
+          <button class="gallery-item" type="button" data-cat="bar"
+                  data-full="/src/assets/gallery/full/the-bar-08.jpg"
+                  aria-label="View larger: The mosaic clock glimpsed through a gilded screen from the dining room">
+            <img src="/src/assets/gallery/thumb/the-bar-08.webp" alt="The mosaic clock glimpsed through a gilded screen from the dining room"
                  width="467" height="700" loading="lazy" decoding="async">
           </button>
           <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-02.jpg"
-                  aria-label="View larger: Dining tables and coral velvet ottomans under the arched mirrored ceiling">
-            <img src="/src/assets/gallery/thumb/dining-room-02.webp" alt="Dining tables and coral velvet ottomans under the arched mirrored ceiling"
+                  data-full="/src/assets/gallery/full/dining-room-19.jpg"
+                  aria-label="View larger: Dining room with the sculptural bare tree and palms rising between tables">
+            <img src="/src/assets/gallery/thumb/dining-room-19.webp" alt="Dining room with the sculptural bare tree and palms rising between tables"
+                 width="700" height="468" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="bar"
+                  data-full="/src/assets/gallery/full/the-bar-05.jpg"
+                  aria-label="View larger: The bar counter curving away beneath the painted tree mural">
+            <img src="/src/assets/gallery/thumb/the-bar-05.webp" alt="The bar counter curving away beneath the painted tree mural"
+                 width="700" height="467" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-14.jpg"
+                  aria-label="View larger: Teal upholstered chairs beneath rose glass lanterns and palm fronds">
+            <img src="/src/assets/gallery/thumb/dining-room-14.webp" alt="Teal upholstered chairs beneath rose glass lanterns and palm fronds"
                  width="467" height="700" loading="lazy" decoding="async">
           </button>
           <button class="gallery-item" type="button" data-cat="dining"
@@ -67,10 +79,22 @@
                  width="463" height="700" loading="lazy" decoding="async">
           </button>
           <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-04.jpg"
-                  aria-label="View larger: The main dining room seen through gilded screens, chandeliers overhead">
-            <img src="/src/assets/gallery/thumb/dining-room-04.webp" alt="The main dining room seen through gilded screens, chandeliers overhead"
-                 width="468" height="700" loading="lazy" decoding="async">
+                  data-full="/src/assets/gallery/full/dining-room-11.jpg"
+                  aria-label="View larger: The dining room&#x27;s full span, gilded screens and chandeliers receding into the room">
+            <img src="/src/assets/gallery/thumb/dining-room-11.webp" alt="The dining room&#x27;s full span, gilded screens and chandeliers receding into the room"
+                 width="700" height="467" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="details"
+                  data-full="/src/assets/gallery/full/details-03.jpg"
+                  aria-label="View larger: The host stand beneath a framed portrait at the entrance">
+            <img src="/src/assets/gallery/thumb/details-03.webp" alt="The host stand beneath a framed portrait at the entrance"
+                 width="469" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-17.jpg"
+                  aria-label="View larger: A small table and chairs framed by ferns and gilded columns">
+            <img src="/src/assets/gallery/thumb/dining-room-17.webp" alt="A small table and chairs framed by ferns and gilded columns"
+                 width="466" height="700" loading="lazy" decoding="async">
           </button>
           <button class="gallery-item" type="button" data-cat="dining"
                   data-full="/src/assets/gallery/full/dining-room-05.jpg"
@@ -85,93 +109,9 @@
                  width="467" height="700" loading="lazy" decoding="async">
           </button>
           <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-06.jpg"
-                  aria-label="View larger: Crystal chandeliers and gilded screens above set dining tables">
-            <img src="/src/assets/gallery/thumb/dining-room-06.webp" alt="Crystal chandeliers and gilded screens above set dining tables"
-                 width="468" height="700" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="dining"
                   data-full="/src/assets/gallery/full/dining-room-07.jpg"
                   aria-label="View larger: Curved emerald velvet banquette with coral tufted ottomans and brass-topped tables">
             <img src="/src/assets/gallery/thumb/dining-room-07.webp" alt="Curved emerald velvet banquette with coral tufted ottomans and brass-topped tables"
-                 width="700" height="467" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-08.jpg"
-                  aria-label="View larger: Emerald banquette seating and coral ottomans beneath hanging foliage">
-            <img src="/src/assets/gallery/thumb/dining-room-08.webp" alt="Emerald banquette seating and coral ottomans beneath hanging foliage"
-                 width="700" height="467" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-09.jpg"
-                  aria-label="View larger: Wide view of the dining room with sculptural statuary and layered lighting">
-            <img src="/src/assets/gallery/thumb/dining-room-09.webp" alt="Wide view of the dining room with sculptural statuary and layered lighting"
-                 width="700" height="467" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-10.jpg"
-                  aria-label="View larger: Symmetrical banquette alcove with coral ottomans and palm fronds">
-            <img src="/src/assets/gallery/thumb/dining-room-10.webp" alt="Symmetrical banquette alcove with coral ottomans and palm fronds"
-                 width="700" height="468" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-11.jpg"
-                  aria-label="View larger: The dining room&#x27;s full span, gilded screens and chandeliers receding into the room">
-            <img src="/src/assets/gallery/thumb/dining-room-11.webp" alt="The dining room&#x27;s full span, gilded screens and chandeliers receding into the room"
-                 width="700" height="467" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-12.jpg"
-                  aria-label="View larger: Coral tufted ottomans drawn up to a dark marble table against emerald velvet">
-            <img src="/src/assets/gallery/thumb/dining-room-12.webp" alt="Coral tufted ottomans drawn up to a dark marble table against emerald velvet"
-                 width="700" height="467" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-13.jpg"
-                  aria-label="View larger: Dining tables and coral seating framed by a gilded screen">
-            <img src="/src/assets/gallery/thumb/dining-room-13.webp" alt="Dining tables and coral seating framed by a gilded screen"
-                 width="466" height="700" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-14.jpg"
-                  aria-label="View larger: Teal upholstered chairs beneath rose glass lanterns and palm fronds">
-            <img src="/src/assets/gallery/thumb/dining-room-14.webp" alt="Teal upholstered chairs beneath rose glass lanterns and palm fronds"
-                 width="467" height="700" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-15.jpg"
-                  aria-label="View larger: A set table before illuminated curio cabinets and a crystal chandelier">
-            <img src="/src/assets/gallery/thumb/dining-room-15.webp" alt="A set table before illuminated curio cabinets and a crystal chandelier"
-                 width="467" height="700" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-16.jpg"
-                  aria-label="View larger: Close view of a booth set for dinner, foliage overhead and a coral ottoman alongside">
-            <img src="/src/assets/gallery/thumb/dining-room-16.webp" alt="Close view of a booth set for dinner, foliage overhead and a coral ottoman alongside"
-                 width="467" height="700" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-17.jpg"
-                  aria-label="View larger: A small table and chairs framed by ferns and gilded columns">
-            <img src="/src/assets/gallery/thumb/dining-room-17.webp" alt="A small table and chairs framed by ferns and gilded columns"
-                 width="466" height="700" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-18.jpg"
-                  aria-label="View larger: Lounge seating in grey and green velvet around low tables">
-            <img src="/src/assets/gallery/thumb/dining-room-18.webp" alt="Lounge seating in grey and green velvet around low tables"
-                 width="467" height="700" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="bar"
-                  data-full="/src/assets/gallery/full/the-bar-01.jpg"
-                  aria-label="View larger: The bar&#x27;s teal counter beneath the mosaic clock face">
-            <img src="/src/assets/gallery/thumb/the-bar-01.webp" alt="The bar&#x27;s teal counter beneath the mosaic clock face"
-                 width="467" height="700" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="bar"
-                  data-full="/src/assets/gallery/full/the-bar-02.jpg"
-                  aria-label="View larger: The long bar counter with domed brass lamps and a backlit bottle display">
-            <img src="/src/assets/gallery/thumb/the-bar-02.webp" alt="The long bar counter with domed brass lamps and a backlit bottle display"
                  width="700" height="467" loading="lazy" decoding="async">
           </button>
           <button class="gallery-item" type="button" data-cat="bar"
@@ -180,17 +120,53 @@
             <img src="/src/assets/gallery/thumb/the-bar-03.webp" alt="Teal bar stools along the counter, peacock mural and mosaic clock behind"
                  width="700" height="466" loading="lazy" decoding="async">
           </button>
-          <button class="gallery-item" type="button" data-cat="bar"
-                  data-full="/src/assets/gallery/full/the-bar-04.jpg"
-                  aria-label="View larger: The full length of the bar, mosaic clock centred above the back bar">
-            <img src="/src/assets/gallery/thumb/the-bar-04.webp" alt="The full length of the bar, mosaic clock centred above the back bar"
-                 width="700" height="468" loading="lazy" decoding="async">
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-04.jpg"
+                  aria-label="View larger: The main dining room seen through gilded screens, chandeliers overhead">
+            <img src="/src/assets/gallery/thumb/dining-room-04.webp" alt="The main dining room seen through gilded screens, chandeliers overhead"
+                 width="468" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-13.jpg"
+                  aria-label="View larger: Dining tables and coral seating framed by a gilded screen">
+            <img src="/src/assets/gallery/thumb/dining-room-13.webp" alt="Dining tables and coral seating framed by a gilded screen"
+                 width="466" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="details"
+                  data-full="/src/assets/gallery/full/details-01.jpg"
+                  aria-label="View larger: Framed artwork above an emerald velvet banquette and coral ottoman">
+            <img src="/src/assets/gallery/thumb/details-01.webp" alt="Framed artwork above an emerald velvet banquette and coral ottoman"
+                 width="467" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-08.jpg"
+                  aria-label="View larger: Emerald banquette seating and coral ottomans beneath hanging foliage">
+            <img src="/src/assets/gallery/thumb/dining-room-08.webp" alt="Emerald banquette seating and coral ottomans beneath hanging foliage"
+                 width="700" height="467" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-16.jpg"
+                  aria-label="View larger: Close view of a booth set for dinner, foliage overhead and a coral ottoman alongside">
+            <img src="/src/assets/gallery/thumb/dining-room-16.webp" alt="Close view of a booth set for dinner, foliage overhead and a coral ottoman alongside"
+                 width="467" height="700" loading="lazy" decoding="async">
           </button>
           <button class="gallery-item" type="button" data-cat="bar"
-                  data-full="/src/assets/gallery/full/the-bar-05.jpg"
-                  aria-label="View larger: The bar counter curving away beneath the painted tree mural">
-            <img src="/src/assets/gallery/thumb/the-bar-05.webp" alt="The bar counter curving away beneath the painted tree mural"
-                 width="700" height="467" loading="lazy" decoding="async">
+                  data-full="/src/assets/gallery/full/the-bar-01.jpg"
+                  aria-label="View larger: The bar&#x27;s teal counter beneath the mosaic clock face">
+            <img src="/src/assets/gallery/thumb/the-bar-01.webp" alt="The bar&#x27;s teal counter beneath the mosaic clock face"
+                 width="467" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-06.jpg"
+                  aria-label="View larger: Crystal chandeliers and gilded screens above set dining tables">
+            <img src="/src/assets/gallery/thumb/dining-room-06.webp" alt="Crystal chandeliers and gilded screens above set dining tables"
+                 width="468" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-18.jpg"
+                  aria-label="View larger: Lounge seating in grey and green velvet around low tables">
+            <img src="/src/assets/gallery/thumb/dining-room-18.webp" alt="Lounge seating in grey and green velvet around low tables"
+                 width="467" height="700" loading="lazy" decoding="async">
           </button>
           <button class="gallery-item" type="button" data-cat="bar"
                   data-full="/src/assets/gallery/full/the-bar-06.jpg"
@@ -199,10 +175,46 @@
                  width="700" height="468" loading="lazy" decoding="async">
           </button>
           <button class="gallery-item" type="button" data-cat="dining"
-                  data-full="/src/assets/gallery/full/dining-room-19.jpg"
-                  aria-label="View larger: Dining room with the sculptural bare tree and palms rising between tables">
-            <img src="/src/assets/gallery/thumb/dining-room-19.webp" alt="Dining room with the sculptural bare tree and palms rising between tables"
+                  data-full="/src/assets/gallery/full/dining-room-02.jpg"
+                  aria-label="View larger: Dining tables and coral velvet ottomans under the arched mirrored ceiling">
+            <img src="/src/assets/gallery/thumb/dining-room-02.webp" alt="Dining tables and coral velvet ottomans under the arched mirrored ceiling"
+                 width="467" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-10.jpg"
+                  aria-label="View larger: Symmetrical banquette alcove with coral ottomans and palm fronds">
+            <img src="/src/assets/gallery/thumb/dining-room-10.webp" alt="Symmetrical banquette alcove with coral ottomans and palm fronds"
                  width="700" height="468" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="bar"
+                  data-full="/src/assets/gallery/full/the-bar-02.jpg"
+                  aria-label="View larger: The long bar counter with domed brass lamps and a backlit bottle display">
+            <img src="/src/assets/gallery/thumb/the-bar-02.webp" alt="The long bar counter with domed brass lamps and a backlit bottle display"
+                 width="700" height="467" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-01.jpg"
+                  aria-label="View larger: Corner banquette in emerald velvet beneath a fringed shell chandelier, framed by tropical foliage">
+            <img src="/src/assets/gallery/thumb/dining-room-01.webp" alt="Corner banquette in emerald velvet beneath a fringed shell chandelier, framed by tropical foliage"
+                 width="468" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="bar"
+                  data-full="/src/assets/gallery/full/the-bar-04.jpg"
+                  aria-label="View larger: The full length of the bar, mosaic clock centred above the back bar">
+            <img src="/src/assets/gallery/thumb/the-bar-04.webp" alt="The full length of the bar, mosaic clock centred above the back bar"
+                 width="700" height="468" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-15.jpg"
+                  aria-label="View larger: A set table before illuminated curio cabinets and a crystal chandelier">
+            <img src="/src/assets/gallery/thumb/dining-room-15.webp" alt="A set table before illuminated curio cabinets and a crystal chandelier"
+                 width="467" height="700" loading="lazy" decoding="async">
+          </button>
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-12.jpg"
+                  aria-label="View larger: Coral tufted ottomans drawn up to a dark marble table against emerald velvet">
+            <img src="/src/assets/gallery/thumb/dining-room-12.webp" alt="Coral tufted ottomans drawn up to a dark marble table against emerald velvet"
+                 width="700" height="467" loading="lazy" decoding="async">
           </button>
           <button class="gallery-item" type="button" data-cat="bar"
                   data-full="/src/assets/gallery/full/the-bar-07.jpg"
@@ -210,17 +222,11 @@
             <img src="/src/assets/gallery/thumb/the-bar-07.webp" alt="The bar seen head-on, mosaic clock and painted branches filling the wall"
                  width="700" height="467" loading="lazy" decoding="async">
           </button>
-          <button class="gallery-item" type="button" data-cat="details"
-                  data-full="/src/assets/gallery/full/details-03.jpg"
-                  aria-label="View larger: The host stand beneath a framed portrait at the entrance">
-            <img src="/src/assets/gallery/thumb/details-03.webp" alt="The host stand beneath a framed portrait at the entrance"
-                 width="469" height="700" loading="lazy" decoding="async">
-          </button>
-          <button class="gallery-item" type="button" data-cat="bar"
-                  data-full="/src/assets/gallery/full/the-bar-08.jpg"
-                  aria-label="View larger: The mosaic clock glimpsed through a gilded screen from the dining room">
-            <img src="/src/assets/gallery/thumb/the-bar-08.webp" alt="The mosaic clock glimpsed through a gilded screen from the dining room"
-                 width="467" height="700" loading="lazy" decoding="async">
+          <button class="gallery-item" type="button" data-cat="dining"
+                  data-full="/src/assets/gallery/full/dining-room-09.jpg"
+                  aria-label="View larger: Wide view of the dining room with sculptural statuary and layered lighting">
+            <img src="/src/assets/gallery/thumb/dining-room-09.webp" alt="Wide view of the dining room with sculptural statuary and layered lighting"
+                 width="700" height="467" loading="lazy" decoding="async">
           </button>
 
         </div>
