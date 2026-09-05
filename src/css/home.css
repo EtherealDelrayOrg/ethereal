@@ -199,6 +199,18 @@
   }
 }
 
+/* --haze has to be a registered custom property, not a plain one: an
+   unregistered property is a raw token, so changing it repaints instantly
+   and the colour hard-cuts from one drink to the next. Registered as
+   <color> it becomes an animatable value the browser can interpolate, so
+   the mist travels to the next drink's colour. Browsers without @property
+   simply keep the old hard cut. */
+@property --haze {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #c49140;
+}
+
 /* ============================================================
    HERO COCKTAILS
    A rail of signature drinks at the foot of the hero — three on
@@ -214,7 +226,7 @@
 .hero-cocktails {
   --slide-w: 142px;
   --img-h: clamp(80px, 10vh, 106px);
-  --haze: 196 145 64;        /* rgb triple, rewritten per drink by JS */
+  --haze: #c49140;           /* rewritten per drink by JS, and animated */
   position: absolute;
   left: 0;
   right: 0;
@@ -227,9 +239,12 @@
   align-items: center;
   justify-content: flex-end;
   opacity: 0;
-  transition: opacity 1400ms var(--ease);
+  transform: translateY(16px);
+  transition: opacity 1400ms var(--ease),
+              transform 1400ms var(--ease),
+              --haze 620ms var(--ease);   /* the mist travels, never cuts */
 }
-.hero-cocktails.is-in { opacity: 1; }
+.hero-cocktails.is-in { opacity: 1; transform: translateY(0); }
 
 /* ── The haze ──────────────────────────────────────────────
    Kept deliberately faint. It reads as light pooling in mist behind
@@ -250,11 +265,10 @@
   position: absolute;
   inset: -18% -10% -30%;
   background: radial-gradient(ellipse 62% 74% at 50% 100%,
-              rgb(var(--haze) / 0.46) 0%,
-              rgb(var(--haze) / 0.22) 38%,
+              color-mix(in srgb, var(--haze) 46%, transparent) 0%,
+              color-mix(in srgb, var(--haze) 22%, transparent) 38%,
               transparent 72%);
   filter: blur(26px);
-  transition: background 1200ms var(--ease);
   will-change: transform;
 }
 /* the second wash is wider, weaker and drifts the other way, so the
@@ -262,7 +276,7 @@
 .cocktail-haze::after {
   inset: -6% -22% -34%;
   background: radial-gradient(ellipse 78% 58% at 50% 100%,
-              rgb(var(--haze) / 0.26) 0%,
+              color-mix(in srgb, var(--haze) 26%, transparent) 0%,
               transparent 68%);
   filter: blur(40px);
   animation: haze-drift-b 31s ease-in-out infinite alternate;
@@ -372,7 +386,7 @@
   height: var(--img-h);
   /* a soft bloom in the drink's own colour grounds the glass in the haze */
   filter: drop-shadow(0 5px 16px rgba(0, 0, 0, 0.6))
-          drop-shadow(0 0 18px rgb(var(--haze) / 0.42));
+          drop-shadow(0 0 18px color-mix(in srgb, var(--haze) 42%, transparent));
   transition: filter 900ms var(--ease), transform var(--transition-fast);
 }
 .cocktail-slide:hover .cocktail-img,

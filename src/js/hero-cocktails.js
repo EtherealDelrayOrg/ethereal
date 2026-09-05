@@ -31,6 +31,8 @@
   const COCKTAILS = [
     {
       "slug": "arabelle-loves-violets",
+      "page": 3,
+      "top": 2615,
       "cx": 7.6,
       "name": "Arabelle Loves Violets",
       "w": 322,
@@ -43,6 +45,8 @@
     },
     {
       "slug": "eden",
+      "page": 3,
+      "top": 1997,
       "cx": 10.7,
       "name": "Eden",
       "w": 326,
@@ -55,6 +59,8 @@
     },
     {
       "slug": "sex-and-the-city",
+      "page": 3,
+      "top": 1251,
       "cx": 13.1,
       "name": "Sex and the City",
       "w": 353,
@@ -67,6 +73,8 @@
     },
     {
       "slug": "cloud-9",
+      "page": 3,
+      "top": 1060,
       "cx": 1.4,
       "name": "Cloud 9",
       "w": 272,
@@ -79,6 +87,8 @@
     },
     {
       "slug": "peacock-oclock",
+      "page": 3,
+      "top": 2458,
       "cx": 7.7,
       "name": "Peacock O’Clock",
       "w": 323,
@@ -91,6 +101,8 @@
     },
     {
       "slug": "smokin-hot",
+      "page": 3,
+      "top": 1557,
       "cx": -2.3,
       "name": "Smokin’ Hot",
       "w": 285,
@@ -103,6 +115,8 @@
     },
     {
       "slug": "make-me-blush",
+      "page": 3,
+      "top": 2281,
       "cx": 1.7,
       "name": "Make Me Blush",
       "w": 236,
@@ -115,6 +129,8 @@
     },
     {
       "slug": "banana-bread-old-fashioned",
+      "page": 3,
+      "top": 628,
       "cx": 0.1,
       "name": "Banana Bread Old Fashioned",
       "w": 283,
@@ -127,6 +143,8 @@
     },
     {
       "slug": "spice-girl-fall-edit",
+      "page": 3,
+      "top": 775,
       "cx": 0.1,
       "name": "Spice Girl",
       "w": 235,
@@ -139,6 +157,8 @@
     },
     {
       "slug": "filthy-rich",
+      "page": 3,
+      "top": 332,
       "cx": -3.3,
       "name": "Filthy Rich",
       "w": 270,
@@ -151,6 +171,8 @@
     },
     {
       "slug": "passion-ash",
+      "page": 3,
+      "top": 1846,
       "cx": -2.0,
       "name": "Passion & Ash",
       "w": 198,
@@ -163,6 +185,8 @@
     },
     {
       "slug": "vanilla-chanel",
+      "page": 3,
+      "top": 908,
       "cx": -0.6,
       "name": "Vanilla & Chanel",
       "w": 214,
@@ -175,6 +199,8 @@
     },
     {
       "slug": "palomas-give-you-wings",
+      "page": 3,
+      "top": 185,
       "cx": 5.8,
       "name": "Palomas Give You Wings",
       "w": 304,
@@ -187,6 +213,8 @@
     },
     {
       "slug": "pearfection",
+      "page": 3,
+      "top": 2128,
       "cx": 1.6,
       "name": "Pearfection",
       "w": 213,
@@ -199,6 +227,8 @@
     },
     {
       "slug": "tipsy-peach",
+      "page": 3,
+      "top": 1439,
       "cx": -0.6,
       "name": "Tipsy Peach",
       "w": 316,
@@ -211,6 +241,8 @@
     },
     {
       "slug": "spritz-me-im-fancy",
+      "page": 3,
+      "top": 502,
       "cx": 12.9,
       "name": "Spritz Me, I’m Fancy",
       "w": 270,
@@ -223,6 +255,8 @@
     },
     {
       "slug": "what-happens-in-pineapple-grove",
+      "page": 3,
+      "top": 1693,
       "cx": -5.7,
       "name": "What Happens in Pineapple Grove…",
       "w": 238,
@@ -262,7 +296,10 @@
     COCKTAILS.forEach((d, k) => {
       const a = document.createElement('a');
       a.className = 'cocktail-slide';
-      a.href = MENU;
+      // PDF Open Parameters: land on the drink's own entry rather than the
+      // top of a 2856pt page. Chrome and Firefox honour view=FitH,<top>;
+      // viewers that ignore it still get page=N, which is the cocktails page.
+      a.href = `${MENU}#page=${d.page}&view=FitH,${d.top}`;
       a.target = '_blank';
       a.rel = 'noopener';
       a.setAttribute('aria-label', d.name + ' — open the menu');
@@ -286,9 +323,6 @@
   rail.appendChild(frag);
   const slides = Array.from(rail.children);
 
-  const hex2rgb = (h) =>
-    `${parseInt(h.slice(1,3),16)} ${parseInt(h.slice(3,5),16)} ${parseInt(h.slice(5,7),16)}`;
-
   // ── Centre tracking ──────────────────────────────────────
   function placeLabel(d, slide) {
     // cx is a share of the image's own width, so it has to be resolved
@@ -305,8 +339,10 @@
     slides[n].classList.add('is-active');
     active = n;
 
-    // the haze and the drink's own bloom both follow the centred drink
-    strip.style.setProperty('--haze', hex2rgb(d.fog.midtone));
+    // The haze and the drink's own bloom both follow the centred drink.
+    // --haze is registered as <color> in home.css, so assigning a new one
+    // animates rather than cuts — hence a plain hex, not an rgb triple.
+    strip.style.setProperty('--haze', d.fog.midtone);
     placeLabel(d, slides[n]);
 
     if (label.textContent !== d.name) {
@@ -389,10 +425,7 @@
   // there but it does still run. The short delay is enough to get the
   // class into a later frame so the opacity transition actually plays.
   (function start(tries) {
-    if (measure()) {
-      setTimeout(() => strip.classList.add('is-in'), 60);
-      return;
-    }
+    if (measure()) { armReveal(); return; }
     if (tries < 40) setTimeout(() => start(tries + 1), 50);
   })(0);
 
@@ -409,5 +442,44 @@
       placeLabel(COCKTAILS[keep], slides[N + keep]);
     }, 180);
   });
+
+  // ── Reveal ───────────────────────────────────────────────
+  // The rail is not part of the first impression. It waits until the
+  // visitor shows some interest in the foot of the hero — the pointer
+  // drops into the lower band, or they scroll, wheel or swipe — and only
+  // then rises out of the haze. Whichever comes first wins, and the
+  // listeners take themselves off afterwards.
+  function armReveal() {
+    if (strip.classList.contains('is-in')) return;
+    let done = false;
+    const ZONE = 0.66;                 // lower third-ish of the viewport
+
+    function reveal() {
+      if (done) return;
+      done = true;
+      off();
+      strip.classList.add('is-in');
+    }
+    function onMove(e) {
+      if (e.clientY > window.innerHeight * ZONE) reveal();
+    }
+    function off() {
+      window.removeEventListener('pointermove', onMove);
+      ['scroll', 'wheel', 'touchmove', 'keydown'].forEach((n) =>
+        window.removeEventListener(n, reveal));
+      clearTimeout(fallback);
+    }
+
+    // Hovering low over the hero is the main gesture on a desktop...
+    window.addEventListener('pointermove', onMove, { passive: true });
+    // ...and any intent to move down the page counts everywhere else,
+    // which is what reaches touch, where there is no hover at all.
+    ['scroll', 'wheel', 'touchmove', 'keydown'].forEach((n) =>
+      window.addEventListener(n, reveal, { passive: true, once: true }));
+
+    // Backstop so it is never permanently hidden from someone who simply
+    // sits still — long enough that it is a discovery, not an entrance.
+    const fallback = setTimeout(reveal, 11000);
+  }
 
 })();
