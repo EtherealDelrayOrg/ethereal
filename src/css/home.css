@@ -225,13 +225,18 @@
    ============================================================ */
 .hero-cocktails {
   --slide-w: 142px;
+  /* the height a MEDIAN drink is drawn at; each image then scales by its own
+     --k so that the glasses match rather than the frames — see hero-cocktails.js */
   --img-h: clamp(80px, 10vh, 106px);
+  --k-max: 1.32;             /* the largest --k in the set, so slides fit the tallest */
+  --glass-share: 0.925;      /* median glass height as a share of frame height */
+  --rim: calc(26px + var(--img-h) * var(--glass-share));   /* rim height above the slide floor */
   --haze: #c49140;           /* rewritten per drink by JS, and animated */
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: clamp(180px, 24vh, 240px);
+  height: calc(var(--img-h) * var(--k-max) + 92px);
   z-index: 3;                /* over .hero-scrim, under .hero-content */
   pointer-events: none;      /* only the rail itself is interactive */
   display: flex;
@@ -305,7 +310,14 @@
    busy mural, the serif italic was the least legible thing on the
    page. Uppercase and letterspaced matches the nav and the CTAs. */
 .cocktail-name {
-  position: relative;
+  /* Absolutely placed rather than stacked above the rail. Now that every glass
+     is drawn to the same height, the rim sits at a fixed height for all of
+     them — so the name can hang a constant distance off THAT, instead of off
+     the top of whichever garnish happens to be tallest. */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--rim) + 13px);
   font-family: var(--font-ui);
   font-size: clamp(11px, 1vw, 13px);
   font-weight: 600;
@@ -313,7 +325,7 @@
   text-transform: uppercase;
   color: var(--brass-light);
   text-align: center;
-  margin: 0 0 0.7rem;
+  margin: 0;
   padding: 0 1rem;
   min-height: 1.2em;         /* reserve the line so the rail never shifts */
   /* Stacked shadows rather than a panel behind the text: a tight dark halo
@@ -367,7 +379,7 @@
   /* The rail has to clip on the y axis (overflow-x:auto forces it), so the
      slide carries enough padding for the drop-shadows to live inside the
      box. Too little and the bloom is sliced flat along the bottom edge. */
-  height: calc(var(--img-h) + 46px);
+  height: calc(var(--img-h) * var(--k-max) + 46px);
   padding-bottom: 26px;
   cursor: pointer;
   text-decoration: none;
@@ -383,7 +395,9 @@
 
 .cocktail-img {
   width: auto;
+  /* --k is set per image by JS; the fallback keeps a sane size if it is absent */
   height: var(--img-h);
+  height: calc(var(--img-h) * var(--k, 1));
   /* a soft bloom in the drink's own colour grounds the glass in the haze */
   filter: drop-shadow(0 5px 16px rgba(0, 0, 0, 0.6))
           drop-shadow(0 0 18px color-mix(in srgb, var(--haze) 42%, transparent));
@@ -401,7 +415,6 @@
   .hero-cocktails {
     --slide-w: 94px;
     --img-h: clamp(58px, 8vh, 74px);
-    height: clamp(140px, 20vh, 176px);
   }
   .cocktail-name { font-size: 10px; letter-spacing: 0.14em; margin-bottom: 0.6rem; }
 }

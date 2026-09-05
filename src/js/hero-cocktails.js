@@ -9,11 +9,21 @@
    Nothing moves on its own. Clicking either of the drinks flanking the
    centre brings it in; clicking the centre one opens the menu.
 
-   Each drink also carries `cx`, the horizontal centre of its opaque
-   pixels as a percentage of its own width. Garnishes are wildly
-   off-axis — Sex and the City's feather throws its mass 13% right of
-   the box centre — so a name centred on the box reads visibly beside
-   the glass rather than over it. The name is nudged by cx instead.
+   Each drink also carries two measured numbers:
+
+   `cx` — the horizontal centre of its opaque pixels, as a percentage of
+   its own width. Garnishes are wildly off-axis (Sex and the City's
+   feather throws its mass 13% right of the box centre), so a name
+   centred on the box reads visibly beside the glass rather than over it.
+
+   `k` — an optical size multiplier. Every cutout is the same pixel
+   height, but the glass inside it is not: Pearfection's glass fills 75%
+   of its frame against Palomas' 97%, so drawn at equal heights one
+   looks a third smaller than the other. k scales each image so the
+   GLASSES match, and the garnishes are free to differ. Found by
+   measuring the topmost row whose longest contiguous opaque run is at
+   least half the widest — contiguous, so a garnish sitting beside the
+   rim cannot masquerade as part of it.
 
    Scrolling is the browser's own, not a transform we drive: touch
    flings, trackpad swipes, shift+wheel and keyboard all behave the way
@@ -32,7 +42,8 @@
     {
       "slug": "arabelle-loves-violets",
       "page": 3,
-      "top": 2615,
+      "top": 241,
+      "k": 0.957,
       "cx": 7.6,
       "name": "Arabelle Loves Violets",
       "w": 322,
@@ -46,7 +57,8 @@
     {
       "slug": "eden",
       "page": 3,
-      "top": 1997,
+      "top": 859,
+      "k": 1.0,
       "cx": 10.7,
       "name": "Eden",
       "w": 326,
@@ -60,7 +72,8 @@
     {
       "slug": "sex-and-the-city",
       "page": 3,
-      "top": 1251,
+      "top": 1605,
+      "k": 0.954,
       "cx": 13.1,
       "name": "Sex and the City",
       "w": 353,
@@ -74,7 +87,8 @@
     {
       "slug": "cloud-9",
       "page": 3,
-      "top": 1060,
+      "top": 1796,
+      "k": 0.974,
       "cx": 1.4,
       "name": "Cloud 9",
       "w": 272,
@@ -88,7 +102,8 @@
     {
       "slug": "peacock-oclock",
       "page": 3,
-      "top": 2458,
+      "top": 398,
+      "k": 1.224,
       "cx": 7.7,
       "name": "Peacock O’Clock",
       "w": 323,
@@ -102,7 +117,8 @@
     {
       "slug": "smokin-hot",
       "page": 3,
-      "top": 1557,
+      "top": 1299,
+      "k": 1.271,
       "cx": -2.3,
       "name": "Smokin’ Hot",
       "w": 285,
@@ -116,7 +132,8 @@
     {
       "slug": "make-me-blush",
       "page": 3,
-      "top": 2281,
+      "top": 575,
+      "k": 0.971,
       "cx": 1.7,
       "name": "Make Me Blush",
       "w": 236,
@@ -130,7 +147,8 @@
     {
       "slug": "banana-bread-old-fashioned",
       "page": 3,
-      "top": 628,
+      "top": 2228,
+      "k": 0.997,
       "cx": 0.1,
       "name": "Banana Bread Old Fashioned",
       "w": 283,
@@ -144,7 +162,8 @@
     {
       "slug": "spice-girl-fall-edit",
       "page": 3,
-      "top": 775,
+      "top": 2081,
+      "k": 1.018,
       "cx": 0.1,
       "name": "Spice Girl",
       "w": 235,
@@ -158,7 +177,8 @@
     {
       "slug": "filthy-rich",
       "page": 3,
-      "top": 332,
+      "top": 2524,
+      "k": 0.943,
       "cx": -3.3,
       "name": "Filthy Rich",
       "w": 270,
@@ -172,7 +192,8 @@
     {
       "slug": "passion-ash",
       "page": 3,
-      "top": 1846,
+      "top": 1010,
+      "k": 1.103,
       "cx": -2.0,
       "name": "Passion & Ash",
       "w": 198,
@@ -186,7 +207,8 @@
     {
       "slug": "vanilla-chanel",
       "page": 3,
-      "top": 908,
+      "top": 1948,
+      "k": 1.025,
       "cx": -0.6,
       "name": "Vanilla & Chanel",
       "w": 214,
@@ -200,7 +222,8 @@
     {
       "slug": "palomas-give-you-wings",
       "page": 3,
-      "top": 185,
+      "top": 2671,
+      "k": 0.951,
       "cx": 5.8,
       "name": "Palomas Give You Wings",
       "w": 304,
@@ -214,7 +237,8 @@
     {
       "slug": "pearfection",
       "page": 3,
-      "top": 2128,
+      "top": 728,
+      "k": 1.233,
       "cx": 1.6,
       "name": "Pearfection",
       "w": 213,
@@ -228,7 +252,8 @@
     {
       "slug": "tipsy-peach",
       "page": 3,
-      "top": 1439,
+      "top": 1417,
+      "k": 1.003,
       "cx": -0.6,
       "name": "Tipsy Peach",
       "w": 316,
@@ -242,7 +267,8 @@
     {
       "slug": "spritz-me-im-fancy",
       "page": 3,
-      "top": 502,
+      "top": 2354,
+      "k": 1.148,
       "cx": 12.9,
       "name": "Spritz Me, I’m Fancy",
       "w": 270,
@@ -256,7 +282,8 @@
     {
       "slug": "what-happens-in-pineapple-grove",
       "page": 3,
-      "top": 1693,
+      "top": 1163,
+      "k": 0.974,
       "cx": -5.7,
       "name": "What Happens in Pineapple Grove…",
       "w": 238,
@@ -296,9 +323,17 @@
     COCKTAILS.forEach((d, k) => {
       const a = document.createElement('a');
       a.className = 'cocktail-slide';
-      // PDF Open Parameters: land on the drink's own entry rather than the
-      // top of a 2856pt page. Chrome and Firefox honour view=FitH,<top>;
-      // viewers that ignore it still get page=N, which is the cocktails page.
+      // PDF Open Parameters, to land on the drink's own entry rather than the
+      // top of a 2856pt page.
+      //
+      // `top` is measured DOWNWARD from the top of the page, which is not what
+      // the Adobe spec says (it defines the coordinate in PDF user space, up
+      // from the bottom) but is what Chrome's viewer actually implements —
+      // checked against a real viewer, where the spec-shaped value landed at
+      // the opposite end of the page. Accuracy tails off further down the
+      // page, and iOS Safari ignores the position outright; both cases still
+      // land on page=3, which is the cocktails page. A menu rendered as HTML
+      // with real anchors is the only way to make this exact everywhere.
       a.href = `${MENU}#page=${d.page}&view=FitH,${d.top}`;
       a.target = '_blank';
       a.rel = 'noopener';
@@ -310,6 +345,7 @@
       img.src = `/src/assets/cocktails/${d.slug}.webp`;
       img.alt = '';
       img.width = d.w; img.height = d.h;   // reserve the box so nothing reflows
+      img.style.setProperty('--k', d.k);   // optical size; see the note above
       img.decoding = 'async';
       // Only the three that start on screen load up front. The rest are
       // lazy: seventeen drinks is ~490 KB, and most visitors never scroll
