@@ -1,10 +1,19 @@
 /* ============================================================
-   HERO COCKTAILS — one drink at a time, rising out of fog at the
-   foot of the hero. Clicking takes you to the menu.
+   HERO COCKTAILS — an endless rail of drinks at the foot of the hero,
+   three on screen at once. Clicking one takes you to the menu.
 
-   Progressive enhancement throughout: with no JS the strip never
-   renders, and without Vanta (mobile, blocked CDN, reduced motion)
-   the drinks still cycle — just over a CSS glow instead of WebGL fog.
+   Endless is done by laying the list out three times and silently
+   rewinding a whole copy once the scroll settles, so the rail can be
+   flung in either direction forever without ever hitting an end.
+
+   Scrolling is the browser's own, not a transform we drive: touch
+   flings, trackpad swipes, shift+wheel and keyboard all behave the way
+   the platform says they should, and scroll-snap parks each drink in
+   the centre for free.
+
+   The haze is CSS (see home.css). Vanta's WebGL fog used to live here
+   and was removed — it read as a stain on the mural and never ran on
+   mobile, where the effect matters most.
    ============================================================ */
 
 (function () {
@@ -200,117 +209,173 @@
     }
   ];
 
-  const DWELL     = 5200;   // ms a drink is held before the next one
-  const FADE      = 1100;   // ms crossfade, matches --cocktail-fade in home.css
-  const COLOUR_MS = 1400;   // ms for the fog to travel to the next drink's colour
+  const COPIES  = 3;      // the list, laid out three times over
+  const DWELL   = 4200;   // ms a drink is centred before drifting on
+  const RESUME  = 5200;   // ms of stillness before auto-advance resumes
+  const SETTLE  = 130;    // ms of no scroll events that counts as "stopped"
 
   const strip = document.getElementById('hero-cocktails');
-  const card  = document.getElementById('cocktail-card');
-  const img   = document.getElementById('cocktail-img');
-  const name  = document.getElementById('cocktail-name');
-  const fogEl = document.getElementById('cocktail-fog');          // Vanta's own element
-  const fogWrap = fogEl && fogEl.parentElement;                    // owns position + mask
-  if (!strip || !card || !img || !name) return;
+  const rail  = document.getElementById('cocktail-rail');
+  const label = document.getElementById('cocktail-name');
+  if (!strip || !rail || !label) return;
 
+  const N       = COCKTAILS.length;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
 
-  let i = 0, timer = null, fx = null, lerpFrame = null;
+  let stride = 0;         // centre-to-centre distance between two slides
+  let active = -1;        // index into the tripled list
+  let timer = null, idle = null, raf = 0;
 
-  const hex2rgb = (h) => [parseInt(h.slice(1,3),16)/255, parseInt(h.slice(3,5),16)/255, parseInt(h.slice(5,7),16)/255];
+  // ── Build ────────────────────────────────────────────────
+  // Three copies. Only the middle one is ever reachable at rest, so the
+  // outer two exist purely to be scrolled into before we rewind.
+  const frag = document.createDocumentFragment();
+  for (let c = 0; c < COPIES; c++) {
+    COCKTAILS.forEach((d) => {
+      const a = document.createElement('a');
+      a.className = 'cocktail-slide';
+      a.href = '/pages/menu.html';
+      a.setAttribute('aria-label', d.name + ' — see the full cocktail menu');
+      // copies 0 and 2 are duplicates of what a screen reader has already
+      // heard, so only the middle copy is exposed
+      if (c !== 1) a.setAttribute('aria-hidden', 'true'), a.tabIndex = -1;
+      const img = document.createElement('img');
+      img.className = 'cocktail-img';
+      img.src = `/src/assets/cocktails/${d.slug}.webp`;
+      img.alt = '';
+      img.width = d.w; img.height = d.h;   // reserve the box so nothing reflows
+      img.decoding = 'async';
+      // the first screenful must not be lazy or the rail starts empty
+      img.loading = c === 1 ? 'eager' : 'lazy';
+      a.appendChild(img);
+      frag.appendChild(a);
+    });
+  }
+  rail.appendChild(frag);
+  const slides = Array.from(rail.children);
 
-  function paint(d) {
-    img.src = `/src/assets/cocktails/${d.slug}.webp`;
-    img.alt = d.name;
-    img.width = d.w; img.height = d.h;   // reserve the box so nothing reflows
-    name.textContent = d.name;
-    // the glow behind the drink tints too, which is what carries the colour
-    // change on mobile where there is no WebGL fog at all
-    strip.style.setProperty('--drink-glow', d.fog.midtone);
+  const hex2rgb = (h) =>
+    `${parseInt(h.slice(1,3),16)} ${parseInt(h.slice(3,5),16)} ${parseInt(h.slice(5,7),16)}`;
+
+  // ── Centre tracking ──────────────────────────────────────
+  function setActive(n) {
+    if (n === active || !slides[n]) return;
+    const d = COCKTAILS[((n % N) + N) % N];
+    if (active >= 0) slides[active].classList.remove('is-active');
+    slides[n].classList.add('is-active');
+    active = n;
+
+    // the haze and the drink's own bloom both follow the centred drink
+    strip.style.setProperty('--haze', hex2rgb(d.fog.midtone));
+
+    if (label.textContent !== d.name) {
+      label.classList.add('is-swapping');
+      setTimeout(() => {
+        label.textContent = d.name;
+        label.classList.remove('is-swapping');
+      }, reduced ? 0 : 300);
+    }
   }
 
-  // Vanta exposes no colour API — its uniforms are THREE.Vector3 holding
-  // normalised RGB, so they are mutated in place and re-render on the next
-  // frame. Same technique the opening sequence uses for its seam→candlelight
-  // drift; see opening-sequence.js.
-  function driftFog(to, ms) {
-    if (!fx || !fx.uniforms) return;
-    const pairs = ['highlightColor','midtoneColor','lowlightColor'].map((u, n) => {
-      const key = ['highlight','midtone','lowlight'][n];
-      const v = fx.uniforms[u];
-      return v ? { v, from: [v.value.x, v.value.y, v.value.z], to: hex2rgb(to[key]) } : null;
-    }).filter(Boolean);
-    const t0 = performance.now();
-    cancelAnimationFrame(lerpFrame);
-    (function step(now) {
-      if (!fx) return;
-      const raw = Math.min((now - t0) / ms, 1);
-      const t = raw * raw * (3 - 2 * raw);              // smoothstep
-      pairs.forEach(p => p.v.value.set(
-        p.from[0] + (p.to[0] - p.from[0]) * t,
-        p.from[1] + (p.to[1] - p.from[1]) * t,
-        p.from[2] + (p.to[2] - p.from[2]) * t));
-      if (raw < 1) lerpFrame = requestAnimationFrame(step);
-    })(t0);
+  const indexAt = (x) => Math.round(x / stride);
+
+  function measure() {
+    stride = slides[1].offsetLeft - slides[0].offsetLeft;
+    if (!stride) return false;
+    // park on the first drink of the middle copy
+    rail.scrollLeft = N * stride;
+    setActive(N);
+    return true;
   }
 
-  function preload(n) {
-    const d = COCKTAILS[n % COCKTAILS.length];
-    new Image().src = `/src/assets/cocktails/${d.slug}.webp`;
+  // ── Endless ──────────────────────────────────────────────
+  // Once the scroll has stopped, fold the position back into the middle
+  // copy. Same drink, same pixels on screen, so the jump is invisible.
+  function rewind() {
+    const lo = N * stride, span = N * stride;
+    const x  = rail.scrollLeft;
+    if (x >= lo && x < lo + span) return;
+    const folded = lo + (((x - lo) % span) + span) % span;
+    const prev = rail.style.scrollBehavior;
+    rail.style.scrollBehavior = 'auto';   // never animate the rewind
+    rail.scrollLeft = folded;
+    rail.style.scrollBehavior = prev;
+    // No re-entrancy guard on purpose. The write fires another scroll event,
+    // but folding is idempotent — the second pass is already in range and
+    // returns above. An earlier version latched a flag and cleared it in a
+    // rAF, which never runs on a backgrounded tab: one rewind with the page
+    // hidden and the rail stopped tracking for the rest of the session.
   }
 
-  function advance() {
-    const next = (i + 1) % COCKTAILS.length;
-    strip.classList.remove('is-in');                    // fade the drink out
-    driftFog(COCKTAILS[next].fog, COLOUR_MS);           // fog moves during the gap
-    setTimeout(() => {
-      i = next;
-      paint(COCKTAILS[i]);
-      strip.classList.add('is-in');
-      preload(i + 1);
-      timer = setTimeout(advance, DWELL);
-    }, FADE);
+  rail.addEventListener('scroll', () => {
+    if (!stride) return;
+    // rAF keeps the highlight in step with the scroll without doing work on
+    // every event...
+    if (!raf) raf = requestAnimationFrame(() => {
+      raf = 0;
+      setActive(indexAt(rail.scrollLeft));
+    });
+    clearTimeout(idle);
+    idle = setTimeout(() => {
+      // ...but rAF is suspended on a backgrounded tab, so settling also
+      // syncs from this timer. Without it the highlight, the name and the
+      // haze colour can all be left pointing at a drink that scrolled off
+      // screen. setActive is a no-op when nothing changed.
+      setActive(indexAt(rail.scrollLeft));
+      rewind();
+    }, SETTLE);
+  }, { passive: true });
+
+  // ── Auto-advance ─────────────────────────────────────────
+  function goTo(n, smooth) {
+    rail.scrollTo({ left: n * stride, behavior: smooth && !reduced ? 'smooth' : 'auto' });
   }
+  function tick() { goTo(indexAt(rail.scrollLeft) + 1, true); schedule(); }
+  function schedule(delay) {
+    clearTimeout(timer);
+    if (!reduced) timer = setTimeout(tick, delay || DWELL);
+  }
+  function hold() { clearTimeout(timer); }          // stop while a human is driving
+  function release() { schedule(RESUME); }
 
-  paint(COCKTAILS[0]);
-  requestAnimationFrame(() => strip.classList.add('is-in'));
+  ['pointerdown', 'wheel', 'touchstart', 'focusin', 'mouseenter']
+    .forEach((e) => rail.addEventListener(e, hold, { passive: true }));
+  ['pointerup', 'touchend', 'focusout', 'mouseleave']
+    .forEach((e) => rail.addEventListener(e, release, { passive: true }));
 
-  if (reduced) return;                                  // one drink, no cycling, no fog
-  preload(1);
-  timer = setTimeout(advance, DWELL);
+  // No point animating a rail nobody is looking at, and without this it
+  // races through drinks the moment the tab comes back.
+  document.addEventListener('visibilitychange', () =>
+    document.hidden ? hold() : schedule());
 
-  // Pause while the tab is hidden — no point burning a WebGL loop in the
-  // background, and it stops the carousel racing through drinks on return.
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { clearTimeout(timer); }
-    else { clearTimeout(timer); timer = setTimeout(advance, DWELL); }
-  });
-
-  // ── Fog: desktop only ────────────────────────────────────────
-  // three.js + vanta are already fetched by the opening sequence on desktop,
-  // so this costs no extra bytes. On mobile they are deliberately never loaded
-  // (see opening-sequence.js) and the CSS glow carries the effect instead.
-  if (!isDesktop || !fogEl) return;
-
-  let waited = 0;
-  (function waitForVanta() {
-    if (window.VANTA && window.VANTA.FOG) {
-      fx = window.VANTA.FOG({
-        el: fogEl, mouseControls: false, touchControls: false, gyroControls: false,
-        minHeight: 120, minWidth: 120,
-        highlightColor: parseInt(COCKTAILS[0].fog.highlight.slice(1), 16),
-        midtoneColor:   parseInt(COCKTAILS[0].fog.midtone.slice(1), 16),
-        lowlightColor:  parseInt(COCKTAILS[0].fog.lowlight.slice(1), 16),
-        baseColor: 0x0a0807, blurFactor: 0.80, speed: 0.9, zoom: 2.4
-      });
-      // Vanta measures its container at construction. If styles land late the
-      // canvas is sized wrong, so re-measure once layout has settled.
-      setTimeout(() => { if (fx && fx.resize) fx.resize(); }, 250);
-      fogWrap.classList.add('is-lit');
+  // ── Start ────────────────────────────────────────────────
+  // Widths come from the images, so wait until layout is real. On a cold
+  // load with the font still swapping, offsetLeft can read 0.
+  //
+  // Timers, not requestAnimationFrame: rAF is suspended on a backgrounded
+  // tab, so a page opened in the background would measure once, fail, and
+  // never retry — and the reveal class would never land, leaving the rail
+  // at opacity 0 even after the tab came forward. setTimeout is throttled
+  // there but it does still run. The short delay is enough to get the
+  // class into a later frame so the opacity transition actually plays.
+  (function start(tries) {
+    if (measure()) {
+      setTimeout(() => strip.classList.add('is-in'), 60);
+      schedule();
       return;
     }
-    // the opening sequence loads them; give it a while, then give up quietly
-    if ((waited += 250) < 15000) setTimeout(waitForVanta, 250);
-  })();
+    if (tries < 40) setTimeout(() => start(tries + 1), 50);
+  })(0);
+
+  // Slide widths are in px, but --slide-w changes at the mobile breakpoint.
+  let rz = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(rz);
+    rz = setTimeout(() => {
+      const keep = ((active % N) + N) % N;
+      stride = slides[1].offsetLeft - slides[0].offsetLeft;
+      if (stride) goTo(N + keep, false);
+    }, 180);
+  });
 
 })();

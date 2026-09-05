@@ -201,94 +201,199 @@
 
 /* ============================================================
    HERO COCKTAILS
-   A single drink at a time at the foot of the hero, rising out of
-   fog tinted to that drink's own colour. Clicking opens the menu.
+   A rail of signature drinks at the foot of the hero — three on
+   screen, scrolling forever in either direction, each rising out
+   of a haze tinted to its own colour. Clicking opens the menu.
+
+   The haze is plain CSS, not WebGL. Vanta's FOG was tried here and
+   read as a mottled stain sitting on top of the mural rather than
+   light in the air behind it, and it never ran on mobile at all,
+   where the effect is most of the point. Two blurred radial washes
+   drifting against each other do the job on every device.
    ============================================================ */
 .hero-cocktails {
-  --cocktail-fade: 1100ms;   /* keep in step with FADE in hero-cocktails.js */
-  --drink-glow: #c49140;
+  --slide-w: 172px;
+  --img-h: clamp(112px, 14vh, 148px);
+  --haze: 196 145 64;        /* rgb triple, rewritten per drink by JS */
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: clamp(190px, 26vh, 260px);
+  height: clamp(210px, 28vh, 280px);
   z-index: 3;                /* over .hero-scrim, under .hero-content */
-  pointer-events: none;      /* only the card itself is clickable */
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-/* The WebGL canvas. Masked so the fog is dense at the very bottom and gone by
-   the top edge — otherwise it reads as a rectangle stuck on the photo rather
-   than something the drink is emerging from. */
-.cocktail-fog {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 1600ms var(--ease);
-  mix-blend-mode: screen;    /* only lit mist shows against the dark hero */
-  -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0,0,0,0.75) 30%, transparent 78%);
-          mask-image: linear-gradient(to top, #000 0%, rgba(0,0,0,0.75) 30%, transparent 78%);
-}
-.cocktail-fog.is-lit { opacity: 0.52; }
-/* Vanta mounts here and sets position:relative on it — harmless, because the
-   wrapper above owns the positioning. */
-.cocktail-fog > div { width: 100%; height: 100%; }
-
-.cocktail-card {
-  position: relative;
-  pointer-events: auto;
+  pointer-events: none;      /* only the rail itself is interactive */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0 1rem 1.1rem;
-  text-decoration: none;
-  /* the drink and its name move together as one unit */
+  justify-content: flex-end;
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity var(--cocktail-fade) var(--ease),
-              transform var(--cocktail-fade) var(--ease);
+  transition: opacity 1400ms var(--ease);
 }
-.hero-cocktails.is-in .cocktail-card { opacity: 1; transform: translateY(0); }
+.hero-cocktails.is-in { opacity: 1; }
 
-.cocktail-name {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(15px, 1.5vw, 19px);
-  letter-spacing: 0.02em;
-  color: var(--brass);
-  text-align: center;
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.75);
-  transition: color var(--transition-fast);
+/* ── The haze ──────────────────────────────────────────────
+   Kept deliberately faint. It reads as light pooling in mist behind
+   the glasses; the moment it is strong enough to notice on its own
+   it stops looking like part of the photograph. */
+.cocktail-haze {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;    /* only lit mist shows against the dark mural */
+  /* gone well before the top edge, so it never reads as a rectangle */
+  -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0,0,0,0.55) 42%, transparent 88%);
+          mask-image: linear-gradient(to top, #000 0%, rgba(0,0,0,0.55) 42%, transparent 88%);
 }
+.cocktail-haze::before,
+.cocktail-haze::after {
+  content: '';
+  position: absolute;
+  inset: -18% -10% -30%;
+  background: radial-gradient(ellipse 62% 74% at 50% 100%,
+              rgb(var(--haze) / 0.46) 0%,
+              rgb(var(--haze) / 0.22) 38%,
+              transparent 72%);
+  filter: blur(26px);
+  transition: background 1200ms var(--ease);
+  will-change: transform;
+}
+/* the second wash is wider, weaker and drifts the other way, so the
+   two never line up and the edge of the pool keeps moving */
+.cocktail-haze::after {
+  inset: -6% -22% -34%;
+  background: radial-gradient(ellipse 78% 58% at 50% 100%,
+              rgb(var(--haze) / 0.26) 0%,
+              transparent 68%);
+  filter: blur(40px);
+  animation: haze-drift-b 31s ease-in-out infinite alternate;
+}
+.cocktail-haze::before { animation: haze-drift-a 23s ease-in-out infinite alternate; }
+
+@keyframes haze-drift-a {
+  from { transform: translate3d(-4%, 2%, 0) scale(1.00); }
+  to   { transform: translate3d( 5%, -2%, 0) scale(1.10); }
+}
+@keyframes haze-drift-b {
+  from { transform: translate3d( 6%, 0, 0) scale(1.08); }
+  to   { transform: translate3d(-5%, 3%, 0) scale(0.97); }
+}
+
+/* Shadow pooling at the foot of the mural. Two jobs: it grounds the
+   glasses, and it gives the brass label something to sit on — without it
+   the name lands on whichever magnolia happens to be behind it and stops
+   being readable. Paints under the haze, so the haze screens light back
+   onto it, which is what makes the mist read at all. */
+.hero-cocktails::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to top,
+              rgba(8, 7, 6, 0.74) 0%,
+              rgba(8, 7, 6, 0.52) 40%,
+              rgba(8, 7, 6, 0.20) 72%,
+              transparent 100%);
+}
+
+/* ── The name ──────────────────────────────────────────────
+   Hanken Grotesk rather than italic Cormorant: at this size, over a
+   busy mural, the serif italic was the least legible thing on the
+   page. Uppercase and letterspaced matches the nav and the CTAs. */
+.cocktail-name {
+  position: relative;
+  font-family: var(--font-ui);
+  font-size: clamp(11px, 1vw, 13px);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brass-light);
+  text-align: center;
+  margin: 0 0 0.85rem;
+  padding: 0 1rem;
+  min-height: 1.2em;         /* reserve the line so the rail never shifts */
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 2px 14px rgba(0,0,0,0.7);
+  transition: opacity 340ms var(--ease);
+}
+.cocktail-name.is-swapping { opacity: 0; }
+
+/* ── The rail ──────────────────────────────────────────────
+   Native scroll, so touch flings and trackpad gestures feel right for
+   free. JS keeps it endless by silently rewinding a whole copy once
+   the scroll settles — see hero-cocktails.js. */
+.cocktail-rail {
+  position: relative;
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-end;
+  width: calc(var(--slide-w) * 3);
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;   /* don't trigger back-swipe navigation */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* So the first and last slide can still come to rest in the centre.
+     One slide's width exactly, because the rail is three slides wide —
+     NOT a percentage: percentage padding resolves against the containing
+     block, not the rail, which blows the rail out to the full hero. */
+  padding-inline: var(--slide-w);
+  /* No edge mask. It was fading the outer two drinks to near-nothing —
+     the rail is exactly three slides wide, so an edge fade eats the very
+     things it is meant to frame. Scale and opacity mark the centre instead. */
+}
+.cocktail-rail::-webkit-scrollbar { display: none; }
+
+.cocktail-slide {
+  flex: 0 0 var(--slide-w);
+  scroll-snap-align: center;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* only enough headroom for the hover lift — any more opens a gap
+     between the name and the drinks it is naming */
+  height: calc(var(--img-h) + 10px);
+  padding-bottom: 1.35rem;
+  text-decoration: none;
+  /* the neighbours sit back so the centre drink is clearly the subject */
+  opacity: 0.6;
+  transform: scale(0.84);
+  transform-origin: 50% 100%;
+  transition: opacity 520ms var(--ease), transform 520ms var(--ease);
+}
+.cocktail-slide.is-active { opacity: 1; transform: scale(1); }
 
 .cocktail-img {
   width: auto;
-  height: clamp(112px, 15vh, 150px);
-  /* a soft bloom in the drink's own colour: it grounds the glass in the fog,
-     and on mobile — where there is no WebGL fog — it is the whole effect */
-  filter: drop-shadow(0 6px 22px rgba(0, 0, 0, 0.55))
-          drop-shadow(0 0 26px var(--drink-glow));
-  transition: filter var(--cocktail-fade) var(--ease),
-              transform var(--transition-fast);
+  height: var(--img-h);
+  /* a soft bloom in the drink's own colour grounds the glass in the haze */
+  filter: drop-shadow(0 5px 16px rgba(0, 0, 0, 0.6))
+          drop-shadow(0 0 18px rgb(var(--haze) / 0.42));
+  transition: filter 900ms var(--ease), transform var(--transition-fast);
 }
-
-.cocktail-card:hover .cocktail-img,
-.cocktail-card:focus-visible .cocktail-img { transform: translateY(-4px) scale(1.03); }
-.cocktail-card:hover .cocktail-name,
-.cocktail-card:focus-visible .cocktail-name { color: var(--brass-light); }
-.cocktail-card:focus-visible { outline: 1px solid var(--brass); outline-offset: 6px; border-radius: 2px; }
+.cocktail-slide:hover .cocktail-img,
+.cocktail-slide:focus-visible .cocktail-img { transform: translateY(-4px); }
+.cocktail-slide:focus-visible {
+  outline: 1px solid var(--brass);
+  outline-offset: -4px;
+  border-radius: 2px;
+}
 
 @media (max-width: 767px) {
-  .hero-cocktails { height: clamp(150px, 22vh, 200px); }
-  .cocktail-img   { height: clamp(92px, 13vh, 118px); }
-  .cocktail-name  { font-size: 14px; }
+  .hero-cocktails {
+    --slide-w: 108px;
+    --img-h: clamp(74px, 11vh, 92px);
+    height: clamp(160px, 23vh, 205px);
+  }
+  .cocktail-name { font-size: 10px; letter-spacing: 0.14em; margin-bottom: 0.6rem; }
 }
 
-/* Someone who has asked for less motion gets a single drink, held still. */
+/* Someone who has asked for less motion gets a still rail they can
+   still scroll by hand — nothing advances or drifts on its own. */
 @media (prefers-reduced-motion: reduce) {
-  .cocktail-card { transition: none; opacity: 1; transform: none; }
-  .cocktail-fog  { display: none; }
+  .cocktail-haze::before,
+  .cocktail-haze::after { animation: none; }
+  .cocktail-slide { transition: none; }
+  .hero-cocktails { transition: none; }
+  .cocktail-rail { scroll-behavior: auto; }
 }

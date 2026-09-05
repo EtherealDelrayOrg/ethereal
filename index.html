@@ -95,20 +95,18 @@
             <a href="/pages/menu.html" class="btn btn--ghost">View the Menu</a>
           </div>
         </div>
-          <!-- Cocktail preview: one drink at a time rising out of fog at the foot
-               of the hero, tinted to that drink's own colour. Sits inside #hero so
-               it inherits the reveal, and is purely additive — no JS, no strip. -->
+          <!-- Cocktail rail: three signature drinks at the foot of the hero,
+               scrolling endlessly, each rising out of a haze tinted to its own
+               colour. Sits inside #hero so it inherits the reveal. Slides are
+               built by hero-cocktails.js — with no JS nothing renders, which is
+               the right outcome for a decorative strip. -->
           <div class="hero-cocktails" id="hero-cocktails">
-            <!-- Vanta writes position:relative inline on whatever element it mounts to,
-                 which would override this layer's absolute positioning and collapse it
-                 to 0x0 as a flex item. So it gets its own inner div to scribble on. -->
-            <div class="cocktail-fog" aria-hidden="true"><div id="cocktail-fog"></div></div>
-            <a class="cocktail-card" id="cocktail-card" href="/pages/menu.html"
-               aria-label="See the full cocktail menu">
-              <span class="cocktail-name" id="cocktail-name"></span>
-              <img class="cocktail-img" id="cocktail-img" src="" alt=""
-                   width="180" height="180" decoding="async">
-            </a>
+            <div class="cocktail-haze" aria-hidden="true"></div>
+            <!-- aria-hidden: each slide is a link already labelled with its drink,
+                 so announcing this too would just repeat it every few seconds -->
+            <p class="cocktail-name" id="cocktail-name" aria-hidden="true"></p>
+            <div class="cocktail-rail" id="cocktail-rail" role="group"
+                 aria-label="Signature cocktails — scroll to browse"></div>
           </div>
       </section>
 
