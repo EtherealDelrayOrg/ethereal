@@ -212,14 +212,14 @@
    drifting against each other do the job on every device.
    ============================================================ */
 .hero-cocktails {
-  --slide-w: 172px;
-  --img-h: clamp(112px, 14vh, 148px);
+  --slide-w: 142px;
+  --img-h: clamp(80px, 10vh, 106px);
   --haze: 196 145 64;        /* rgb triple, rewritten per drink by JS */
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: clamp(210px, 28vh, 280px);
+  height: clamp(180px, 24vh, 240px);
   z-index: 3;                /* over .hero-scrim, under .hero-content */
   pointer-events: none;      /* only the rail itself is interactive */
   display: flex;
@@ -278,22 +278,13 @@
   to   { transform: translate3d(-5%, 3%, 0) scale(0.97); }
 }
 
-/* Shadow pooling at the foot of the mural. Two jobs: it grounds the
-   glasses, and it gives the brass label something to sit on — without it
-   the name lands on whichever magnolia happens to be behind it and stops
-   being readable. Paints under the haze, so the haze screens light back
-   onto it, which is what makes the mist read at all. */
-.hero-cocktails::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(to top,
-              rgba(8, 7, 6, 0.74) 0%,
-              rgba(8, 7, 6, 0.52) 40%,
-              rgba(8, 7, 6, 0.20) 72%,
-              transparent 100%);
-}
+/* There is deliberately no dark scrim here. An earlier version laid one
+   under the haze to lift the label's contrast, and it worked — but it
+   dimmed the mural along the whole foot of the hero, which is the one
+   thing on this page that should not be touched. The label carries its
+   own legibility in text-shadow instead, which costs the artwork
+   nothing. Note the haze can only ever add light: it is a screen blend,
+   so nothing here darkens the photograph. */
 
 /* ── The name ──────────────────────────────────────────────
    Hanken Grotesk rather than italic Cormorant: at this size, over a
@@ -308,11 +299,20 @@
   text-transform: uppercase;
   color: var(--brass-light);
   text-align: center;
-  margin: 0 0 0.85rem;
+  margin: 0 0 0.7rem;
   padding: 0 1rem;
   min-height: 1.2em;         /* reserve the line so the rail never shifts */
-  text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 2px 14px rgba(0,0,0,0.7);
-  transition: opacity 340ms var(--ease);
+  /* Stacked shadows rather than a panel behind the text: a tight dark halo
+     for edge contrast plus a wider soft one to sink whatever mural detail
+     sits behind it. Legible over the pale magnolias without dimming them. */
+  text-shadow: 0 0 4px rgba(6,5,4,0.95),
+               0 1px 2px rgba(6,5,4,0.95),
+               0 2px 10px rgba(6,5,4,0.85),
+               0 0 22px rgba(6,5,4,0.6);
+  /* transform is set by JS to sit the name over the drink's mass, not its
+     bounding box — see the cx note in hero-cocktails.js */
+  transition: opacity 300ms var(--ease), transform 520ms var(--ease);
+  will-change: transform;
 }
 .cocktail-name.is-swapping { opacity: 0; }
 
@@ -350,10 +350,12 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  /* only enough headroom for the hover lift — any more opens a gap
-     between the name and the drinks it is naming */
-  height: calc(var(--img-h) + 10px);
-  padding-bottom: 1.35rem;
+  /* The rail has to clip on the y axis (overflow-x:auto forces it), so the
+     slide carries enough padding for the drop-shadows to live inside the
+     box. Too little and the bloom is sliced flat along the bottom edge. */
+  height: calc(var(--img-h) + 46px);
+  padding-bottom: 26px;
+  cursor: pointer;
   text-decoration: none;
   /* the neighbours sit back so the centre drink is clearly the subject */
   opacity: 0.6;
@@ -361,7 +363,9 @@
   transform-origin: 50% 100%;
   transition: opacity 520ms var(--ease), transform 520ms var(--ease);
 }
-.cocktail-slide.is-active { opacity: 1; transform: scale(1); }
+.cocktail-slide.is-active { opacity: 1; transform: scale(1); cursor: pointer; }
+/* the flanking drinks are the controls, so they respond to the pointer */
+.cocktail-slide:not(.is-active):hover { opacity: 0.85; transform: scale(0.9); }
 
 .cocktail-img {
   width: auto;
@@ -381,9 +385,9 @@
 
 @media (max-width: 767px) {
   .hero-cocktails {
-    --slide-w: 108px;
-    --img-h: clamp(74px, 11vh, 92px);
-    height: clamp(160px, 23vh, 205px);
+    --slide-w: 94px;
+    --img-h: clamp(58px, 8vh, 74px);
+    height: clamp(140px, 20vh, 176px);
   }
   .cocktail-name { font-size: 10px; letter-spacing: 0.14em; margin-bottom: 0.6rem; }
 }
