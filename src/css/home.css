@@ -238,10 +238,14 @@
   --slide-w:  196px;
   /* the height a MEDIAN drink is drawn at; each image then scales by its own
      --k so the GLASSES match rather than the frames — see cocktail-rail.js */
-  --img-h:    clamp(162px, 19vh, 214px);
+  /* The drinks are drawn well under the width of their slot on purpose: the
+     gap between one glass and the next is what stops five in a row reading as
+     a crowd. Shrinking the drinks rather than widening the slots keeps the
+     shelf the same width on the page. */
+  --img-h:    clamp(118px, 14vh, 156px);
   --k-max:    1.32;                           /* the largest --k in the set, so the tallest still fits */
   --mirror-h: calc(var(--img-h) * 0.34);      /* how far the reflection runs before it is gone */
-  --lift:     34px;                           /* headroom inside the rail for the bloom */
+  --lift:     24px;                           /* headroom inside the rail for the bloom */
   --fade:     76px;                           /* how far the rail's edges dissolve */
   /* Every glow on the block is the drink's own colour pulled a third of the way
      back toward the house brass. Straight from the bottle these are saturated
@@ -253,7 +257,11 @@
   --lit:      color-mix(in srgb, var(--haze) 68%, var(--brass));
   --lit-hi:   color-mix(in srgb, var(--haze-hi) 68%, var(--brass-light));
   position: relative;
-  padding: var(--section-v) 0 calc(var(--section-v) * 0.8);
+  /* Deliberately short of the site's usual --section-v: with the heading gone
+     there is nothing at the top of this block to justify a full section's
+     worth of air above it, and the drinks read better as a band between the
+     mural and the footer than as another full-height stop. */
+  padding: calc(var(--section-v) * 0.66) 0 calc(var(--section-v) * 0.5);
   text-align: center;
   background: var(--ink);
   transition: --haze 900ms var(--ease),
@@ -276,8 +284,6 @@
   mix-blend-mode: screen;
 }
 
-.cocktails-heading { margin-bottom: 1.05rem; }
-
 /* ── The name ──────────────────────────────────────────────
    Hanken uppercase rather than more Cormorant italic: the heading directly
    above it is already the serif, and two italic serif lines stacked read as
@@ -291,7 +297,7 @@
   text-transform: uppercase;
   color: var(--brass-light);
   min-height: 1.4em;             /* reserve the line so nothing below it shifts */
-  margin-bottom: 2.4rem;
+  margin-bottom: 1.5rem;
   /* Dead centre, on the same axis as the heading above it. An earlier version
      nudged the name sideways to sit over the drink's visual mass (see the cx
      note in cocktail-rail.js) — right when the name was tucked against the
@@ -321,8 +327,8 @@
   position: absolute;
   left: 50%;
   bottom: var(--mirror-h);
-  width: min(560px, 92%);
-  height: calc(var(--img-h) * 1.15);
+  width: min(calc(var(--img-h) * 3.4), 92%);
+  height: calc(var(--img-h) * 1.2);
   /* --nudge leans the pool toward the drink's own mass, so the light sits under
      the glass rather than under the middle of its box */
   transform: translateX(calc(-50% + var(--nudge)));
@@ -385,7 +391,7 @@
   position: absolute;
   left: 50%;
   bottom: -3px;
-  width: min(330px, 66%);
+  width: min(calc(var(--img-h) * 2.1), 66%);
   height: 18px;
   transform: translateX(calc(-50% + var(--nudge)));
   background: radial-gradient(ellipse 50% 100% at 50% 0%,
@@ -517,8 +523,8 @@
   z-index: 3;
   display: grid;
   place-items: center;
-  width: 46px;
-  height: 46px;
+  width: 40px;
+  height: 40px;
   border: 1px solid var(--brass-dark);
   border-radius: 50%;
   color: var(--brass);
@@ -528,8 +534,8 @@
   transition: opacity var(--transition-fast), color var(--transition-fast),
               border-color var(--transition-fast), background var(--transition-fast);
 }
-.cocktail-arrow--prev { left: -62px; }
-.cocktail-arrow--next { right: -62px; }
+.cocktail-arrow--prev { left: -56px; }
+.cocktail-arrow--next { right: -56px; }
 .cocktails:hover .cocktail-arrow { opacity: 0.72; }
 .cocktail-arrow:hover,
 .cocktail-arrow:focus-visible {
@@ -544,7 +550,7 @@
    this one opens it at the cocktails. */
 .cocktails-more {
   display: inline-block;
-  margin-top: 2.6rem;
+  margin-top: 2rem;
   font-family: var(--font-ui);
   font-size: 12px;
   font-weight: 500;
@@ -572,12 +578,12 @@
   .cocktails {
     --visible: 3;
     --slide-w: 116px;
-    --img-h: clamp(112px, 19vh, 148px);
-    --lift: 24px;
+    --img-h: clamp(86px, 13vh, 112px);
+    --lift: 18px;
     --fade: 16px;
-    padding: calc(var(--section-v) * 0.7) 0 calc(var(--section-v) * 0.6);
+    padding: calc(var(--section-v) * 0.58) 0 calc(var(--section-v) * 0.42);
   }
-  .cocktail-name { letter-spacing: 0.2em; margin-bottom: 1.8rem; }
+  .cocktail-name { letter-spacing: 0.2em; margin-bottom: 1.2rem; }
   .cocktails-more { margin-top: 2rem; }
 }
 

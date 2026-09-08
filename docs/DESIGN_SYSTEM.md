@@ -203,11 +203,24 @@ background below it, the block can be lit properly instead — so the drinks are
 roughly twice the size, the haze became a real pool of light rather than a whisper, and
 the reflection and the bar became possible at all.
 
-**The composition, top to bottom:** the section heading in the house display serif; the
-centred drink's name; the shelf itself — five drinks on desktop, three below 1200px, the
-centre one full size with the pairs either side stepping back in scale and opacity; a
-brass hairline they all stand on; their reflections dissolving into the dark below it; and
-one quiet link into the menu.
+**The composition, top to bottom:** the centred drink's name; the shelf itself — five
+drinks on desktop, three below 1200px, the centre one full size with the pairs either side
+stepping back in scale and opacity; a brass hairline they all stand on; their reflections
+dissolving into the dark below it; and one quiet link into the menu.
+
+**There is no section heading**, and the drinks are drawn small — both at the client's
+request, in the same round. A "Signature Cocktails" title in the display serif was the
+first thing in the block and was dropped outright; the section keeps an `aria-label` so
+the landmark still has a name for anyone moving through the page by region. The drinks
+then went from a 162–214px median height to 118–156px, which is the part that actually
+fixed the complaint: at the old size five in a row read as a crowd. Note *the slots did
+not change width* — shrinking the drinks inside their existing 196px slots is what opened
+the gaps (from ~30px between neighbouring glasses to ~100–135px) while keeping the shelf
+the same width on the page. Widening the slots instead would have pushed the outer drinks
+off the edge of the container. Section padding came down with it, from a full `--section-v`
+to roughly two thirds of one, and is deliberately weighted toward the top: the block's
+first line now sits close enough to the top edge that a thinner top margin lets the fixed
+header clip it. Total height went from ~560px to ~455px.
 
 **What carries the mood:**
 - **The block takes its light from the drink in the centre.** Its sampled highlight,

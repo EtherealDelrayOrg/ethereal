@@ -118,18 +118,20 @@
            thing is built by cocktail-rail.js and stays [hidden] until it has
            been, so no-JS gets nothing rather than an empty heading over an
            empty shelf. -->
-      <section id="cocktails" class="cocktails" aria-labelledby="cocktails-heading" hidden>
+      <!-- aria-label, not aria-labelledby: the visible heading was dropped at
+           the client's request, but the landmark still needs a name for anyone
+           moving through the page by region. -->
+      <section id="cocktails" class="cocktails" aria-label="Signature cocktails" hidden>
 
         <div class="container">
-          <h2 class="section-heading cocktails-heading reveal" id="cocktails-heading">Signature Cocktails</h2>
           <!-- aria-hidden: every slide is a link already labelled with its own
                drink, so announcing this too would repeat it on every scroll -->
-          <div class="reveal" data-delay="120">
+          <div class="reveal">
             <p class="cocktail-name" id="cocktail-name" aria-hidden="true"></p>
           </div>
         </div>
 
-        <div class="cocktail-stage reveal" data-delay="220">
+        <div class="cocktail-stage reveal" data-delay="120">
           <!-- light in the air behind the centred drink, in its own colour -->
           <div class="cocktail-pool" aria-hidden="true"></div>
           <!-- the bar the glasses stand on: a hairline with a pool of light
@@ -153,7 +155,7 @@
         <div class="container">
           <!-- Straight to the cocktails page of the client's designed PDF,
                same file the hero CTA and every glass open. -->
-          <a class="cocktails-more reveal" data-delay="320"
+          <a class="cocktails-more reveal" data-delay="240"
              href="/src/assets/menu/ethereal-menu.pdf#page=3" target="_blank" rel="noopener">The full cocktail list</a>
         </div>
 
