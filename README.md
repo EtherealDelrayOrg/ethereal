@@ -131,11 +131,24 @@ markup. **Edit the nav or footer in one place.**
 | Branch | Deploys to | Purpose |
 |--------|-----------|---------|
 | `main` | **etherealdelray.com** (+ `www`, `etherealrestaurant.com`, `www`) | Live site |
-| `dev`  | Netlify branch deploy | Staging — carries the finished gallery, not yet merged |
+| `dev`  | Netlify branch deploy | Staging — everything on `main`, plus whatever is waiting on client approval |
 
-Push to GitHub → Netlify deploys. Note that `main` and `dev` have **diverged**: `dev` has
-the completed gallery but lacks the `?v=` cache busting, the `_headers`/`_redirects`
-config and the asset optimisation work. See MIGRATION.md.
+Push to GitHub → Netlify deploys.
+
+The two branches had **diverged badly** in both directions for a while (`main` carried the
+hosting migration, `dev` carried the gallery in an older form — see MIGRATION.md). That is
+over: `dev` was brought up to `main` wholesale in Sep 2026 and is now `main` plus the work
+awaiting approval, so it is a straight fast-forward-shaped merge back.
+
+**Three differences are deliberate and must not cross between the branches.** All three
+are commented in place, in both directions, because every one of them has already ridden
+along in a merge once:
+
+| Difference | Lives on | Why |
+|---|---|---|
+| GA4 `gtag.js` snippet | `main` only | Preview traffic is us and the client; it would land in the live property as real visits. Each of dev's nine `<head>`s carries a note where it would go |
+| `X-Robots-Tag: noindex` in `_headers` | `dev` only | Keeps the preview site out of search results. On `main` it would de-index the live site |
+| The About page's real copy | `dev` only, for now | `/about` is the last page still gated behind a Coming Soon link on `main`; the client's story, partner bios and founders photograph are written and waiting on it |
 
 **Deploys cost credits** (15 each on Netlify's credit model) — batch pushes rather than
 shipping one commit at a time.
