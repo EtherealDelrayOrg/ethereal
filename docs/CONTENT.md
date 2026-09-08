@@ -40,6 +40,8 @@ Tracks what content exists, what's pending, and what needs to be provided by the
 | Hero text / tagline | ❓ | |
 | "About in one line" subheader | ❓ | |
 | Featured imagery | ❓ | Food, interior, ambiance |
+| Cocktail illustrations | ✅ | 17 AI-restyled cut-outs in `src/assets/cocktails/`, one per signature drink, on the homepage rail. Each is measured (optical size, visual centre, sampled colour) in `src/js/cocktail-rail.js` — **a new or replaced drink needs those numbers re-measured**, not just a new file dropped in |
+| Cocktail descriptions | ⏳ | The rail shows the name only and links into the PDF menu for the rest. Would need short copy per drink if we ever want it on the page |
 | CTA buttons copy | ❓ | e.g., "Reserve a Table", "View Menu" |
 
 ---

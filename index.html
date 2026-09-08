@@ -26,11 +26,11 @@
   <link rel="canonical" href="https://etherealdelray.com/">
   <link rel="icon" type="image/png" href="/src/assets/images/favicon-clock.png">
   <meta name="theme-color" content="#0d0b09">
-  <link rel="stylesheet" href="/src/css/globals.css?v=20260902d">
-  <link rel="stylesheet" href="/src/css/opening-sequence.css?v=20260902d">
-  <link rel="stylesheet" href="/src/css/home.css?v=20260902d">
+  <link rel="stylesheet" href="/src/css/globals.css?v=20260908a">
+  <link rel="stylesheet" href="/src/css/opening-sequence.css?v=20260908a">
+  <link rel="stylesheet" href="/src/css/home.css?v=20260908a">
   <noscript><style>#opening-sequence,.seq-bloom,#seq-fog{display:none!important}#site-content{opacity:1!important}#site-header{opacity:1!important;pointer-events:auto!important}.hero-label,.hero-title,.hero-sub,.hero-ctas{opacity:1!important;animation:none!important}.hero-bg{transform:scale(1.04)!important}</style></noscript>
-  <script src="/src/js/partials.js?v=20260902d"></script>
+  <script src="/src/js/partials.js?v=20260908a"></script>
 </head>
 <body>
 
@@ -113,6 +113,52 @@
         </div>
       </section>
 
+      <!-- ── Signature Cocktails ──────────────────────────
+           A separate block under the mural, not part of the hero. The whole
+           thing is built by cocktail-rail.js and stays [hidden] until it has
+           been, so no-JS gets nothing rather than an empty heading over an
+           empty shelf. -->
+      <section id="cocktails" class="cocktails" aria-labelledby="cocktails-heading" hidden>
+
+        <div class="container">
+          <h2 class="section-heading cocktails-heading reveal" id="cocktails-heading">Signature Cocktails</h2>
+          <!-- aria-hidden: every slide is a link already labelled with its own
+               drink, so announcing this too would repeat it on every scroll -->
+          <div class="reveal" data-delay="120">
+            <p class="cocktail-name" id="cocktail-name" aria-hidden="true"></p>
+          </div>
+        </div>
+
+        <div class="cocktail-stage reveal" data-delay="220">
+          <!-- light in the air behind the centred drink, in its own colour -->
+          <div class="cocktail-pool" aria-hidden="true"></div>
+          <!-- the bar the glasses stand on: a hairline with a pool of light
+               on it, sitting behind the rail so the glasses cover it -->
+          <div class="cocktail-bar" aria-hidden="true"></div>
+
+          <button class="cocktail-arrow cocktail-arrow--prev" type="button" data-step="-1" aria-label="Previous cocktail">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+              <path d="M15 4 L7 12 L15 20"/>
+            </svg>
+          </button>
+          <div class="cocktail-rail" id="cocktail-rail" role="group"
+               aria-label="Signature cocktails — drag or swipe to browse"></div>
+          <button class="cocktail-arrow cocktail-arrow--next" type="button" data-step="1" aria-label="Next cocktail">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+              <path d="M9 4 L17 12 L9 20"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="container">
+          <!-- Straight to the cocktails page of the client's designed PDF,
+               same file the hero CTA and every glass open. -->
+          <a class="cocktails-more reveal" data-delay="320"
+             href="/src/assets/menu/ethereal-menu.pdf#page=3" target="_blank" rel="noopener">The full cocktail list</a>
+        </div>
+
+      </section>
+
     </main>
 
     <!-- ── Footer ────────────────────────────────────── -->
@@ -121,7 +167,8 @@
   </div>
   <!-- /site-content -->
 
-  <script src="/src/js/opening-sequence.js?v=20260902d"></script>
-  <script src="/src/js/main.js?v=20260902d"></script>
+  <script src="/src/js/opening-sequence.js?v=20260908a"></script>
+  <script src="/src/js/main.js?v=20260908a"></script>
+  <script src="/src/js/cocktail-rail.js?v=20260908a"></script>
 </body>
 </html>

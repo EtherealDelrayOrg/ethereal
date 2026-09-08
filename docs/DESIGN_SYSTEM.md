@@ -187,6 +187,87 @@ This is a scoped exception, not a new site-wide direction — every other sectio
 
 ---
 
+## Signature Cocktails Block
+
+**Added Sep 2026.** A rail of the seventeen signature drinks, sitting on the homepage as
+its own section directly beneath the hero mural. Markup in `index.html`, styles under
+"SIGNATURE COCKTAILS" in `home.css`, everything else — the slides, the per-drink data and
+all the behaviour — in `src/js/cocktail-rail.js`.
+
+**Where it came from.** It was first built into the foot of the hero, floating over the
+mural. The client liked the rail itself but asked for it as a separate block under the
+bird photograph, which is what this is. Moving it off the photo changed what the design
+had to do: over the mural everything was fighting the artwork for legibility (hence the
+tiny type, the heavy text-shadows and the deliberate absence of any scrim). On the ink
+background below it, the block can be lit properly instead — so the drinks are drawn
+roughly twice the size, the haze became a real pool of light rather than a whisper, and
+the reflection and the bar became possible at all.
+
+**The composition, top to bottom:** the section heading in the house display serif; the
+centred drink's name; the shelf itself — five drinks on desktop, three below 1200px, the
+centre one full size with the pairs either side stepping back in scale and opacity; a
+brass hairline they all stand on; their reflections dissolving into the dark below it; and
+one quiet link into the menu.
+
+**What carries the mood:**
+- **The block takes its light from the drink in the centre.** Its sampled highlight,
+  midtone and shadow (`hi`/`mid`/`lo` per drink) drive a wash over the whole section, the
+  pool of haze behind the glass, the bloom around it and the sheen on the bar. All four
+  are `screen` blends, so this can only ever *add* light — nothing here darkens.
+- **Those colours are pulled a third of the way back toward `--brass`** before use
+  (`--lit` / `--lit-hi`). Photographic drink colours at full strength — a violet, a lime —
+  light the section like a bar sign rather than like candlelight, which is the one thing
+  this palette rules out.
+- **The colour travels rather than cuts.** `--haze`, `--haze-hi` and `--haze-lo` are
+  registered with `@property` as `<color>`, which is what makes them animatable; without
+  that registration a custom property is an unanimatable token and the light would jump
+  from drink to drink. Browsers without `@property` get the hard cut, which is a
+  downgrade, not a break.
+- **The reflection** is the same image again, flipped, squashed to 78% (a reflection seen
+  across a surface at a shallow angle), tinted down and masked to nothing within a third
+  of the glass's height. Same URL as the drink above it, so it costs a decode and no
+  second request.
+- **Nothing moves on its own.** Two blurred washes drift against each other behind the
+  glass and that is the whole of the ambient motion; the rail advances only when the
+  visitor drags, swipes, arrows or clicks a neighbour. `prefers-reduced-motion` stills
+  the drift and the transitions and leaves a rail that is still fully usable by hand.
+
+**Three measured numbers per drink, and why they are not guesses** (all in
+`cocktail-rail.js`; re-measure them if the art is ever replaced):
+- `k` — an optical size multiplier. Every cutout is 360px tall but the *glass* inside it
+  is not: Pearfection's fills 75% of its frame against Palomas' 97%, so drawn at equal
+  heights one looks a third smaller than the other. `k` scales each image so the glasses
+  match and the garnishes are free to differ.
+- `cx` — the horizontal centre of the drink's opaque pixels. Garnishes are wildly
+  off-axis (Sex and the City's feather throws its mass 13% right of the box centre), so a
+  name centred on the bounding box reads visibly beside the glass rather than over it.
+- `hi`/`mid`/`lo` — the sampled colour described above.
+
+**Behaviour worth knowing about:**
+- **Endless in both directions**, done by laying the list out three times and silently
+  folding the scroll position back into the middle copy once it settles — same drink,
+  same pixels, invisible jump.
+- **Scrolling is the browser's own**, not a transform we drive, so touch flings, trackpad
+  swipes and scroll-snap all behave the way the platform says they should. Mouse users
+  get click-and-drag on top, because a mouse has no fling gesture and the scrollbar is
+  hidden.
+- **Two dead ends worth not re-walking.** Dragging did nothing at first: the browser's own
+  link/image drag starts on `pointerdown` and swallows the pointer stream, so the slides
+  and their images are `draggable = false`. And letting go of a drag over the centre drink
+  opened the menu, because the flag that suppresses that click was being cleared on a
+  `setTimeout(0)` racing the click event — it is cleared on the next `pointerdown`
+  instead, which is exact. Keyboard-raised clicks (`e.detail === 0`) are never treated as
+  the tail of a drag.
+- **The centre drink is the link** (into its own entry on page 3 of the PDF menu); the
+  drinks around it are the controls. Only the middle copy is exposed to screen readers —
+  the other two would repeat every drink twice more.
+- **The section is `hidden` in the markup** and unhidden by the script once the rail
+  exists, so no-JS gets nothing at all rather than a heading over an empty shelf.
+- **Only the drinks that start on screen load up front**; the other twelve are lazy.
+  Seventeen drinks is ~520 KB and plenty of visitors never scroll this far.
+
+---
+
 ## Coming-Soon Links (temporary, pre-launch)
 
 While a page isn't ready for visitors, every link/button pointing to it gets `class="is-coming-soon"` plus a `<span class="coming-soon-badge">Coming Soon</span>` child (see `globals.css`; `main.js` blocks the click and adds a 2.2s `.is-touched` state so tap devices get the same feedback as `:hover`). **Currently applied to: Menu, Reservations, Gallery, and About Us** — the nav, mobile overlay, and footer versions all live in `partials.js`, so the header/footer only ever need editing there. Real `href`s stay in the markup (direct URL access still works); un-gating a page when it launches is just deleting the class + badge span from its links.

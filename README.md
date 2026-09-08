@@ -33,6 +33,13 @@ A luxury, atmospheric web experience built around a cinematic opening sequence �
 > `partials.js`. Collapsed it reads "Elegant Chic Dress Code" with a down arrow;
 > expanding drops the full policy over the page without shifting it.
 
+> **Signature cocktails block:** the homepage carries a scrolling rail of the seventeen
+> signature drinks directly under the hero mural. Every slide is built by
+> `src/js/cocktail-rail.js` (which also holds the per-drink measurements and colours) and
+> deep-links into page 3 of the PDF menu. The section is `hidden` in the markup and only
+> unhidden once the rail exists, so with JavaScript off there is no empty block. See
+> DESIGN_SYSTEM.md → "Signature Cocktails Block".
+
 > **No forms anywhere.** Netlify Forms was removed during the hosting migration — it is a
 > Netlify-only feature and would not have survived a move. Contact and Shop use plain
 > `mailto:` CTAs with pre-filled subject lines instead.
@@ -82,9 +89,12 @@ ethereal/
 │   ├── js/
 │   │   ├── main.js              # Shared utilities (nav, scroll reveals, mobile menu)
 │   │   ├── partials.js          # Shared <site-header> / <site-footer> components
-│   │   └── opening-sequence.js  # Homepage intro orchestration
+│   │   ├── opening-sequence.js  # Homepage intro orchestration
+│   │   ├── cocktail-rail.js     # Homepage signature-cocktails block (data + behaviour)
+│   │   └── gallery.js           # Gallery filtering + lightbox
 │   └── assets/
 │       ├── images/         # logo-wordmark.webp (nav mark), bg-brand.webp (hero), clock art…
+│       ├── cocktails/      # 17 cut-out drink illustrations for the homepage rail
 │       ├── video/          # Opening sequence video
 │       └── fonts/
 ├── docs/                   # Project documentation
