@@ -203,24 +203,47 @@ background below it, the block can be lit properly instead — so the drinks are
 roughly twice the size, the haze became a real pool of light rather than a whisper, and
 the reflection and the bar became possible at all.
 
-**The composition, top to bottom:** the centred drink's name; the shelf itself — five
-drinks on desktop, three below 1200px, the centre one full size with the pairs either side
-stepping back in scale and opacity; a brass hairline they all stand on; their reflections
-dissolving into the dark below it; and one quiet link into the menu.
+**The composition, top to bottom:** the centred drink's name, hanging just above it; the
+shelf itself — five drinks on desktop, three below 1200px, the centre one full size with
+the pairs either side stepping back in scale and opacity; a brass hairline they all stand
+on; and their reflections dissolving into the dark below it. Nothing else.
 
-**There is no section heading**, and the drinks are drawn small — both at the client's
-request, in the same round. A "Signature Cocktails" title in the display serif was the
-first thing in the block and was dropped outright; the section keeps an `aria-label` so
-the landmark still has a name for anyone moving through the page by region. The drinks
-then went from a 162–214px median height to 118–156px, which is the part that actually
-fixed the complaint: at the old size five in a row read as a crowd. Note *the slots did
-not change width* — shrinking the drinks inside their existing 196px slots is what opened
-the gaps (from ~30px between neighbouring glasses to ~100–135px) while keeping the shelf
-the same width on the page. Widening the slots instead would have pushed the outer drinks
-off the edge of the container. Section padding came down with it, from a full `--section-v`
-to roughly two thirds of one, and is deliberately weighted toward the top: the block's
-first line now sits close enough to the top edge that a thinner top margin lets the fixed
-header clip it. Total height went from ~560px to ~455px.
+### It is deliberately slim — three rounds of client feedback got it there
+
+Everything below came from the client, and the block went from ~560px tall to ~293px
+without losing anything in it.
+
+**No section heading.** A "Signature Cocktails" title in the display serif opened the
+block and was dropped outright. The section keeps an `aria-label` so the landmark still
+has a name for anyone moving through the page by region — there is no visible text left
+for `aria-labelledby` to point at.
+
+**No closing link.** A "The full cocktail list" line sat under the shelf and cost more
+vertical room than any other single element here. The centre drink is already a link into
+its own entry in that same PDF, and the hero's own CTA opens it a screen above.
+
+**Smaller drinks, and the slots left alone.** The median drink went from 162–214px tall to
+118–156px. That is the change that actually fixed "crammed together": *the slots did not
+change width*, so shrinking the drink inside its existing 196px slot is what opened the
+gap between neighbouring glasses from ~30px to ~100–135px, while keeping the shelf exactly
+as wide on the page. Widening the slots instead would have pushed the outer pair off the
+edge of the container.
+
+**The name hangs off the drink, not off the top of the box.** This is the one worth
+understanding before changing anything here. Every slide has to be as tall as the tallest
+drink in the set (`--k-max`), so above a median glass there is a band of dead space —
+and the drinks vary a lot, from 111px drawn to 150px. Stacked above that band, the name
+sat anywhere from 29px to 67px clear of the glass depending on which drink was centred,
+and the gap visibly breathed as you scrolled. It now lives *inside* the band, positioned
+against the bar line plus the centred drink's own drawn height (`--k-active`, published by
+the script and registered as `<number>` so it eases rather than snaps). Measured across
+all seventeen drinks the gap is 13px, spread 0. It also reclaims the line's worth of
+height the name used to cost, since it no longer stacks.
+
+**Padding is weighted toward the top.** Roughly `0.45 / 0.4` of a `--section-v` rather
+than a full one each way. The top gets the larger share because the block's first line now
+sits close enough to the top edge that a thinner margin lets the fixed header clip it —
+even at its highest (a tall drink pulls the name up), the name stays 25px clear.
 
 **What carries the mood:**
 - **The block takes its light from the drink in the centre.** Its sampled highlight,

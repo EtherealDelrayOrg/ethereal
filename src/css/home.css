@@ -232,6 +232,11 @@
    for the same reason the colours are registered as <color>: so it travels with
    the drink instead of jumping. */
 @property --nudge   { syntax: '<length>'; inherits: true; initial-value: 0px; }
+/* The centred drink's own size multiplier. The name hangs off this rather than
+   off the top of the box, so it sits the same distance above every glass —
+   registered as <number> so it eases from one drink to the next instead of
+   snapping. */
+@property --k-active { syntax: '<number>'; inherits: true; initial-value: 1; }
 
 .cocktails {
   --visible:  5;                              /* drinks on screen at once */
@@ -243,9 +248,13 @@
      a crowd. Shrinking the drinks rather than widening the slots keeps the
      shelf the same width on the page. */
   --img-h:    clamp(118px, 14vh, 156px);
-  --k-max:    1.32;                           /* the largest --k in the set, so the tallest still fits */
-  --mirror-h: calc(var(--img-h) * 0.34);      /* how far the reflection runs before it is gone */
-  --lift:     24px;                           /* headroom inside the rail for the bloom */
+  --k-max:    1.271;                          /* the largest --k in the set (Smokin' Hot), so the tallest still fits */
+  --mirror-h: calc(var(--img-h) * 0.30);      /* how far the reflection runs before it is gone */
+  /* Headroom inside the rail for the bloom above the tallest drink. Kept tight:
+     every slide has to be as tall as the tallest drink in the set (--k-max), so
+     for a median drink this and that reserved height are the whole of the gap
+     between the name and the glass — the one place this block wastes room. */
+  --lift:     14px;
   --fade:     76px;                           /* how far the rail's edges dissolve */
   /* Every glow on the block is the drink's own colour pulled a third of the way
      back toward the house brass. Straight from the bottle these are saturated
@@ -261,13 +270,14 @@
      there is nothing at the top of this block to justify a full section's
      worth of air above it, and the drinks read better as a band between the
      mural and the footer than as another full-height stop. */
-  padding: calc(var(--section-v) * 0.66) 0 calc(var(--section-v) * 0.5);
+  padding: calc(var(--section-v) * 0.45) 0 calc(var(--section-v) * 0.4);
   text-align: center;
   background: var(--ink);
   transition: --haze 900ms var(--ease),
               --haze-hi 900ms var(--ease),
               --haze-lo 900ms var(--ease),
-              --nudge 700ms var(--ease);
+              --nudge 700ms var(--ease),
+              --k-active 700ms var(--ease);
 }
 
 /* A single wide wash of the drink's colour over the whole block, low enough to
@@ -289,15 +299,27 @@
    above it is already the serif, and two italic serif lines stacked read as
    one broken sentence. Caps and letterspacing put it in the same voice as the
    nav and the buttons — a label under an exhibit, not a second title. */
+/* Every slide has to be as tall as the tallest drink in the set, so above a
+   median glass sits a band of dead space — and stacking the name on top of that
+   band put it anywhere from 29px to 67px clear of the glass depending on which
+   drink was centred. It lives in the band instead, hung off the centred drink's
+   own height, so the distance is the same for all seventeen and the block loses
+   the line's worth of height it used to cost. --k-active travels, so the name
+   glides when a taller drink arrives rather than jumping. */
 .cocktail-name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--mirror-h) + var(--img-h) * var(--k-active) + 13px);
+  z-index: 3;                    /* the rail is absolutely placed over the stage */
+  pointer-events: none;          /* never in the way of a drag */
   font-family: var(--font-ui);
   font-size: clamp(12px, 1.05vw, 14px);
   font-weight: 600;
   letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--brass-light);
-  min-height: 1.4em;             /* reserve the line so nothing below it shifts */
-  margin-bottom: 1.5rem;
+  min-height: 1.4em;
   /* Dead centre, on the same axis as the heading above it. An earlier version
      nudged the name sideways to sit over the drink's visual mass (see the cx
      note in cocktail-rail.js) — right when the name was tucked against the
@@ -545,24 +567,11 @@
   background: rgba(10, 8, 7, 0.7);
 }
 
-/* ── The way out ───────────────────────────────────────────
-   The block's own closing line — the hero's button opens the menu at page one,
-   this one opens it at the cocktails. */
-.cocktails-more {
-  display: inline-block;
-  margin-top: 2rem;
-  font-family: var(--font-ui);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--brass);
-  padding-bottom: 5px;
-  border-bottom: 1px solid var(--brass-dark);
-  transition: color var(--transition-fast), border-color var(--transition-fast);
-}
-.cocktails-more:hover,
-.cocktails-more:focus-visible { color: var(--brass-light); border-color: var(--brass); }
+/* There is deliberately no closing link. The block carried a "The full cocktail
+   list" line into the menu and it was dropped: the centre drink is already a
+   link to its own entry in that same PDF, the hero's own CTA opens it a screen
+   above, and the line was costing more vertical room than any other single
+   thing here. */
 
 /* === Responsive ===
    Five across needs room for the two outer drinks to still read as drinks
@@ -579,12 +588,11 @@
     --visible: 3;
     --slide-w: 116px;
     --img-h: clamp(86px, 13vh, 112px);
-    --lift: 18px;
+    --lift: 12px;
     --fade: 16px;
-    padding: calc(var(--section-v) * 0.58) 0 calc(var(--section-v) * 0.42);
+    padding: calc(var(--section-v) * 0.46) 0 calc(var(--section-v) * 0.36);
   }
-  .cocktail-name { letter-spacing: 0.2em; margin-bottom: 1.2rem; }
-  .cocktails-more { margin-top: 2rem; }
+  .cocktail-name { letter-spacing: 0.2em; }
 }
 
 /* Someone who has asked for less motion gets a still block they can still

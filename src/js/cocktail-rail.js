@@ -235,6 +235,8 @@
     block.style.setProperty('--haze', d.mid);
     block.style.setProperty('--haze-hi', d.hi);
     block.style.setProperty('--haze-lo', d.lo);
+    // The name hangs off the drink's own drawn height — see the note in home.css.
+    block.style.setProperty('--k-active', d.k);
     placeLight(d, slides[n]);
 
     if (label.textContent !== d.name) {

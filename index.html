@@ -123,15 +123,10 @@
            moving through the page by region. -->
       <section id="cocktails" class="cocktails" aria-label="Signature cocktails" hidden>
 
-        <div class="container">
+        <div class="cocktail-stage reveal">
           <!-- aria-hidden: every slide is a link already labelled with its own
                drink, so announcing this too would repeat it on every scroll -->
-          <div class="reveal">
-            <p class="cocktail-name" id="cocktail-name" aria-hidden="true"></p>
-          </div>
-        </div>
-
-        <div class="cocktail-stage reveal" data-delay="120">
+          <p class="cocktail-name" id="cocktail-name" aria-hidden="true"></p>
           <!-- light in the air behind the centred drink, in its own colour -->
           <div class="cocktail-pool" aria-hidden="true"></div>
           <!-- the bar the glasses stand on: a hairline with a pool of light
@@ -150,13 +145,6 @@
               <path d="M9 4 L17 12 L9 20"/>
             </svg>
           </button>
-        </div>
-
-        <div class="container">
-          <!-- Straight to the cocktails page of the client's designed PDF,
-               same file the hero CTA and every glass open. -->
-          <a class="cocktails-more reveal" data-delay="240"
-             href="/src/assets/menu/ethereal-menu.pdf#page=3" target="_blank" rel="noopener">The full cocktail list</a>
         </div>
 
       </section>
