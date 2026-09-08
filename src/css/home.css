@@ -305,14 +305,31 @@
    drink was centred. It lives in the band instead, hung off the centred drink's
    own height, so the distance is the same for all seventeen and the block loses
    the line's worth of height it used to cost. --k-active travels, so the name
-   glides when a taller drink arrives rather than jumping. */
-.cocktail-name {
+   glides when a taller drink arrives rather than jumping.
+
+   Horizontally it sits over the drink's own mass rather than the centre of its
+   bounding box — measured, the two are up to 14px apart and the gap changes
+   from drink to drink, which reads as the name wandering as you scroll. (This
+   nudge was dropped for a while, correctly, when the name sat 60px up and lined
+   up against a section heading; with the heading gone and the name tucked
+   against the glass, the glass is the only thing left to align to.) */
+.cocktail-caption {
   position: absolute;
   left: 0;
   right: 0;
   bottom: calc(var(--mirror-h) + var(--img-h) * var(--k-active) + 13px);
   z-index: 3;                    /* the rail is absolutely placed over the stage */
   pointer-events: none;          /* never in the way of a drag */
+  transform: translateX(var(--nudge));
+}
+
+/* ── Changing the name ─────────────────────────────────────
+   The old name fades out and lifts away; the new one rises into the same place
+   once the rail has stopped. The two never share the screen — a crossfade of
+   two different words in the same spot is unreadable mush — and the glyphs are
+   only ever swapped while the line is at zero opacity, so the change is never
+   seen happening. Out is quick, in is unhurried. */
+.cocktail-name {
   font-family: var(--font-ui);
   font-size: clamp(12px, 1.05vw, 14px);
   font-weight: 600;
@@ -320,15 +337,21 @@
   text-transform: uppercase;
   color: var(--brass-light);
   min-height: 1.4em;
-  /* Dead centre, on the same axis as the heading above it. An earlier version
-     nudged the name sideways to sit over the drink's visual mass (see the cx
-     note in cocktail-rail.js) — right when the name was tucked against the
-     glass in the hero, wrong here: this far above the shelf the eye reads it
-     against the heading, and the offset looks like a mistake rather than like
-     optical alignment. The measurement now moves the light instead. */
-  transition: opacity 280ms var(--ease);
+  transition: opacity 420ms var(--ease), transform 420ms var(--ease);
 }
-.cocktail-name.is-swapping { opacity: 0; }
+.cocktail-name.is-swapping {
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: opacity 200ms var(--ease), transform 200ms var(--ease);
+}
+/* The starting pose for the incoming name. It carries no transition of its own:
+   the script sets this, forces a layout, then takes it off again, so the browser
+   animates out of this pose rather than through it. */
+.cocktail-name.is-entering {
+  opacity: 0;
+  transform: translateY(7px);
+  transition: none;
+}
 
 /* ── The stage ─────────────────────────────────────────────
    Exactly as wide as the drinks on screen, so the arrows and the bar can be
@@ -470,13 +493,13 @@
   /* Anything not in the centre sits back into the dark; the further out, the
      further back. Scaled about the bar line, not the box, so every glass keeps
      its foot on the surface however small it gets. */
-  opacity: 0.16;
-  transform: scale(0.56);
+  opacity: 0.14;
+  transform: scale(0.44);
   transform-origin: 50% calc(100% - var(--mirror-h));
   transition: opacity 560ms var(--ease), transform 560ms var(--ease);
 }
-.cocktail-slide.is-far    { opacity: 0.38; transform: scale(0.66); }
-.cocktail-slide.is-near   { opacity: 0.72; transform: scale(0.82); }
+.cocktail-slide.is-far    { opacity: 0.32; transform: scale(0.50); }
+.cocktail-slide.is-near   { opacity: 0.66; transform: scale(0.70); }
 .cocktail-slide.is-active { opacity: 1;    transform: scale(1); }
 
 .cocktail-glass {
@@ -527,8 +550,8 @@
 
 .cocktail-slide:hover .cocktail-img,
 .cocktail-slide:focus-visible .cocktail-img { transform: translateY(-5px); }
-.cocktail-slide:not(.is-active):hover { opacity: 0.88; transform: scale(0.87); }
-.cocktail-slide.is-far:not(.is-active):hover { transform: scale(0.71); }
+.cocktail-slide:not(.is-active):hover { opacity: 0.86; transform: scale(0.75); }
+.cocktail-slide.is-far:not(.is-active):hover { transform: scale(0.55); }
 .cocktail-slide:focus-visible {
   outline: 1px solid var(--brass);
   outline-offset: -6px;

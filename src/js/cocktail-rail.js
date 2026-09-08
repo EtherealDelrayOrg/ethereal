@@ -108,7 +108,9 @@
   let active = -1;       // index into the tripled list
   let aim = -1;          // where an in-flight smooth scroll is headed, or -1
   let marked = [];       // the slides currently carrying a depth class
-  let idle = null, raf = 0, swap = null;
+  let idle = null, raf = 0, fade = null;
+  // The name changes on its own small state machine — see nameTo() below.
+  let shown = '', pending = null, faded = false, settled = true;
 
   // ── Build ────────────────────────────────────────────────
   // Three copies. Only the middle one is ever reachable at rest, so the
@@ -239,18 +241,53 @@
     block.style.setProperty('--k-active', d.k);
     placeLight(d, slides[n]);
 
-    if (label.textContent !== d.name) {
+    nameTo(d.name);
+  }
+
+  // ── The name ─────────────────────────────────────────────
+  // Two conditions have to be true before the glyphs are allowed to change: the
+  // line must have finished fading out, and the rail must have stopped moving.
+  //
+  // The second one is what makes a fling read as one deliberate change rather
+  // than a stutter — fifteen drinks go past, the name stays out of the way the
+  // whole time, and the one you land on rises into place. The first is what
+  // stops the swap ever being *seen*: an earlier version replaced the text on a
+  // fixed timer that could land mid-fade, so on a fast scroll one name visibly
+  // turned into the next on screen.
+  function nameTo(next) {
+    if (next === shown && pending === null) return;
+    pending = next;
+    if (!shown) { commit(true); return; }         // first drink of the session
+    if (!label.classList.contains('is-swapping')) {
+      faded = false;
       label.classList.add('is-swapping');
-      // One timer, not one per drink: scrolling past six drinks in a second
-      // would otherwise queue six swaps, and an early one landing after a later
-      // one flickers the name back to a drink that has already gone by. Cleared
-      // and re-armed, the name simply stays out until the rail settles.
-      clearTimeout(swap);
-      swap = setTimeout(() => {
-        label.textContent = d.name;
-        label.classList.remove('is-swapping');
-      }, reduced ? 0 : 240);
+      // Comfortably past the 200ms fade-out in home.css. A timer rather than
+      // transitionend: transitions do not run on a backgrounded tab, and a
+      // name that can never change again is a worse failure than one that
+      // changes a frame early somewhere nobody is looking.
+      clearTimeout(fade);
+      fade = setTimeout(() => { faded = true; flushName(); }, reduced ? 0 : 240);
     }
+    flushName();
+  }
+
+  function flushName() {
+    if (pending !== null && faded && settled) commit(false);
+  }
+
+  function commit(instant) {
+    label.textContent = shown = pending;
+    pending = null;
+    faded = false;
+    clearTimeout(fade);
+    if (instant || reduced) { label.classList.remove('is-swapping'); return; }
+    // Put the new name in its starting pose, make the browser take that as
+    // real, and only then let it go: without the forced layout the two class
+    // changes collapse into one style pass and it fades in from nowhere
+    // instead of rising.
+    label.classList.add('is-entering');
+    void label.offsetWidth;
+    label.classList.remove('is-swapping', 'is-entering');
   }
 
   function measure() {
@@ -284,6 +321,7 @@
     if (!stride) return;
     // rAF keeps the highlight in step with the scroll without doing work on
     // every event...
+    settled = false;
     if (!raf) raf = requestAnimationFrame(() => {
       raf = 0;
       setActive(indexAt(rail.scrollLeft));
@@ -296,6 +334,8 @@
       // screen. setActive is a no-op when nothing changed.
       setActive(indexAt(rail.scrollLeft));
       aim = -1;                        // the scroll has arrived; step from here again
+      settled = true;
+      flushName();                     // the name lands with the rail, not before
       if (!dragging) rewind();
     }, SETTLE);
   }, { passive: true });

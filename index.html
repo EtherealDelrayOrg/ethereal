@@ -125,8 +125,12 @@
 
         <div class="cocktail-stage reveal">
           <!-- aria-hidden: every slide is a link already labelled with its own
-               drink, so announcing this too would repeat it on every scroll -->
-          <p class="cocktail-name" id="cocktail-name" aria-hidden="true"></p>
+               drink, so announcing this too would repeat it on every scroll.
+               The wrapper owns where the name sits; the name itself owns how it
+               changes — two transforms that would otherwise overwrite each other. -->
+          <div class="cocktail-caption" aria-hidden="true">
+            <p class="cocktail-name" id="cocktail-name"></p>
+          </div>
           <!-- light in the air behind the centred drink, in its own colour -->
           <div class="cocktail-pool" aria-hidden="true"></div>
           <!-- the bar the glasses stand on: a hairline with a pool of light

@@ -275,9 +275,32 @@ even at its highest (a tall drink pulls the name up), the name stays 25px clear.
   heights one looks a third smaller than the other. `k` scales each image so the glasses
   match and the garnishes are free to differ.
 - `cx` — the horizontal centre of the drink's opaque pixels. Garnishes are wildly
-  off-axis (Sex and the City's feather throws its mass 13% right of the box centre), so a
-  name centred on the bounding box reads visibly beside the glass rather than over it.
+  off-axis (Sex and the City's feather throws its mass 13% right of the box centre), so
+  anything centred on the bounding box reads visibly beside the glass rather than over it.
+  Both the name and the pool of light under the glass are leaned by it: measured on the
+  rendered pixels, the name was landing up to 14px off the drink's real ink centre and
+  wandering from drink to drink, which is exactly what it looks like — a name that never
+  quite settles over what it is naming. With the nudge it is within 4px everywhere.
 - `hi`/`mid`/`lo` — the sampled colour described above.
+
+**The name changes on its own small state machine**, and it is worth knowing why before
+simplifying it. Two conditions have to be true before the glyphs are allowed to change:
+the line must have finished fading out, *and* the rail must have stopped moving. The
+second is what makes a fling read as one deliberate change instead of a stutter — fifteen
+drinks go past, the name stays out of the way throughout, and the one you land on rises
+into place. Measured over a six-drink fling: one name change, at zero opacity. The first
+condition is what stops the swap ever being *seen*: an earlier version replaced the text
+on a fixed timer that could land mid-fade, so on a fast scroll one name visibly turned
+into the next on screen. The two names never share the screen either — a crossfade of two
+different words in the same spot is unreadable mush.
+
+The entrance uses a deliberate trick: the incoming name is put into a starting pose
+(`.is-entering`, no transition of its own), the layout is forced, and only then is the
+pose removed, so the browser animates *out of* it rather than through it. Without the
+forced layout both class changes collapse into one style pass and the name fades in from
+nowhere instead of rising. Note also that the name's position and its animation live on
+two different elements (`.cocktail-caption` and `.cocktail-name`) — they both want the
+`transform` property, and one element cannot hold both.
 
 **Behaviour worth knowing about:**
 - **Endless in both directions**, done by laying the list out three times and silently
