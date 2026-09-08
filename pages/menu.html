@@ -3,15 +3,11 @@
 <head>
   <meta charset="UTF-8">
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NDDQ1KQZ8R"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-NDDQ1KQZ8R');
-  </script>
+  <!-- No Google Analytics here, deliberately. GA4 is main-only: this is a
+       preview branch and its traffic — ours, the client's, whoever we are
+       showing it to — would land in the live property and skew real-visit
+       numbers. If a main→dev merge brings the gtag.js snippet back, strip it
+       again rather than "fixing" its absence. See INTEGRATIONS.md. -->
 
   <link rel="canonical" href="https://etherealdelray.com/menu">
   <link rel="icon" type="image/png" href="/src/assets/images/favicon-clock.png">
