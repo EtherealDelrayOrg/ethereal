@@ -45,7 +45,7 @@
 
     <header id="site-header" class="${opening ? 'nav-hidden' : 'nav-solid'}" role="banner">
       <div class="nav-inner">
-        <a href="/" class="nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal" class="logo-img"></a>
+        <a href="/" class="nav-logo" aria-label="Ethereal — homepage"><img src="/src/assets/images/logo-wordmark.webp" alt="Ethereal" class="logo-img"></a>
 
         <button class="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-links">
           <span class="hamburger-line"></span>
@@ -55,26 +55,18 @@
 
         <nav id="nav-links" aria-label="Main navigation">
           <ul role="list">
-            <li><a href="/pages/menu.html">Menu</a></li>
-            <li><a href="/pages/gallery.html">Gallery</a></li>
-            <li><a href="/pages/about.html">About Us</a></li>
-            <li><a href="/pages/shop.html">Shop</a></li>
-            <li><a href="/pages/careers.html">Careers</a></li>
-            <li><a href="/pages/contact.html">Contact</a></li>
-            <li><a href="/pages/reservations.html" class="nav-reserve">Reserve</a></li>
+            <li><a href="/gallery">Gallery</a></li>
+            <li><a href="/about" class="is-coming-soon" aria-disabled="true" title="Coming soon">About Us<span class="coming-soon-badge">Coming Soon</span></a></li>
+            <li><a href="https://resy.com/cities/delray-beach-fl/venues/ethereal" class="nav-reserve" data-resy-book>Reserve</a></li>
           </ul>
         </nav>
       </div>
     </header>
 
     <div id="mobile-nav" role="dialog" aria-label="Navigation menu" aria-modal="true">
-      <a href="/pages/menu.html">Menu</a>
-      <a href="/pages/gallery.html">Gallery</a>
-      <a href="/pages/about.html">About Us</a>
-      <a href="/pages/shop.html">Shop</a>
-      <a href="/pages/careers.html">Careers</a>
-      <a href="/pages/contact.html">Contact</a>
-      <a href="/pages/reservations.html" class="mobile-reserve">Reserve a Table</a>
+      <a href="/gallery">Gallery</a>
+      <a href="/about" class="is-coming-soon" aria-disabled="true" title="Coming soon">About Us<span class="coming-soon-badge">Coming Soon</span></a>
+      <a href="https://resy.com/cities/delray-beach-fl/venues/ethereal" class="mobile-reserve" data-resy-book>Reserve a Table</a>
     </div>
   `;
 
@@ -83,7 +75,7 @@
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            <a href="/" class="footer-logo"><img src="/src/assets/images/logo-wordmark.png" alt="Ethereal" class="logo-img"></a>
+            <a href="/" class="footer-logo"><img src="/src/assets/images/logo-wordmark.webp" alt="Ethereal" class="logo-img"></a>
             <!-- PLACEHOLDER: "Where time breathes." retired at client request, new
                  tagline TBD. Deliberately renders as empty space — no visible
                  placeholder text here, since visitors see this footer on every
@@ -94,12 +86,8 @@
           <nav class="footer-nav" aria-label="Footer navigation">
             <h3>Navigate</h3>
             <ul role="list">
-              <li><a href="/pages/menu.html">Menu</a></li>
-              <li><a href="/pages/gallery.html">Gallery</a></li>
-              <li><a href="/pages/about.html">About Us</a></li>
-              <li><a href="/pages/shop.html">Shop</a></li>
-              <li><a href="/pages/careers.html">Careers</a></li>
-              <li><a href="/pages/contact.html">Contact</a></li>
+              <li><a href="/gallery">Gallery</a></li>
+              <li><a href="/about" class="is-coming-soon" aria-disabled="true" title="Coming soon">About Us<span class="coming-soon-badge">Coming Soon</span></a></li>
             </ul>
           </nav>
           <div class="footer-visit">
@@ -108,13 +96,13 @@
               <p>324 NE 3rd Ave #1</p>
               <p>Delray Beach, FL 33444</p>
             </address>
-            <p style="margin-top:1rem;">Mon–Sun &middot; 4pm – 11pm</p>
+            <p style="margin-top:1rem;">Mon–Sun &middot; 5pm – 11pm</p>
           </div>
           <div class="footer-contact">
             <h3>Contact</h3>
             <p><a href="mailto:info@etherealdelray.com">info@etherealdelray.com</a></p>
             <p><a href="tel:+15612702738">(561) 270-2738</a></p>
-            <a href="/pages/reservations.html" class="footer-reserve-link">Reserve a Table</a>
+            <a href="https://resy.com/cities/delray-beach-fl/venues/ethereal" class="footer-reserve-link" data-resy-book>Reserve a Table</a>
           </div>
         </div>
         <div class="footer-bottom">

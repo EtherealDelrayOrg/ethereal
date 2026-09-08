@@ -69,16 +69,62 @@ ffmpeg -f concat -safe 0 -i concat-list.txt -c copy opening-master.mp4
 #   file 'job1-reversed.mp4'
 #   file 'job2-pushin.mp4'
 
-# 3. Encode final deliverables
-ffmpeg -i opening-master.mp4 -vcodec libx264 -crf 20 -preset slow -an opening-desktop.mp4   # target ~4–5MB
-ffmpeg -i opening-master.mp4 -c:v libvpx-vp9  -crf 32 -b:v 0    -an opening-desktop.webm
-ffmpeg -i opening-master-mobile.mp4 -vcodec libx264 -crf 22 -preset slow -an opening-mobile.mp4  # target ~2–3MB
-ffmpeg -i opening-master-mobile.mp4 -c:v libvpx-vp9  -crf 34 -b:v 0    -an opening-mobile.webm
+# 3. Encode the shipping files — ALWAYS from the masters in _reference/video/,
+#    never by re-compressing a file that already ships (artefacts stack).
+#    CRFs below are the measured settings actually in production.
 
-# 4. Poster images (from the master start stills, not extracted frames — cleaner)
-# desktop-start-still.png → opening-desktop-poster.jpg
-# mobile-start-still.png  → opening-mobile-poster.jpg
+# AV1 — smallest AND highest fidelity; first source in the list
+ffmpeg -i opening-desktop-master.mp4 -c:v libsvtav1 -crf 48 -preset 6 -g 240 \
+       -pix_fmt yuv420p -an -movflags +faststart opening-desktop-av1.mp4   # 1.87 MB
+ffmpeg -i opening-mobile-master.mp4  -c:v libsvtav1 -crf 48 -preset 6 -g 240 \
+       -pix_fmt yuv420p -an -movflags +faststart opening-mobile-av1.mp4    # 1.53 MB
+
+# VP9 — middle fallback for browsers with VP9 but no AV1
+ffmpeg -i opening-desktop-master.mp4 -c:v libvpx-vp9 -crf 44 -b:v 0 -row-mt 1 -an opening-desktop.webm  # 2.63 MB
+ffmpeg -i opening-mobile-master.mp4  -c:v libvpx-vp9 -crf 44 -b:v 0 -row-mt 1 -an opening-mobile.webm   # 2.36 MB
+
+# h264 — final fallback. ALREADY OPTIMAL: a fresh CRF sweep reproduced the shipping
+# desktop file byte-for-byte in size and SSIM at CRF28. Do not "improve" these.
+ffmpeg -i opening-desktop-master.mp4 -c:v libx264 -crf 28 -preset slow -an opening-desktop.mp4  # 3.67 MB
+ffmpeg -i opening-mobile-master.mp4  -c:v libx264 -crf 28 -preset slow -an opening-mobile.mp4   # 2.71 MB
+
+# 4. Posters — WebP q68, extracted from the master first frame
 ```
+
+### Measured quality (SSIM vs the 74/69 MB masters)
+
+| | desktop | mobile |
+|---|---|---|
+| AV1 CRF48 | **1.87 MB · 0.955** | **1.53 MB · 0.963** |
+| VP9 webm CRF44 | 2.63 MB · 0.891 | 2.36 MB · 0.919 |
+| h264 CRF28 | 3.67 MB · 0.957 | 2.71 MB · 0.959 |
+
+AV1 is smaller *and* closer to the master than either alternative — not a trade. Note the
+VP9 webm is markedly the **worst** of the three; before AV1 shipped, Chrome and Firefox
+users were getting the poorest encode on the site.
+
+### The source order and why the codec string matters
+
+`opening-sequence.js` appends three `<source>` elements, smallest first:
+
+```
+1. *-av1.mp4   type='video/mp4; codecs="av01.0.08M.08"'
+2. *.webm      type='video/webm'
+3. *.mp4       type='video/mp4'
+```
+
+**That `codecs=` parameter is load-bearing.** Declared as plain `video/mp4`, the AV1 file
+would *match* in browsers that support MP4 but not AV1 (older Safari) — they would select
+it, fail to decode, and never reach the h264 fallback below. The full string makes them
+skip it instead.
+
+Derive the level from the encode with `ffprobe`, do not guess: the bare string `av01`
+reports `"no"` from `canPlayType`, while `av01.0.08M.08` reports `"probably"`.
+
+**Who actually gets AV1:** Chrome, Edge, Firefox, Android — and Safari only with hardware
+decode, meaning iPhone 15 Pro / M3 and newer. GA4 shows iOS at ~80% of this site's users,
+so most visitors still receive the h264 file. Keep the webm: without it, a VP9-but-no-AV1
+browser drops all the way to the largest file.
 
 Run this per aspect ratio (16:9 desktop, 9:16 mobile) — four source clips in, two deliverable pairs out.
 

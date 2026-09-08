@@ -1,150 +1,182 @@
 # Third-party Integrations
 
-## Toast — Menu & Online Ordering
+## Menu — a PDF, not an embed (Toast was never used)
 
-**What it is:** Toast is a restaurant POS and online ordering platform. The restaurant already uses Toast for operations.
+**Status: live.** The menu is the client's own designed PDF at
+`/src/assets/menu/ethereal-menu.pdf`, linked directly from the hero's "View the Menu"
+CTA. There is no Toast embed, no online ordering, and no Toast dependency anywhere in the
+site. The earlier plan to embed Toast Tab was dropped when the client supplied artwork.
 
-**What we embed:** Toast Tab — their hosted ordering/menu page embedded in our site.
+### Compressing a new menu — use the script, not a generic tool
 
-### Integration Method
+Client PDFs arrive around 16 MB, which is far too heavy to link from the homepage of a
+site that gets mobile traffic. Compress with
+`_reference/menu-originals/shrink_images_only.py` (gitignored, alongside every previous
+build):
 
-Toast provides two embed approaches:
-
-**Option A — Iframe embed (recommended for menu page)**
-```html
-<iframe
-  src="https://www.toasttab.com/[restaurant-slug]/v3"
-  width="100%"
-  height="900"
-  style="border: none;"
-  title="Ethereal Menu & Ordering"
-></iframe>
+```bash
+python3 _reference/menu-originals/shrink_images_only.py <client.pdf> <out.pdf>
 ```
 
-**Option B — Redirect button**
-A "Order Online" CTA button that links directly to the Toast Tab URL. Simpler, no iframe styling issues.
+Latest run: **16.68 MB → 1.24 MB (7%)**, text character-identical, every aspect ratio
+preserved.
 
-### What we need from client
-- Their Toast Tab URL / restaurant slug (format: `toasttab.com/[name]/v3`)
-- Confirmation: do they want full online ordering embedded, or just menu display?
-- Their Toast account must have the Online Ordering module enabled
+**Why that script and not `pymupdf.rewrite_images()` or Ghostscript:** an earlier attempt
+used `ez_save(clean=True)`, which re-serialises every page content stream. iOS PDFKit
+renders the re-encoded streams differently and painted the "A" in headings and the "1" in
+prices **black instead of gold**. The text and colour values were never lost — the
+operators were byte-identical in value — but the re-encoding alone was enough to break
+it. The script avoids the whole class of problem by replacing image XObjects in place by
+xref and asserting on every run that page content streams come out byte-identical.
 
-### Styling note
-The iframe will show Toast's own UI — we cannot override their internal styles. We CAN style the container/frame around it to match our aesthetic.
+Two more rules it encodes, both learned by breaking things:
+- Size each image from its **largest** placement. One feather ornament is placed four
+  times from a single shared xref; sizing it per-placement compounded the downsample
+  (1049px → 263 → 66 → 17 → 5) and turned three of the four into flat colour blocks.
+- Use **one uniform scale factor**, flooring only the longer edge. Flooring each
+  dimension independently squashed that 1.3:1 feather into a 64×64 square.
+
+**Verify on a real iPhone after any menu change.** MuPDF agreeing with the original
+proves nothing about PDFKit — that is exactly how the black-glyph bug slipped through.
 
 ---
 
 ## Resy — Reservations
 
-**Status: LIVE on `dev`** (client supplied the embed snippet July 2026). Implemented in
-`pages/reservations.html` — replaced the old "Coming Soon" placeholder button.
+**Status: LIVE.** The venue went active on Resy in Aug 2026, and every "Reserve" CTA on the
+site now opens Resy's booking modal in place. **There is no reservations page on `main`** — the
+widget *is* the reservation flow here, so all CTAs point straight at Resy.
 
-**What it is:** Resy is a reservation management platform used by fine dining restaurants.
-
-### Client-supplied values
+### Venue values
 
 | Value | |
 |---|---|
-| Venue page | `https://resy.com/cities/delray-beach-fl/venues/ethereal` |
 | `venueId` | `98608` |
 | `apiKey` | `12m41wFYzrqYB8D1dFhLaAoGU1UXG71e` |
+| Venue page | `https://resy.com/cities/delray-beach-fl/venues/ethereal` |
 
-The `apiKey` is a **public embed key** — it ships in the page source by design, exactly like
-any Resy booking button, and only grants widget booking. It is not a secret. Resy restricts it
-**by referrer domain** instead (see the gotcha below).
+The `apiKey` is a **public embed key** — it ships in page source by design, like any Resy
+booking button, and only grants widget booking. Resy restricts it by referrer domain instead.
+
+Resy's API reports the canonical slug as `.../cities/dlr/venues/ethereal` (city code `dlr`), but
+**both forms resolve** — we use the longer one because that's what the client's ResyOS dashboard
+generates. To re-check the venue's status or slug at any time:
+
+```bash
+curl -s "https://api.resy.com/3/venue?id=98608" -H 'Authorization: ResyAPI api_key="12m41wFYzrqYB8D1dFhLaAoGU1UXG71e"'
+```
+
+A `404` with `"Venue is inactive or not found."` means the venue isn't live — that is the single
+most useful check when the widget "won't load", and it distinguishes a venue problem from a code
+problem instantly. A `401` instead would mean the key itself is bad.
 
 ### How it's wired
 
-The client's snippet used `resyWidget.addButton(el, {…, replace: true})`. We deliberately do
-**not** use `addButton`, because it injects Resy's own red `#FF462D` 200×50 branded button:
+All nine CTAs (nav, mobile nav, footer, hero, and the buttons/inline links on about, menu ×2,
+gallery, contact) are plain anchors marked `data-resy-book`. One delegated handler in
+`src/js/main.js` owns the behaviour, so the venue credentials live in exactly one place and the
+markup stays clean. `embed.js` is injected by that same code rather than pasted into nine
+`<head>`s by hand — `main.js` already loads everywhere. (GA4 couldn't be done this way because
+it must run before render; this doesn't.)
 
-- `replace: true` — swaps our anchor out entirely, losing both the site styling and the
-  `href` fallback.
-- `replace: false` — appends the red button *inside* ours, so you get both.
+We deliberately avoid `resyWidget.addButton()`, which injects Resy's own red `#FF462D` branded
+button — `replace: true` swaps out our anchor entirely (losing the styling *and* the href
+fallback), `replace: false` nests the red button inside ours. Binding `resyWidget.openModal()`
+to our own buttons keeps the site on-palette.
 
-Neither survives contact with the dark/gold palette. Instead we bind Resy's own public
-`resyWidget.openModal({venueId, apiKey})` to our standard `.btn.btn--filled` anchor, which
-opens the identical booking modal (fixed overlay, `z-index: 9999999`) while keeping the page
-on-brand.
+### Gotcha — the modal does not open on mobile viewports
 
-**Progressive enhancement:** the anchor is a real link to the venue's Resy page. The click
-handler only calls `preventDefault()` once it has confirmed `resyWidget.openModal` exists —
-so if `widgets.resy.com` is slow, blocked, or ever changes its API surface, the button
-degrades to a normal navigation that still books, rather than becoming a dead control.
+**Verified:** `openModal()` mounts the modal at 1280px wide and does **nothing** at 375px — it
+returns normally, throws no error, and mounts no frame. Unhandled, that makes every Reserve
+button a dead control on phones, i.e. most of a restaurant's traffic.
 
-### Gotcha — the widget cannot be tested from localhost
+The handler therefore counts iframes before and after the call and only calls `preventDefault()`
+if a frame actually appeared. When it didn't, the click falls through to the anchor's `href` and
+the guest lands on Resy's own venue page — which is mobile-optimised and hands off to their app,
+so it's the better mobile flow regardless. This deliberately avoids hard-coding Resy's
+breakpoint, which is undocumented and theirs to change.
 
-Resy's embed key is referrer-restricted. Loading the modal from `http://localhost` returns a
-full-page **"Access denied — Error 15"** inside the widget iframe. This is expected and is not
-a bug in our integration — the DOM wiring can be verified locally (the modal mounts with the
-correct `venueId`), but the booking UI itself only renders from a real deployed domain.
+The same fall-through covers a slow, blocked, or changed `embed.js`: the CTA degrades to a normal
+navigation that still books, rather than a dead button.
 
-**The deployed dev domain is fine** — `etherealdelray-dev.netlify.app` loads the widget with no
-Error 15, so no domain allowlisting was needed. Test there, not on localhost.
+### Gotcha — cannot be tested from localhost
 
-### Blocker — the venue is not live on Resy yet (as of July 2026)
-
-Our side is done and verified. What's outstanding is entirely on the client's Resy account:
-
-- `https://resy.com/cities/delray-beach-fl/venues/ethereal` renders Resy's **"Sorry, but we
-  can't find that page"** — the venue is not published. (Note: `curl` reports HTTP 200 because
-  the page is a SPA that renders its 404 client-side; check the rendered text, not the status.)
-- The booking modal opens but **hangs on a loading spinner** and never renders a calendar —
-  including when the widget URL is loaded directly on `widgets.resy.com`, i.e. with our site
-  out of the picture entirely. That points at no bookable inventory for `venueId` 98608.
-
-The client has clearly been provisioned (a real `venueId` and embed key were issued), but the
-venue still needs to be switched live with inventory loaded. What has to be true before the
-button does anything useful:
-
-1. Venue **published / live** on Resy (its public page must resolve).
-2. **Inventory configured** in ResyOS — floor plan/tables, service periods (shifts), seating
-   times, party-size range.
-3. **Booking window open** (how far ahead guests may reserve). With no open window a live venue
-   still shows an empty widget.
-
-Resy onboarding is account-manager driven rather than fully self-serve, so the fastest path is
-for the client to ask their Resy account manager to confirm venue 98608 is live with shifts and
-a booking window configured.
-
-**When it goes live, re-check the venue slug** in the anchor's `href` — the current slug is
-unverified precisely because the page 404s, and it may differ from the final published URL.
-
-### Still open
-- Reservation note, party size, and dress code on the page remain `[ placeholder ]` copy.
+Resy's embed key is referrer-restricted; from `http://localhost` the modal renders a full-page
+**"Access denied — Error 15"**. The wiring can still be verified locally (the modal mounts with
+the correct `venueId`), but the booking UI itself only renders from a real deployed domain. The
+deployed domains work with no allowlisting needed.
 
 ---
 
-## Netlify Forms — Contact & Shop Signup
+## Forms — REMOVED (both pages)
 
-**What it is:** Both `/pages/contact.html` (the contact form) and `/pages/shop.html` (the "notify me" email signup) submit through [Netlify Forms](https://docs.netlify.com/forms/setup/) — no backend, database, or third-party form service needed. Netlify's build system detects any `<form data-netlify="true">` in the static HTML at deploy time and starts capturing submissions automatically from then on.
+**Status: no forms on the site.** `/pages/contact.html` and `/pages/shop.html`
+previously submitted through Netlify Forms (`contact` and `shop-notify`). Both
+were removed while evaluating a move off Netlify, because Netlify Forms is a
+platform-only feature with no equivalent elsewhere — carried across as-is,
+each form would have become a POST into nothing, which is worse than no form.
 
-Each form:
-- Has a unique `name` (`contact`, `shop-notify`) and a matching hidden `<input name="form-name">`, both required for Netlify to register and correctly attribute submissions.
-- Has a honeypot field (`data-netlify-honeypot="bot-field"` + a hidden `bot-field` input) for basic spam filtering.
-- Submits via `fetch()` to `/` instead of a normal page navigation, so the visitor sees an inline confirmation message (`.form-status`) instead of being sent to Netlify's generic default success page.
+Each is replaced by a plain `mailto:` CTA — same pattern the careers page
+already uses for applications (`<a href="mailto:…?subject=…" class="btn">`), so
+it needs no new styling and has no backend to migrate:
+- Contact → **Send a Message**, `?subject=General Inquiry — Ethereal`
+- Shop → **Email Me When It Opens**, `?subject=Notify me when the shop opens — Ethereal`
 
-### Where submissions go
+The contact page also still lists the email, phone, address and hours as real,
+tappable links independently of this.
 
-**Storage is automatic** — as soon as the site is deployed with these forms in place, every submission is captured under **Site → Forms** in the Netlify dashboard (viewable individually, exportable as CSV). No further setup required for this part.
+What that changed:
+- **Contact page** — the form was the right-hand column of `.contact-grid`. The
+  map moved into that column rather than leaving the contact blocks stranded at
+  half width, so the two-column layout still reads as intentional. `.contact-map`
+  lost its `margin-top: 2rem`, which only made sense while it was stacked
+  underneath the contact blocks; the grid gap handles spacing now.
+- **Shop page** — the "notify me when the shop opens" block came out whole,
+  leaving the coming-soon message.
 
-**Emailing the client on every submission is a one-time manual step** (can't be done from code — it's an account/site-level setting):
-1. Netlify dashboard → the site → **Site configuration → Forms → Form notifications**
-2. **Add notification → Email notification**
-3. Choose the form (`contact` or `shop-notify`) and enter the client's email address
-4. Repeat for the other form
+**The CSS is deliberately still there** (`.contact-form`, `.form-group`,
+`.email-form`, `.form-honeypot`, `.form-status` in `pages.css`). It costs a few
+hundred bytes and means re-adding a form later is markup only.
 
-Once set up, every new submission auto-emails that address with the submitted fields. Submissions remain stored in the dashboard either way, so nothing is lost if this step is skipped or done later.
+### Putting forms back
 
-### Netlify Forms cost
+Whatever the site is hosted on, a static page needs a third-party endpoint or a
+serverless function. The options priced up during the migration:
+- **Web3Forms / Formspree free tier** — swap the `action` to their endpoint,
+  ~50 submissions/month free. Least work.
+- **A Cloudflare Worker** that accepts the POST and sends mail — no third party,
+  but it is real code to write and maintain.
 
-Free and unlimited on Netlify's current (credit-based) pricing plans. (Only older "legacy" Netlify plans meter form submissions — not a concern at this site's expected volume regardless.)
+## DNS & Hosting
 
----
+**Registrar + DNS: Wix.** `etherealdelray.com`, `etherealrestaurant.com` and
+`glimmercafedelray.com` all sit in the company's Wix account.
 
-## DNS & Domain (Wix → Netlify)
+**Hosting: Netlify, on the restaurant-owned account** since Aug 30 2026 (previously the
+developer's personal account).
 
-See [TECH_STACK.md](TECH_STACK.md#connecting-wix-domain--netlify) for step-by-step DNS setup.
+Four hostnames are attached to the one Netlify site, all on a single certificate:
+`etherealdelray.com`, `www.etherealdelray.com`, `etherealrestaurant.com`,
+`www.etherealrestaurant.com`. `etherealrestaurant.com` is **not** a redirect — it serves
+the same site at its own URL.
+
+### Things that will bite on any future host move
+
+- **The apex A record never needs to change.** `75.2.60.5` is Netlify's *shared* load
+  balancer; routing follows the custom-domain attachment, not DNS. Only the `www` CNAMEs
+  are site-specific.
+- **Both `www` records CNAME to `ethereal-delray.netlify.app`** — a Netlify *site name*.
+  Deleting or renaming that site releases the name and breaks `www` on both domains. When
+  the site was replaced, this was handled by renaming the old site to free the name and
+  renaming the new one to take it, so no Wix edit was needed.
+- **Wix will not let you change nameservers on a domain registered with them.** Their
+  docs are explicit; the only route is transferring the registrar. This is what blocked a
+  Cloudflare move, since Cloudflare Workers custom domains require the zone to be on
+  Cloudflare nameservers — and Cloudflare Registrar cannot be the transfer target either,
+  because it requires the zone to be Active first.
+- **Google Workspace email runs on this domain.** Any nameserver change must recreate all
+  five MX records and both TXT records (SPF + verification) *before* switching, or mail
+  stops. There is currently no DKIM or DMARC.
 
 ---
 

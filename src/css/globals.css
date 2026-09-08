@@ -626,7 +626,7 @@ site-header, site-footer { display: contents; }
   transition: opacity var(--transition-fast);
 }
 .footer-logo:hover { opacity: 0.8; }
-/* logo-wordmark.png here, not logo.png — the latter is a 3:2 canvas where the wordmark
+/* logo-wordmark.webp here, not logo.png — the latter is a 3:2 canvas where the wordmark
    only occupies the middle band, so it rendered as a ~190px-tall mostly-empty box that
    pushed the tagline far below the visible logo and inflated the whole footer. The
    tightly-cropped wordmark keeps the brand block compact. */

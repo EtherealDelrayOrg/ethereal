@@ -1,0 +1,44 @@
+# Cloudflare applies EVERY matching rule and concatenates the values rather than
+# letting a later, more specific rule override an earlier one — which is how
+# netlify.toml behaved. So these paths are kept deliberately non-overlapping;
+# a broad /src/assets/* rule alongside /src/assets/menu/* produced
+# "max-age=31536000, immutable, max-age=3600, must-revalidate" on the menu,
+# an ambiguous header where the immutable half would very likely win.
+
+# Root: does not match /*.html, so it needs its own entry or it falls through to
+# Cloudflare's default.
+/
+  Cache-Control: no-cache, must-revalidate
+
+# Cloudflare strips .html and serves pages at extensionless paths (/pages/about,
+# not /pages/about.html), so the rule has to target what is actually served. A
+# /*.html rule matches only the 307 redirect, which carries no body — the header
+# on it is irrelevant. This is the one place Cloudflare and Netlify genuinely
+# differ in behaviour rather than syntax.
+/pages/*
+  Cache-Control: no-cache, must-revalidate
+
+# Long-lived assets, listed per directory rather than as /src/assets/* so the
+# menu below is not double-matched. Add a line here for any new asset folder.
+/src/assets/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/src/assets/video/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/src/assets/gallery/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# The menu is re-issued at the SAME path when the restaurant updates it, so it
+# must revalidate — `immutable` would pin a stale menu for up to a year.
+/src/assets/menu/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# Cached for a day while the HTML referencing them is not, so the two can drift
+# and render a half-styled page. The ?v=<date> query on every <link>/<script> is
+# what prevents that — BUMP IT whenever a file under /src/css or /src/js changes.
+/src/css/*
+  Cache-Control: public, max-age=86400
+
+/src/js/*
+  Cache-Control: public, max-age=86400

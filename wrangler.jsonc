@@ -1,0 +1,13 @@
+{
+  // Cloudflare Workers with static assets — the path Cloudflare recommends for
+  // new projects now that Pages is being folded into Workers. No build step:
+  // this is hand-written HTML/CSS/JS, so Cloudflare just uploads ./ as-is.
+  "name": "ethereal",
+  "compatibility_date": "2026-08-26",
+  "assets": {
+    "directory": ".",
+    // Serves /404.html for unmatched paths, replacing netlify.toml's
+    // catch-all 404 redirect.
+    "not_found_handling": "404-page"
+  }
+}

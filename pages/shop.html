@@ -2,6 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NDDQ1KQZ8R"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NDDQ1KQZ8R');
+  </script>
+
+  <link rel="canonical" href="https://etherealdelray.com/shop">
   <link rel="icon" type="image/png" href="/src/assets/images/favicon-clock.png">
   <meta name="theme-color" content="#0d0b09">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,8 +22,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/src/css/globals.css">
-  <link rel="stylesheet" href="/src/css/pages.css">
+  <link rel="stylesheet" href="/src/css/globals.css?v=20260902d">
+  <link rel="stylesheet" href="/src/css/pages.css?v=20260902d">
   <style>
     .coming-soon-clock svg {
       width: 80px;
@@ -74,7 +86,7 @@
       .email-form button { border-radius: 0 0 2px 2px; }
     }
   </style>
-  <script src="/src/js/partials.js"></script>
+  <script src="/src/js/partials.js?v=20260902d"></script>
 </head>
 <body>
 
@@ -103,22 +115,11 @@
 
         <p class="content-ph">[ Shop teaser — e.g., "Curated objects, pantry goods, and gifts that carry a piece of Ethereal home with you." ]</p>
 
+        <!-- Was a Netlify "notify me" signup; a mailto keeps the intent with no
+             backend to migrate. Swap back to a real form when there is a list to
+             collect into. -->
         <div style="margin-top:2.5rem;">
-          <p style="font-family:var(--font-ui); font-size:12px; font-weight:500; letter-spacing:0.13em; text-transform:uppercase; color:var(--ivory-dark); margin-bottom:1.25rem;">
-            Notify me when the shop opens
-          </p>
-          <!-- Netlify form — captured automatically once deployed (Site → Forms in the
-               Netlify dashboard). Email notifications to the client's inbox are a separate
-               one-time dashboard step; see docs/INTEGRATIONS.md. -->
-          <form class="email-form" name="shop-notify" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" aria-label="Email notification signup" novalidate>
-            <input type="hidden" name="form-name" value="shop-notify">
-            <p class="form-honeypot" hidden>
-              <label>Don't fill this out if you're human: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
-            </p>
-            <input type="email" name="email" placeholder="Your email address" required aria-label="Email address">
-            <button type="submit">Notify Me</button>
-          </form>
-          <p class="form-status" role="status" aria-live="polite" hidden style="margin-top:1rem;"></p>
+          <a href="mailto:info@etherealdelray.com?subject=Notify me when the shop opens — Ethereal" class="btn">Email Me When It Opens</a>
         </div>
 
       </div>
@@ -126,7 +127,7 @@
 
   </main>
 
-  <script src="/src/js/main.js"></script>
+  <script src="/src/js/main.js?v=20260902d"></script>
   <script>
     // AJAX submit to Netlify Forms — keeps the visitor on the page instead of navigating
     // to Netlify's generic success page.

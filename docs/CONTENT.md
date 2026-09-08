@@ -14,7 +14,7 @@ Tracks what content exists, what's pending, and what needs to be provided by the
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Logo | ✅ | `src/assets/images/logo.png` (gold wordmark) active in nav/footer/opening. Official thin wordmark + `ė` monogram in `_reference/` PDFs. |
+| Logo | ✅ | `src/assets/images/logo-wordmark.webp` (gold wordmark, near-lossless WebP) active in nav/footer/opening. `logo.png` is NOT used — it survives only in a CSS comment and is 2.12 MB of dead deploy weight. Official thin wordmark + `ė` monogram in `_reference/` PDFs. |
 | Brand colors (final) | ✅ | Sampled from built interior — see `DESIGN_SYSTEM.md`. Confirm with client. |
 | Brand fonts (final) | 🔄 | **Jost** (UI/labels, echoes logo) + **Cormorant Garamond** (display/body). Confirm. |
 | Favicon | 🔄 | Inline SVG clock mark — should be replaced with the `ė` monogram from `Ä.pdf`. |

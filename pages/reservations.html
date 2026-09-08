@@ -2,6 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NDDQ1KQZ8R"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NDDQ1KQZ8R');
+  </script>
+
+  <link rel="canonical" href="https://etherealdelray.com/reservations">
   <link rel="icon" type="image/png" href="/src/assets/images/favicon-clock.png">
   <meta name="theme-color" content="#0d0b09">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +22,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/src/css/globals.css">
-  <link rel="stylesheet" href="/src/css/pages.css">
-  <script src="/src/js/partials.js"></script>
+  <link rel="stylesheet" href="/src/css/globals.css?v=20260902d">
+  <link rel="stylesheet" href="/src/css/pages.css?v=20260902d">
+  <script src="/src/js/partials.js?v=20260902d"></script>
 </head>
 <body>
 
@@ -37,24 +49,37 @@
             <p class="content-ph">[ Reservation note — e.g., "We recommend reserving at least two weeks in advance for weekend dining. Walk-ins are welcome based on availability." ]</p>
           </div>
 
-          <!-- Resy booking widget — behaviour lives in main.js under
-               [data-resy-book], shared with the gallery's closing CTA so the venue
-               credentials and the mobile fallback exist in one place only. The
-               anchor's href is a real link to the venue's Resy page and is what
-               runs when the widget can't open. -->
+          <!-- Resy embed goes here -->
+          <!-- Replace the placeholder below with your Resy widget code -->
+          <!--
+          <script type="text/javascript"
+            src="https://widgets.resy.com/embed.js"
+            async=""
+            defer="">
+          </script>
+          <a href="https://resy.com/cities/[city]/[venue-slug]"
+             class="resy-button"
+             data-url="https://resy.com/cities/[city]/[venue-slug]"
+             data-notify-id="[notify-id]"
+             data-color-primary="#c4a440"
+             data-color-secondary="#0d0b09">
+            Make a Reservation
+          </a>
+          -->
+
           <div style="text-align:center; padding:1rem 0;">
-            <a href="https://resy.com/cities/delray-beach-fl/venues/ethereal"
-               class="btn btn--filled"
-               style="padding:16px 38px;"
-               data-resy-book>
-              Make a Reservation on Resy
+            <a href="#" class="btn btn--filled is-coming-soon" style="padding:16px 38px;" aria-disabled="true" title="Coming soon">
+              Make a Reservation on Resy<span class="coming-soon-badge">Coming Soon</span>
             </a>
+            <p style="margin-top:1rem; font-family:var(--font-ui); font-size:11px; letter-spacing:0.12em; color:var(--brass-dark); text-transform:uppercase;">
+              Placeholder — replace with Resy widget when venue is live
+            </p>
           </div>
 
           <div class="resy-info-grid">
             <div class="resy-info-item">
               <h4>Hours</h4>
-              <p>Monday – Sunday<br>4pm – 11pm</p>
+              <p>Monday – Sunday<br>5pm – 11pm</p>
             </div>
             <div class="resy-info-item">
               <h4>Party Size</h4>
@@ -76,7 +101,7 @@
           <p class="body-text" style="margin-bottom:2rem;">
             <span class="content-ph">[ Private dining note — e.g., "Ethereal offers exclusive private dining for special occasions, corporate events, and intimate celebrations." ]</span>
           </p>
-          <a href="/pages/contact.html?subject=events" class="btn">Enquire About Private Events</a>
+          <a href="/contact?subject=events" class="btn">Enquire About Private Events</a>
         </div>
 
       </div>
@@ -86,11 +111,6 @@
 
   <site-footer></site-footer>
 
-  <!-- The Resy embed script and click handling now live in main.js, keyed off
-       [data-resy-book] — this page previously carried its own copy, which was a
-       second place to keep the venue credentials in sync and, more importantly,
-       preventDefault()ed unconditionally: on a phone, where Resy's widget mounts
-       no modal, that left the button doing nothing at all. -->
-  <script src="/src/js/main.js"></script>
+  <script src="/src/js/main.js?v=20260902d"></script>
 </body>
 </html>

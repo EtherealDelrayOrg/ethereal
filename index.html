@@ -2,6 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NDDQ1KQZ8R"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NDDQ1KQZ8R');
+  </script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- PLACEHOLDER: the "Where time breathes." tagline was retired at client request and
        its replacement isn't set yet. Title and description are deliberately left clean
@@ -16,13 +27,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 
+  <link rel="canonical" href="https://etherealdelray.com/">
   <link rel="icon" type="image/png" href="/src/assets/images/favicon-clock.png">
   <meta name="theme-color" content="#0d0b09">
-  <link rel="stylesheet" href="/src/css/globals.css">
-  <link rel="stylesheet" href="/src/css/opening-sequence.css">
-  <link rel="stylesheet" href="/src/css/home.css">
+  <link rel="stylesheet" href="/src/css/globals.css?v=20260902d">
+  <link rel="stylesheet" href="/src/css/opening-sequence.css?v=20260902d">
+  <link rel="stylesheet" href="/src/css/home.css?v=20260902d">
   <noscript><style>#opening-sequence,.seq-bloom,#seq-fog{display:none!important}#site-content{opacity:1!important}#site-header{opacity:1!important;pointer-events:auto!important}.hero-label,.hero-title,.hero-sub,.hero-ctas{opacity:1!important;animation:none!important}.hero-bg{transform:scale(1.04)!important}</style></noscript>
-  <script src="/src/js/partials.js"></script>
+  <script src="/src/js/partials.js?v=20260902d"></script>
 </head>
 <body>
 
@@ -37,9 +49,15 @@
            preload="auto" aria-hidden="true"></video>
 
     <!-- Static clock fallback — only shown if autoplay gets blocked or the
-         clip fails to load, on either viewport size -->
+         clip fails to load, on either viewport size.
+
+         data-src, not src: this path is the exception, not the rule, but a plain
+         src makes every visitor download the image during preload — before any
+         script can hide it — so the common (video) path was paying for an asset
+         it never shows. opening-sequence.js promotes data-src to src at the
+         moment the fallback is actually needed. -->
     <div class="seq-clock" id="seq-clock-fallback">
-      <img src="/src/assets/images/clock-face-transparent.png" alt="" aria-hidden="true">
+      <img data-src="/src/assets/images/clock-face-transparent.webp" alt="" aria-hidden="true">
     </div>
 
     <div class="seq-brand">
@@ -84,30 +102,19 @@
         <div class="hero-bg" aria-hidden="true"></div>
         <div class="hero-scrim" aria-hidden="true"></div>
         <div class="hero-content">
-          <span class="hero-label">Coming Soon</span>
           <!-- Hero heading removed at client request (was "Where time breathes.").
                Deliberately left with no replacement copy for now. The .hero-title
                styles + entrance animation stay in home.css so restoring it is just
                putting the <h1 class="hero-title" id="hero-title"> back here (and
                switching the section above back to aria-labelledby="hero-title"). -->
           <div class="hero-ctas">
-            <a href="/pages/reservations.html" class="btn btn--filled">Reserve a Table</a>
-            <a href="/pages/menu.html" class="btn btn--ghost">View the Menu</a>
+            <a href="https://resy.com/cities/delray-beach-fl/venues/ethereal" class="btn btn--filled" data-resy-book>Reserve a Table</a>
+            <!-- Opens the client's designed PDF menu rather than /menu,
+                 which is still placeholder copy on this branch. New tab so the
+                 visitor doesn't lose the site behind the PDF viewer. -->
+            <a href="/src/assets/menu/ethereal-menu.pdf" class="btn btn--ghost" target="_blank" rel="noopener">View the Menu</a>
           </div>
         </div>
-          <!-- Cocktail rail: three signature drinks at the foot of the hero,
-               scrolling endlessly, each rising out of a haze tinted to its own
-               colour. Sits inside #hero so it inherits the reveal. Slides are
-               built by hero-cocktails.js — with no JS nothing renders, which is
-               the right outcome for a decorative strip. -->
-          <div class="hero-cocktails" id="hero-cocktails">
-            <div class="cocktail-haze" aria-hidden="true"></div>
-            <!-- aria-hidden: each slide is a link already labelled with its drink,
-                 so announcing this too would just repeat it every few seconds -->
-            <p class="cocktail-name" id="cocktail-name" aria-hidden="true"></p>
-            <div class="cocktail-rail" id="cocktail-rail" role="group"
-                 aria-label="Signature cocktails — scroll to browse"></div>
-          </div>
       </section>
 
     </main>
@@ -118,8 +125,7 @@
   </div>
   <!-- /site-content -->
 
-  <script src="/src/js/opening-sequence.js"></script>
-  <script src="/src/js/main.js"></script>
-  <script src="/src/js/hero-cocktails.js"></script>
+  <script src="/src/js/opening-sequence.js?v=20260902d"></script>
+  <script src="/src/js/main.js?v=20260902d"></script>
 </body>
 </html>
