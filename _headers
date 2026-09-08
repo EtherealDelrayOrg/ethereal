@@ -5,6 +5,21 @@
 # "max-age=31536000, immutable, max-age=3600, must-revalidate" on the menu,
 # an ambiguous header where the immutable half would very likely win.
 
+# ── DEV BRANCH ONLY ──────────────────────────────────────────────────────────
+# Keep this preview site out of search engines entirely. X-Robots-Tag rather
+# than robots.txt is deliberate: a robots.txt Disallow stops Google crawling
+# but the bare URL can still surface in results, whereas noindex de-indexes —
+# and a crawler has to be able to fetch the page to see it. The site stays
+# reachable by direct URL.
+#
+# This lived in netlify.toml until main retired that file in the hosting
+# migration, so it is re-expressed here. It sets no Cache-Control, so it does
+# not disturb the non-overlapping-paths rule above.
+#
+# DO NOT let this block ride along into main — it would de-index the live site.
+/*
+  X-Robots-Tag: noindex, nofollow
+
 # Root: does not match /*.html, so it needs its own entry or it falls through to
 # Cloudflare's default.
 /
