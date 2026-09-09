@@ -198,3 +198,138 @@
     padding: 8px 20px;
   }
 }
+
+/* ============================================================
+   GALLERY BAND
+   A single photograph of the room running full width under the
+   hero, dimmed, with the word over it. The whole strip is a link
+   through to /gallery.
+
+   Note what it is NOT: a second hero. It is deliberately short,
+   heavily darkened and carries one word — the mural above it is
+   the page's image, and two full-strength photographs stacked
+   would fight. Everything here is in service of that: the type is
+   the house display serif at display-heading size, and the only
+   colour is the brass hairline under it.
+   ============================================================ */
+.gallery-band {
+  position: relative;
+  display: block;
+  width: 100%;
+  /* A band, not a panel. The ceiling matters more than the floor — past
+     ~400px it stops reading as a strip under the hero and starts competing
+     with it. */
+  height: clamp(240px, 30vw, 400px);
+  overflow: hidden;
+  background: var(--ink);
+  text-decoration: none;
+}
+
+.gallery-band-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 48%;
+  /* Dimmed by filter rather than baked into the file so the hover can lift it.
+     Saturation comes down a touch with it: the room is warm and gold, and at
+     half brightness full saturation reads muddy rather than candlelit. */
+  filter: brightness(0.6) saturate(0.94);
+  transform: scale(1.02);          /* headroom, so the hover can push in without showing an edge */
+  transition: transform 1200ms var(--ease), filter 900ms var(--ease);
+  will-change: transform;
+}
+
+/* Three jobs, in one element. Bottom to top: a warm vignette (the house
+   treatment for full-bleed imagery — see DESIGN_SYSTEM.md); a soft pool of
+   darkness behind the word, so the type never has to fight a chandelier; and
+   a feather at the top and bottom edges.
+
+   That last one is the important one. A full-bleed photograph meeting a hard
+   horizontal edge is exactly the "broken black band" the hero copy was moved
+   off in an earlier round — the band has to emerge from the dark and return
+   to it, not sit in a frame. */
+.gallery-band-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom,
+      rgba(10, 8, 7, 0.88) 0%, rgba(10, 8, 7, 0.5) 10%, transparent 30%,
+      transparent 72%, rgba(10, 8, 7, 0.6) 92%, var(--ink) 100%),
+    radial-gradient(ellipse 54% 62% at 50% 50%,
+      rgba(10, 8, 7, 0.44) 0%, rgba(10, 8, 7, 0.15) 58%, transparent 80%),
+    radial-gradient(ellipse 116% 104% at 50% 50%,
+      transparent 38%, rgba(10, 8, 7, 0.5) 100%);
+  transition: opacity 900ms var(--ease);
+}
+
+.gallery-band-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.5rem;
+}
+
+.gallery-band-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5.2vw, 4.4rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.05;
+  color: var(--ivory);
+  margin: 0;
+  /* A dark shadow under light type — the same technique the hero uses, and for
+     the same reason: it blends with the photograph's own shadows instead of
+     standing out as a foreign shape the way an outline does. */
+  text-shadow: 0 4px 26px rgba(6, 5, 4, 0.72), 0 1px 5px rgba(6, 5, 4, 0.8);
+  transition: color 700ms var(--ease);
+}
+
+/* The one moving part of the invitation: a brass hairline that grows. No
+   colour flip, no button — the whole band is already the target. */
+.gallery-band-rule {
+  display: block;
+  width: 44px;
+  height: 1px;
+  margin-top: 1.15rem;
+  background: var(--brass);
+  transition: width 700ms var(--ease), background-color 700ms var(--ease);
+}
+
+.gallery-band:hover .gallery-band-img,
+.gallery-band:focus-visible .gallery-band-img {
+  transform: scale(1.06);
+  filter: brightness(0.72) saturate(1);
+}
+.gallery-band:hover .gallery-band-rule,
+.gallery-band:focus-visible .gallery-band-rule {
+  width: 96px;
+  background-color: var(--brass-light);
+}
+.gallery-band:hover .gallery-band-title,
+.gallery-band:focus-visible .gallery-band-title { color: #fdf7ea; }
+
+/* Inside the band, not around it: the global focus ring sits 3px outside its
+   element, which on a full-bleed strip would draw a box round the viewport. */
+.gallery-band:focus-visible {
+  outline: 1px solid var(--brass);
+  outline-offset: -6px;
+}
+
+@media (max-width: 600px) {
+  .gallery-band { height: clamp(200px, 52vw, 280px); }
+  .gallery-band-rule { margin-top: 0.9rem; }
+}
+
+/* The photograph holds still. It still lifts out of the dark on hover —
+   a brightness change is not motion. */
+@media (prefers-reduced-motion: reduce) {
+  .gallery-band-img { transition: filter 900ms var(--ease); transform: scale(1); }
+  .gallery-band:hover .gallery-band-img,
+  .gallery-band:focus-visible .gallery-band-img { transform: scale(1); }
+  .gallery-band-rule { transition: none; }
+}
