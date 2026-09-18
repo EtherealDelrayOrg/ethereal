@@ -187,6 +187,165 @@ This is a scoped exception, not a new site-wide direction — every other sectio
 
 ---
 
+## Signature Cocktails Block
+
+**Added Sep 2026.** A rail of the seventeen signature drinks, sitting on the homepage as
+its own section directly beneath the hero mural. Markup in `index.html`, styles under
+"SIGNATURE COCKTAILS" in `home.css`, everything else — the slides, the per-drink data and
+all the behaviour — in `src/js/cocktail-rail.js`.
+
+**Where it came from.** It was first built into the foot of the hero, floating over the
+mural. The client liked the rail itself but asked for it as a separate block under the
+bird photograph, which is what this is. Moving it off the photo changed what the design
+had to do: over the mural everything was fighting the artwork for legibility (hence the
+tiny type, the heavy text-shadows and the deliberate absence of any scrim). On the ink
+background below it, the block can be lit properly instead — so the drinks are drawn
+roughly twice the size, the haze became a real pool of light rather than a whisper, and
+the reflection and the bar became possible at all.
+
+**The composition, top to bottom:** the centred drink's name, hanging just above it; the
+shelf itself — five drinks on desktop, three below 1200px, the centre one full size with
+the pairs either side stepping back in scale and opacity; a brass hairline they all stand
+on; and their reflections dissolving into the dark below it. Nothing else.
+
+### It is deliberately slim — three rounds of client feedback got it there
+
+Everything below came from the client, and the block went from ~560px tall to ~293px
+without losing anything in it.
+
+**No section heading.** A "Signature Cocktails" title in the display serif opened the
+block and was dropped outright. The section keeps an `aria-label` so the landmark still
+has a name for anyone moving through the page by region — there is no visible text left
+for `aria-labelledby` to point at.
+
+**No closing link.** A "The full cocktail list" line sat under the shelf and cost more
+vertical room than any other single element here. The centre drink is already a link into
+its own entry in that same PDF, and the hero's own CTA opens it a screen above.
+
+**Smaller drinks, and the slots left alone.** The median drink went from 162–214px tall to
+118–156px. That is the change that actually fixed "crammed together": *the slots did not
+change width*, so shrinking the drink inside its existing 196px slot is what opened the
+gap between neighbouring glasses from ~30px to ~100–135px, while keeping the shelf exactly
+as wide on the page. Widening the slots instead would have pushed the outer pair off the
+edge of the container.
+
+**The name sits at one fixed height — and the tallest drinks are capped to make that
+work.** This went back and forth, and the reasoning is worth keeping. Every slide has to
+be as tall as the tallest drink it may hold, so above a median glass there is a band of
+dead space, and the drinks vary a lot (111px to 150px drawn). Stacked above that band,
+the name sat 29–67px clear of the glass. The next version hung the name off the centred
+drink's own height — the name→glass gap became a constant 13px, but the name's distance
+from the *top of the section* then changed with every drink (25–66px on desktop, and on
+phones from −1px to 31px, i.e. sometimes poking out of the block). The client read that
+as inconsistent top padding, which is right: the eye anchors a label to the frame around
+it before it anchors it to the object under it.
+
+So the name is fixed, and `--k-cap: 1.12` limits how tall any drink is drawn. Four
+drinks have a `k` above that (Smokin' Hot, Pearfection, Peacock O'Clock, Spritz) and come
+out up to 12% smaller than the rest; in exchange the reserved band shrinks, so a fixed
+name still sits close over a median glass. Measured: the name is 28px from the section
+top on every drink on desktop and 26px on phones, and the name→glass gap is 10–32px.
+
+**Padding is weighted toward the top.** Roughly `0.45 / 0.4` of a `--section-v` rather
+than a full one each way. The top gets the larger share because the block's first line now
+sits close enough to the top edge that a thinner margin lets the fixed header clip it —
+even at its highest (a tall drink pulls the name up), the name stays 25px clear.
+
+**What carries the mood:**
+- **The block takes its light from the drink in the centre.** Its sampled highlight,
+  midtone and shadow (`hi`/`mid`/`lo` per drink) drive a wash over the whole section, the
+  pool of haze behind the glass, the bloom around it and the sheen on the bar. All four
+  are `screen` blends, so this can only ever *add* light — nothing here darkens.
+- **Those colours are pulled a third of the way back toward `--brass`** before use
+  (`--lit` / `--lit-hi`). Photographic drink colours at full strength — a violet, a lime —
+  light the section like a bar sign rather than like candlelight, which is the one thing
+  this palette rules out.
+- **The colour travels rather than cuts.** `--haze`, `--haze-hi` and `--haze-lo` are
+  registered with `@property` as `<color>`, which is what makes them animatable; without
+  that registration a custom property is an unanimatable token and the light would jump
+  from drink to drink. Browsers without `@property` get the hard cut, which is a
+  downgrade, not a break.
+- **The reflection** is the same image again, flipped, squashed to 78% (a reflection seen
+  across a surface at a shallow angle), tinted down and masked to nothing within a third
+  of the glass's height. Same URL as the drink above it, so it costs a decode and no
+  second request.
+- **Nothing moves on its own.** Two blurred washes drift against each other behind the
+  glass and that is the whole of the ambient motion; the rail advances only when the
+  visitor drags, swipes, arrows or clicks a neighbour. `prefers-reduced-motion` stills
+  the drift and the transitions and leaves a rail that is still fully usable by hand.
+
+**Three measured numbers per drink, and why they are not guesses** (all in
+`cocktail-rail.js`; re-measure them if the art is ever replaced):
+- `k` — an optical size multiplier. Every cutout is 360px tall but the *glass* inside it
+  is not: Pearfection's fills 75% of its frame against Palomas' 97%, so drawn at equal
+  heights one looks a third smaller than the other. `k` scales each image so the glasses
+  match and the garnishes are free to differ.
+- `cx` — the horizontal centre of the drink's opaque pixels. Garnishes are wildly
+  off-axis (Sex and the City's feather throws its mass 13% right of the box centre), so
+  anything centred on the bounding box reads visibly beside the glass rather than over it.
+  Both the name and the pool of light under the glass are leaned by it: measured on the
+  rendered pixels, the name was landing up to 14px off the drink's real ink centre and
+  wandering from drink to drink, which is exactly what it looks like — a name that never
+  quite settles over what it is naming. With the nudge it is within 4px everywhere.
+- `hi`/`mid`/`lo` — the sampled colour described above.
+
+**The name changes on its own small state machine**, and it is worth knowing why before
+simplifying it. Two conditions have to be true before the glyphs are allowed to change:
+the line must have finished fading out, *and* the rail must have stopped moving. The
+second is what makes a fling read as one deliberate change instead of a stutter — fifteen
+drinks go past, the name stays out of the way throughout, and the one you land on rises
+into place. Measured over a six-drink fling: one name change, at zero opacity. The first
+condition is what stops the swap ever being *seen*: an earlier version replaced the text
+on a fixed timer that could land mid-fade, so on a fast scroll one name visibly turned
+into the next on screen. The two names never share the screen either — a crossfade of two
+different words in the same spot is unreadable mush.
+
+The entrance uses a deliberate trick: the incoming name is put into a starting pose
+(`.is-entering`, no transition of its own), the layout is forced, and only then is the
+pose removed, so the browser animates *out of* it rather than through it. Without the
+forced layout both class changes collapse into one style pass and the name fades in from
+nowhere instead of rising. Note also that the name's position and its animation live on
+two different elements (`.cocktail-caption` and `.cocktail-name`) — they both want the
+`transform` property, and one element cannot hold both.
+
+**Phones: nothing moves the rail except the visitor.** The slider used to jump on phones.
+The cause, reproduced on an emulated phone: phones fire `resize` every time the address
+bar slides in or out — so on nearly every vertical scroll of the page — and the resize
+handler answered each one by hard-setting the rail's position; a rail held between two
+drinks mid-swipe moved 58px on its own. It now re-parks only when the rail's own geometry
+changes (slot width or rail width), never under a finger, and the endless fold only
+happens when the rail is at rest *and* exactly on a drink — iOS honours a scroll write
+mid-snap and drops the snap, leaving the rail a third of a drink off. The list is laid
+out five times rather than three, so a hard fling has room to finish before the fold.
+A related bug fixed on the way: switching between the five-up and three-up layouts used
+to put back the wrong drink, because the drink was read after the slots had already
+changed width; it is now read at the first resize event.
+
+**Behaviour worth knowing about:**
+- **Endless in both directions**, done by laying the list out three times and silently
+  folding the scroll position back into the middle copy once it settles — same drink,
+  same pixels, invisible jump.
+- **Scrolling is the browser's own**, not a transform we drive, so touch flings, trackpad
+  swipes and scroll-snap all behave the way the platform says they should. Mouse users
+  get click-and-drag on top, because a mouse has no fling gesture and the scrollbar is
+  hidden.
+- **Two dead ends worth not re-walking.** Dragging did nothing at first: the browser's own
+  link/image drag starts on `pointerdown` and swallows the pointer stream, so the slides
+  and their images are `draggable = false`. And letting go of a drag over the centre drink
+  opened the menu, because the flag that suppresses that click was being cleared on a
+  `setTimeout(0)` racing the click event — it is cleared on the next `pointerdown`
+  instead, which is exact. Keyboard-raised clicks (`e.detail === 0`) are never treated as
+  the tail of a drag.
+- **The centre drink is the link** (into its own entry on page 3 of the PDF menu); the
+  drinks around it are the controls. Only the middle copy is exposed to screen readers —
+  the other two would repeat every drink twice more.
+- **The section is `hidden` in the markup** and unhidden by the script once the rail
+  exists, so no-JS gets nothing at all rather than a heading over an empty shelf.
+- **Only the drinks that start on screen load up front**; the other twelve are lazy.
+  Seventeen drinks is ~520 KB and plenty of visitors never scroll this far.
+
+---
+
 ## Homepage Gallery Band
 
 **Added Sep 2026, client-requested.** A single photograph of the room running full width

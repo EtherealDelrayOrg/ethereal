@@ -200,6 +200,445 @@
 }
 
 /* ============================================================
+   SIGNATURE COCKTAILS
+   Its own block under the mural — seventeen drinks on an endless
+   rail, five on screen at desktop widths, three below that. The
+   centred drink stands on a lit bar with its own reflection under
+   it and a pool of coloured haze behind it; the ones either side
+   sit back into the dark. Everything else on the block — the
+   glow, the sheen on the bar, the tint in the reflection — takes
+   its colour from whichever drink is centred, so the whole
+   section changes light as you browse. Built by cocktail-rail.js.
+
+   The haze is plain CSS, not WebGL. Vanta's FOG was tried for
+   this effect earlier and read as a mottled stain sitting on top
+   of the page rather than light in the air behind it, and it
+   never ran on mobile at all, where the effect is most of the
+   point. Two blurred radial washes drifting against each other
+   do the job on every device.
+   ============================================================ */
+
+/* These have to be registered custom properties, not plain ones: an
+   unregistered property is a raw token, so changing it repaints instantly and
+   the colour hard-cuts from one drink to the next. Registered as <color> they
+   become animatable values the browser can interpolate, so the light travels
+   to the next drink's colour. Browsers without @property simply keep the old
+   hard cut, which is a downgrade, not a break. */
+@property --haze    { syntax: '<color>'; inherits: true; initial-value: #c49140; }
+@property --haze-hi { syntax: '<color>'; inherits: true; initial-value: #dcb06a; }
+@property --haze-lo { syntax: '<color>'; inherits: true; initial-value: #3b3121; }
+/* How far the pool of light sits off the centre line — the centred drink's own
+   visual centre, which is rarely the centre of its box. Registered as <length>
+   for the same reason the colours are registered as <color>: so it travels with
+   the drink instead of jumping. */
+@property --nudge   { syntax: '<length>'; inherits: true; initial-value: 0px; }
+
+.cocktails {
+  --visible:  5;                              /* drinks on screen at once */
+  --slide-w:  196px;
+  /* the height a MEDIAN drink is drawn at; each image then scales by its own
+     --k so the GLASSES match rather than the frames — see cocktail-rail.js */
+  /* The drinks are drawn well under the width of their slot on purpose: the
+     gap between one glass and the next is what stops five in a row reading as
+     a crowd. Shrinking the drinks rather than widening the slots keeps the
+     shelf the same width on the page. */
+  --img-h:    clamp(118px, 14vh, 156px);
+  /* The tallest any drink is allowed to be drawn, as a multiple of --img-h.
+     Four drinks have a --k above this (Smokin' Hot 1.271, Pearfection 1.233,
+     Peacock O'Clock 1.224, Spritz 1.148) and are drawn at this cap instead, so
+     their glasses come out up to 12% smaller than the rest. That is the trade
+     for the name sitting at one fixed height: every slide is as tall as the
+     cap, the name sits just above it, and the cap is what decides how much
+     empty space a median drink has above its rim. Uncapped (1.271) the gap
+     over a median glass was ~45px; at 1.12 it is ~28px. */
+  --k-cap:    1.12;
+  --mirror-h: calc(var(--img-h) * 0.30);      /* how far the reflection runs before it is gone */
+  /* Headroom inside the rail for the bloom above the tallest drink. Kept tight:
+     every slide has to be as tall as the tallest drink allowed (--k-cap), so
+     for a median drink this and that reserved height are the whole of the gap
+     between the name and the glass — the one place this block wastes room. */
+  --lift:     14px;
+  --fade:     76px;                           /* how far the rail's edges dissolve */
+  /* Every glow on the block is the drink's own colour pulled a third of the way
+     back toward the house brass. Straight from the bottle these are saturated
+     photographic colours — a violet or a lime at full strength lights the room
+     like a cocktail-bar sign rather than like candlelight, which is the one
+     thing this palette is not allowed to do. Mixed toward brass they still read
+     as that drink's own colour and still stay in the warm world the rest of the
+     site lives in. */
+  --lit:      color-mix(in srgb, var(--haze) 68%, var(--brass));
+  --lit-hi:   color-mix(in srgb, var(--haze-hi) 68%, var(--brass-light));
+  position: relative;
+  /* Deliberately short of the site's usual --section-v: with the heading gone
+     there is nothing at the top of this block to justify a full section's
+     worth of air above it, and the drinks read better as a band between the
+     mural and the footer than as another full-height stop. */
+  padding: calc(var(--section-v) * 0.45) 0 calc(var(--section-v) * 0.4);
+  text-align: center;
+  background: var(--ink);
+  transition: --haze 900ms var(--ease),
+              --haze-hi 900ms var(--ease),
+              --haze-lo 900ms var(--ease),
+              --nudge 700ms var(--ease);
+}
+
+/* A single wide wash of the drink's colour over the whole block, low enough to
+   read as the room being lit by it rather than as a coloured panel. Screen
+   blend, so it can only ever add light — nothing here darkens. */
+.cocktails::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 48% 46% at 50% 60%,
+              color-mix(in srgb, var(--lit) 11%, transparent) 0%,
+              transparent 70%);
+  mix-blend-mode: screen;
+}
+
+/* ── The name ──────────────────────────────────────────────
+   Hanken uppercase rather than more Cormorant italic: the heading directly
+   above it is already the serif, and two italic serif lines stacked read as
+   one broken sentence. Caps and letterspacing put it in the same voice as the
+   nav and the buttons — a label under an exhibit, not a second title. */
+/* The name sits at ONE fixed height, just above the tallest a drink is allowed
+   to be drawn (--k-cap), inside the band every slide reserves for that height.
+
+   It used to follow the centred drink up and down so that it sat the same
+   distance above every glass. Measured, that was true — but it meant the gap
+   between the top of the section and the name changed with every drink, by
+   up to 38px, and the block's top padding read as inconsistent. The eye
+   anchors a label to the frame it sits in before it anchors it to the object
+   under it. Capping the tallest drinks (see --k-cap) is what keeps a fixed
+   name from floating far above the shorter glasses.
+
+   Horizontally it sits over the drink's own mass rather than the centre of its
+   bounding box — measured, the two are up to 14px apart and the gap changes
+   from drink to drink, which reads as the name wandering as you scroll. (This
+   nudge was dropped for a while, correctly, when the name sat 60px up and lined
+   up against a section heading; with the heading gone and the name tucked
+   against the glass, the glass is the only thing left to align to.) */
+.cocktail-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--mirror-h) + var(--img-h) * var(--k-cap) + 10px);
+  z-index: 3;                    /* the rail is absolutely placed over the stage */
+  pointer-events: none;          /* never in the way of a drag */
+  transform: translateX(var(--nudge));
+}
+
+/* ── Changing the name ─────────────────────────────────────
+   The old name fades out and lifts away; the new one rises into the same place
+   once the rail has stopped. The two never share the screen — a crossfade of
+   two different words in the same spot is unreadable mush — and the glyphs are
+   only ever swapped while the line is at zero opacity, so the change is never
+   seen happening. Out is quick, in is unhurried. */
+.cocktail-name {
+  font-family: var(--font-ui);
+  font-size: clamp(12px, 1.05vw, 14px);
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--brass-light);
+  min-height: 1.4em;
+  transition: opacity 420ms var(--ease), transform 420ms var(--ease);
+}
+.cocktail-name.is-swapping {
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: opacity 200ms var(--ease), transform 200ms var(--ease);
+}
+/* The starting pose for the incoming name. It carries no transition of its own:
+   the script sets this, forces a layout, then takes it off again, so the browser
+   animates out of this pose rather than through it. */
+.cocktail-name.is-entering {
+  opacity: 0;
+  transform: translateY(7px);
+  transition: none;
+}
+
+/* ── The stage ─────────────────────────────────────────────
+   Exactly as wide as the drinks on screen, so the arrows and the bar can be
+   positioned against the rail rather than against the page. */
+.cocktail-stage {
+  position: relative;
+  width: calc(var(--slide-w) * var(--visible));
+  max-width: 100%;
+  margin: 0 auto;
+  height: calc(var(--lift) + var(--img-h) * var(--k-cap) + var(--mirror-h));
+}
+
+/* ── The haze ──────────────────────────────────────────────
+   Kept deliberately faint. It reads as light pooling in mist behind the
+   glasses; the moment it is strong enough to notice on its own it stops
+   looking like light and starts looking like a coloured shape. */
+.cocktail-pool {
+  position: absolute;
+  left: 50%;
+  bottom: var(--mirror-h);
+  width: min(calc(var(--img-h) * 3.4), 92%);
+  height: calc(var(--img-h) * 1.2);
+  /* --nudge leans the pool toward the drink's own mass, so the light sits under
+     the glass rather than under the middle of its box */
+  transform: translateX(calc(-50% + var(--nudge)));
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.cocktail-pool::before,
+.cocktail-pool::after {
+  content: '';
+  position: absolute;
+  inset: -16% -8% -6%;
+  background: radial-gradient(ellipse 58% 72% at 50% 100%,
+              color-mix(in srgb, var(--lit-hi) 24%, transparent) 0%,
+              color-mix(in srgb, var(--lit) 16%, transparent) 36%,
+              transparent 74%);
+  filter: blur(30px);
+  animation: haze-drift-a 23s ease-in-out infinite alternate;
+  will-change: transform;
+}
+/* the second wash is wider, weaker and drifts the other way, so the two never
+   line up and the edge of the pool keeps moving */
+.cocktail-pool::after {
+  inset: -6% -20% -4%;
+  background: radial-gradient(ellipse 76% 58% at 50% 100%,
+              color-mix(in srgb, var(--lit) 15%, transparent) 0%,
+              transparent 70%);
+  filter: blur(44px);
+  animation: haze-drift-b 31s ease-in-out infinite alternate;
+}
+
+@keyframes haze-drift-a {
+  from { transform: translate3d(-4%, 2%, 0) scale(1.00); }
+  to   { transform: translate3d( 5%, -2%, 0) scale(1.10); }
+}
+@keyframes haze-drift-b {
+  from { transform: translate3d( 6%, 0, 0) scale(1.08); }
+  to   { transform: translate3d(-5%, 3%, 0) scale(0.97); }
+}
+
+/* ── The bar ───────────────────────────────────────────────
+   One brass hairline, faded out well before either end so it reads as a
+   surface catching light rather than a rule drawn across the page, plus a
+   soft pool of the drink's own colour lying on it under the centre glass. */
+.cocktail-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--mirror-h);
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(to right,
+              transparent 0%,
+              rgba(138, 100, 40, 0.35) 18%,
+              rgba(220, 176, 106, 0.55) 50%,
+              rgba(138, 100, 40, 0.35) 82%,
+              transparent 100%);
+}
+.cocktail-bar::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: min(calc(var(--img-h) * 2.1), 66%);
+  height: 18px;
+  transform: translateX(calc(-50% + var(--nudge)));
+  background: radial-gradient(ellipse 50% 100% at 50% 0%,
+              color-mix(in srgb, var(--lit-hi) 22%, transparent) 0%,
+              transparent 76%);
+  mix-blend-mode: screen;
+  filter: blur(6px);
+}
+
+/* ── The rail ──────────────────────────────────────────────
+   Native scroll, so touch flings and trackpad gestures feel right for free.
+   JS keeps it endless by silently rewinding a whole copy once the scroll
+   settles — see cocktail-rail.js. */
+.cocktail-rail {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;   /* don't trigger back-swipe navigation */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-top: var(--lift);
+  /* So the first and last drink can still come to rest in the centre. A
+     percentage resolves against the containing block, which here IS the rail's
+     own width (the stage) — this is only safe because the stage exists; the
+     same rule written against a full-width parent blows the rail open. */
+  padding-inline: calc((100% - var(--slide-w)) / 2);
+  cursor: grab;
+  /* A short dissolve at each end — short on purpose. An earlier version faded
+     over a whole slide and ate the outer drinks, which are the ones the fade is
+     there to frame; this one only softens the cut where a garnish runs off the
+     end of the shelf. Depth is carried by scale and opacity, not by the mask. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%);
+}
+.cocktail-rail::-webkit-scrollbar { display: none; }
+.cocktail-rail.is-dragging { cursor: grabbing; scroll-behavior: auto; user-select: none; }
+
+.cocktail-slide {
+  flex: 0 0 var(--slide-w);
+  scroll-snap-align: center;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: calc(var(--img-h) * var(--k-cap) + var(--mirror-h));
+  text-decoration: none;
+  cursor: pointer;
+  /* the rail's own drag has to win over the browser's link/image drag */
+  -webkit-user-drag: none;
+  /* Anything not in the centre sits back into the dark; the further out, the
+     further back. Scaled about the bar line, not the box, so every glass keeps
+     its foot on the surface however small it gets. */
+  opacity: 0.14;
+  transform: scale(0.44);
+  transform-origin: 50% calc(100% - var(--mirror-h));
+  transition: opacity 560ms var(--ease), transform 560ms var(--ease);
+}
+.cocktail-slide.is-far    { opacity: 0.32; transform: scale(0.50); }
+.cocktail-slide.is-near   { opacity: 0.66; transform: scale(0.70); }
+.cocktail-slide.is-active { opacity: 1;    transform: scale(1); }
+
+.cocktail-glass {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;    /* the whole slide is the target, not the pixels */
+}
+
+.cocktail-img {
+  width: auto;
+  /* --k is set per drink by JS; the fallback keeps a sane size without it */
+  height: var(--img-h);
+  height: calc(var(--img-h) * min(var(--k, 1), var(--k-cap)));
+  /* a soft bloom in the drink's own colour, so the glass sits in the haze
+     rather than on top of it */
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.65))
+          drop-shadow(0 0 22px color-mix(in srgb, var(--lit-hi) 30%, transparent));
+  transition: filter 900ms var(--ease), transform var(--transition-fast);
+}
+
+/* ── The reflection ────────────────────────────────────────
+   The same image again, flipped and squashed as if seen across a polished
+   surface at a shallow angle, tinted toward the drink's own shadow colour and
+   gone within a third of the glass's height. Blurred a touch so it reads as a
+   reflection in stone rather than a second, upside-down drink. */
+.cocktail-mirror {
+  display: block;
+  height: var(--mirror-h);
+  overflow: hidden;
+  opacity: 0.42;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.45) 40%, transparent 86%);
+          mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.45) 40%, transparent 86%);
+}
+.cocktail-mirror img {
+  width: auto;
+  height: calc(var(--img-h) * min(var(--k, 1), var(--k-cap)));
+  /* Read right to left, the way transforms apply: lift the image by its own
+     height so it sits directly above the box, then flip it back down through
+     the box's top edge, squashed to 78% as a reflection seen across a surface
+     at a shallow angle is. Flipping it in place instead throws the image out
+     of the top of the box entirely. */
+  transform: scaleY(-0.78) translateY(-100%);
+  transform-origin: 50% 0;
+  filter: blur(1.1px) brightness(0.78) saturate(1.1);
+}
+
+.cocktail-slide:hover .cocktail-img,
+.cocktail-slide:focus-visible .cocktail-img { transform: translateY(-5px); }
+.cocktail-slide:not(.is-active):hover { opacity: 0.86; transform: scale(0.75); }
+.cocktail-slide.is-far:not(.is-active):hover { transform: scale(0.55); }
+.cocktail-slide:focus-visible {
+  outline: 1px solid var(--brass);
+  outline-offset: -6px;
+  border-radius: 2px;
+}
+
+/* ── Arrows ────────────────────────────────────────────────
+   A mouse has no fling gesture and the scrollbar is hidden, so without these
+   the rail looks static to anyone who doesn't happen to try dragging it. Quiet
+   at rest — a hairline ring, the same metal as every other border on the site. */
+.cocktail-arrow {
+  position: absolute;
+  top: calc((var(--lift) + 100% - var(--mirror-h)) / 2);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--brass-dark);
+  border-radius: 50%;
+  color: var(--brass);
+  background: rgba(10, 8, 7, 0.4);
+  opacity: 0.42;
+  transform: translateY(-50%);
+  transition: opacity var(--transition-fast), color var(--transition-fast),
+              border-color var(--transition-fast), background var(--transition-fast);
+}
+.cocktail-arrow--prev { left: -56px; }
+.cocktail-arrow--next { right: -56px; }
+.cocktails:hover .cocktail-arrow { opacity: 0.72; }
+.cocktail-arrow:hover,
+.cocktail-arrow:focus-visible {
+  opacity: 1;
+  color: var(--brass-light);
+  border-color: var(--brass);
+  background: rgba(10, 8, 7, 0.7);
+}
+
+/* There is deliberately no closing link. The block carried a "The full cocktail
+   list" line into the menu and it was dropped: the centre drink is already a
+   link to its own entry in that same PDF, the hero's own CTA opens it a screen
+   above, and the line was costing more vertical room than any other single
+   thing here. */
+
+/* === Responsive ===
+   Five across needs room for the two outer drinks to still read as drinks
+   rather than as smudges; below that width it drops to three. */
+@media (max-width: 1199px) {
+  .cocktails { --visible: 3; --slide-w: 204px; --fade: 30px; }
+}
+@media (max-width: 900px) {
+  /* Swipe is the gesture here, and the arrows would be sitting on the drinks. */
+  .cocktail-arrow { display: none; }
+}
+@media (max-width: 600px) {
+  .cocktails {
+    --visible: 3;
+    --slide-w: 116px;
+    --img-h: clamp(86px, 13vh, 112px);
+    --lift: 12px;
+    --fade: 16px;
+    /* --section-v drops to 48px on phones, so a pure fraction of it left the
+       name 2px from the top edge — nearly touching the mural. The fixed 24px
+       brings it to the same ~26px clearance it has on desktop. */
+    padding: calc(var(--section-v) * 0.46 + 24px) 0 calc(var(--section-v) * 0.36);
+  }
+  .cocktail-name { letter-spacing: 0.2em; }
+}
+
+/* Someone who has asked for less motion gets a still block they can still
+   scroll by hand — nothing drifts, brightens or travels on its own. */
+@media (prefers-reduced-motion: reduce) {
+  .cocktail-pool::before,
+  .cocktail-pool::after { animation: none; }
+  .cocktails,
+  .cocktail-slide,
+  .cocktail-name,
+  .cocktail-img { transition: none; }
+  .cocktail-rail { scroll-behavior: auto; }
+}
+
+/* ============================================================
    GALLERY BAND
    A single photograph of the room running full width under the
    hero, dimmed, with the word over it. The whole strip is a link

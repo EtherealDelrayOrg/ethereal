@@ -30,11 +30,11 @@
   <link rel="canonical" href="https://etherealdelray.com/">
   <link rel="icon" type="image/png" href="/src/assets/images/favicon-clock.png">
   <meta name="theme-color" content="#0d0b09">
-  <link rel="stylesheet" href="/src/css/globals.css?v=20260909a">
-  <link rel="stylesheet" href="/src/css/opening-sequence.css?v=20260909a">
-  <link rel="stylesheet" href="/src/css/home.css?v=20260909a">
+  <link rel="stylesheet" href="/src/css/globals.css?v=20260918c">
+  <link rel="stylesheet" href="/src/css/opening-sequence.css?v=20260918c">
+  <link rel="stylesheet" href="/src/css/home.css?v=20260918c">
   <noscript><style>#opening-sequence,.seq-bloom,#seq-fog{display:none!important}#site-content{opacity:1!important}#site-header{opacity:1!important;pointer-events:auto!important}.hero-label,.hero-title,.hero-sub,.hero-ctas{opacity:1!important;animation:none!important}.hero-bg{transform:scale(1.04)!important}</style></noscript>
-  <script src="/src/js/partials.js?v=20260909a"></script>
+  <script src="/src/js/partials.js?v=20260918c"></script>
 </head>
 <body>
 
@@ -143,6 +143,46 @@
         </span>
       </a>
 
+      <!-- ── Signature Cocktails ──────────────────────────
+           A separate block under the mural, not part of the hero. The whole
+           thing is built by cocktail-rail.js and stays [hidden] until it has
+           been, so no-JS gets nothing rather than an empty heading over an
+           empty shelf. -->
+      <!-- aria-label, not aria-labelledby: the visible heading was dropped at
+           the client's request, but the landmark still needs a name for anyone
+           moving through the page by region. -->
+      <section id="cocktails" class="cocktails" aria-label="Signature cocktails" hidden>
+
+        <div class="cocktail-stage reveal">
+          <!-- aria-hidden: every slide is a link already labelled with its own
+               drink, so announcing this too would repeat it on every scroll.
+               The wrapper owns where the name sits; the name itself owns how it
+               changes — two transforms that would otherwise overwrite each other. -->
+          <div class="cocktail-caption" aria-hidden="true">
+            <p class="cocktail-name" id="cocktail-name"></p>
+          </div>
+          <!-- light in the air behind the centred drink, in its own colour -->
+          <div class="cocktail-pool" aria-hidden="true"></div>
+          <!-- the bar the glasses stand on: a hairline with a pool of light
+               on it, sitting behind the rail so the glasses cover it -->
+          <div class="cocktail-bar" aria-hidden="true"></div>
+
+          <button class="cocktail-arrow cocktail-arrow--prev" type="button" data-step="-1" aria-label="Previous cocktail">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+              <path d="M15 4 L7 12 L15 20"/>
+            </svg>
+          </button>
+          <div class="cocktail-rail" id="cocktail-rail" role="group"
+               aria-label="Signature cocktails — drag or swipe to browse"></div>
+          <button class="cocktail-arrow cocktail-arrow--next" type="button" data-step="1" aria-label="Next cocktail">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+              <path d="M9 4 L17 12 L9 20"/>
+            </svg>
+          </button>
+        </div>
+
+      </section>
+
     </main>
 
     <!-- ── Footer ────────────────────────────────────── -->
@@ -151,7 +191,8 @@
   </div>
   <!-- /site-content -->
 
-  <script src="/src/js/opening-sequence.js?v=20260909a"></script>
-  <script src="/src/js/main.js?v=20260909a"></script>
+  <script src="/src/js/opening-sequence.js?v=20260918c"></script>
+  <script src="/src/js/main.js?v=20260918c"></script>
+  <script src="/src/js/cocktail-rail.js?v=20260918c"></script>
 </body>
 </html>
