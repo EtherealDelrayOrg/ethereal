@@ -10,7 +10,7 @@
    neighbour to bring it in. Clicking the centre drink opens the
    menu at that drink's own entry.
 
-   Endless is done by laying the list out three times and
+   Endless is done by laying the list out five times and
    silently rewinding a whole copy once the scroll settles, so
    the rail can be flung either way forever without hitting an
    end.
@@ -88,7 +88,14 @@
     { slug: 'what-happens-in-pineapple-grove', name: 'What Happens in Pineapple Grove…', w: 238, h: 360, k: 0.974, cx: -5.7, page: 3, top: 1163,
       hi: '#f5bf70', mid: '#c79347', lo: '#48371e' },  ];
 
-  const COPIES = 3;      // the list, laid out three times over
+  // Five copies, parked on the middle one. Three was not enough runway on a
+  // phone: a hard fling across 116px slides can travel further than one copy
+  // (~2000px) before it stops, and the endless fold only happens once the
+  // rail has come to rest — so a strong swipe could run into the physical end
+  // of the rail and stop dead there, off-centre. Two copies either side gives
+  // ~3900px of travel, more than a thumb produces.
+  const COPIES = 5;
+  const MID    = Math.floor(COPIES / 2);   // the copy we always fold back into
   const SETTLE = 130;    // ms of no scroll events that counts as "stopped"
   const DRAG   = 4;      // px of mouse travel before a click becomes a drag
 
@@ -102,13 +109,17 @@
   const MENU = '/src/assets/menu/ethereal-menu.pdf';
 
   const N       = COCKTAILS.length;
+  const HOME    = MID * N;                 // index of the first drink in the middle copy
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let stride = 0;        // centre-to-centre distance between two slides
-  let active = -1;       // index into the tripled list
+  let active = -1;       // index into the repeated list
   let aim = -1;          // where an in-flight smooth scroll is headed, or -1
   let marked = [];       // the slides currently carrying a depth class
   let idle = null, raf = 0, fade = null;
+  let touching = false;  // a finger is on the rail — never move it under one
+  let railW = 0;         // the rail's width when it was last parked — see the resize handler
+  let held = -1;         // the drink to put back after a resize, or -1 when none is pending
   // The name changes on its own small state machine — see nameTo() below.
   let shown = '', pending = null, faded = false, settled = true;
 
@@ -140,8 +151,8 @@
       // rail's own drag dead in the water. CSS covers the same ground for the
       // images (-webkit-user-drag), belt and braces.
       a.draggable = false;
-      // copies 0 and 2 repeat what a screen reader has already heard
-      if (c !== 1) { a.setAttribute('aria-hidden', 'true'); a.tabIndex = -1; }
+      // the outer copies repeat what a screen reader has already heard
+      if (c !== MID) { a.setAttribute('aria-hidden', 'true'); a.tabIndex = -1; }
 
       // --k rides on the wrapper rather than the image so the reflection can
       // read it too; see the k note at the top.
@@ -154,7 +165,7 @@
       // seventeen drinks is ~520 KB, and plenty of visitors never reach this
       // block at all — no reason to spend that on every homepage view.
       const global = c * N + k;
-      const eager  = global >= N - 2 && global <= N + 2;
+      const eager  = global >= HOME - 2 && global <= HOME + 2;
 
       const img = document.createElement('img');
       img.className = 'cocktail-img';
@@ -237,8 +248,6 @@
     block.style.setProperty('--haze', d.mid);
     block.style.setProperty('--haze-hi', d.hi);
     block.style.setProperty('--haze-lo', d.lo);
-    // The name hangs off the drink's own drawn height — see the note in home.css.
-    block.style.setProperty('--k-active', d.k);
     placeLight(d, slides[n]);
 
     nameTo(d.name);
@@ -255,7 +264,15 @@
   // fixed timer that could land mid-fade, so on a fast scroll one name visibly
   // turned into the next on screen.
   function nameTo(next) {
-    if (next === shown && pending === null) return;
+    // Back to the drink already named (flicked away and straight back, or a
+    // resize that briefly showed a neighbour): cancel the change rather than
+    // replaying the same name through a fade-out and rise-in.
+    if (next === shown) {
+      pending = null;
+      clearTimeout(fade);
+      label.classList.remove('is-swapping');
+      return;
+    }
     pending = next;
     if (!shown) { commit(true); return; }         // first drink of the session
     if (!label.classList.contains('is-swapping')) {
@@ -293,17 +310,28 @@
   function measure() {
     stride = slides[1].offsetLeft - slides[0].offsetLeft;
     if (!stride) return false;
-    rail.scrollLeft = posOf(N);        // park on the middle copy's first drink
-    setActive(N);
+    railW = rail.clientWidth;
+    rail.scrollLeft = posOf(HOME);     // park on the middle copy's first drink
+    setActive(HOME);
     return true;
   }
 
   // ── Endless ──────────────────────────────────────────────
   // Once the scroll has stopped, fold the position back into the middle
   // copy. Same drink, same pixels on screen, so the jump is invisible.
+  //
+  // Only ever at rest, and only ever exactly on a drink. On a phone the "no
+  // scroll events for a moment" test can pass while the rail is still easing
+  // into its snap point, or while a finger is resting on it between swipes;
+  // folding then writes a scrollLeft that is not a snap position, and iOS
+  // honours the write and drops the snap — the rail stops a third of a drink
+  // off-centre. Leaving it for the next settle costs nothing: the outer
+  // copies are there precisely so there is room to wait.
   function rewind() {
-    const lo = posOf(N), span = N * stride;
+    if (touching) return;
     const x  = rail.scrollLeft;
+    if (Math.abs(x - posOf(indexAt(x))) > 1.5) return;   // not parked on a drink yet
+    const lo = posOf(HOME), span = N * stride;
     if (x >= lo && x < lo + span) return;
     const folded = lo + (((x - lo) % span) + span) % span;
     const prev = rail.style.scrollBehavior;
@@ -318,7 +346,7 @@
   }
 
   rail.addEventListener('scroll', () => {
-    if (!stride) return;
+    if (!stride || held >= 0) return;   // mid-resize: the pixels no longer mean the same drink
     // rAF keeps the highlight in step with the scroll without doing work on
     // every event...
     settled = false;
@@ -327,22 +355,26 @@
       setActive(indexAt(rail.scrollLeft));
     });
     clearTimeout(idle);
-    idle = setTimeout(() => {
-      // ...but rAF is suspended on a backgrounded tab, so settling also syncs
-      // from this timer. Without it the centre drink, its name and the colour
-      // of the whole block can be left pointing at something that scrolled off
-      // screen. setActive is a no-op when nothing changed.
-      setActive(indexAt(rail.scrollLeft));
-      aim = -1;                        // the scroll has arrived; step from here again
-      settled = true;
-      flushName();                     // the name lands with the rail, not before
-      if (!dragging) rewind();
-    }, SETTLE);
+    idle = setTimeout(settle, SETTLE);
   }, { passive: true });
+
+  function settle() {
+    if (held >= 0) return;           // the resize re-park owns the rail until it has run
+    // rAF is suspended on a backgrounded tab, so settling also syncs from this
+    // timer. Without it the centre drink, its name and the colour of the whole
+    // block can be left pointing at something that scrolled off screen.
+    // setActive is a no-op when nothing changed.
+    setActive(indexAt(rail.scrollLeft));
+    if (touching) return;            // still under a finger: not settled at all
+    aim = -1;                        // the scroll has arrived; step from here again
+    settled = true;
+    flushName();                     // the name lands with the rail, not before
+    if (!dragging) rewind();
+  }
 
   // ── Clicking a neighbour brings it in ────────────────────
   // The centre drink keeps its link and opens the menu; the ones around it
-  // act as the controls. Delegated, because there are fifty-one of them.
+  // act as the controls. Delegated, because there are eighty-five of them.
   rail.addEventListener('click', (e) => {
     const slide = e.target.closest('.cocktail-slide');
     if (!slide) return;
@@ -428,17 +460,60 @@
   })(0);
 
   // Slide widths are in px and change at the breakpoints, and the light's
-  // nudge is relative to the rendered image width.
+  // nudge is relative to the rendered image width — so a change of WIDTH has
+  // to re-park the rail.
+  //
+  // A change of height must not. Phones fire resize every time the address bar
+  // slides in or out, which is to say on nearly every vertical scroll of the
+  // page, and this used to answer each one by hard-setting the rail's position
+  // 180ms later. Measured on an emulated phone: a rail held between two drinks
+  // mid-swipe was moved 58px by an address-bar resize alone. That was the
+  // "cocktails jump and end up off" on phones.
+  //
+  // The test is the rail's own geometry, not the window's. A first version
+  // compared window.innerWidth against the value at script start and still
+  // fired on an address-bar resize — the width read at load was not the width
+  // the page settled at. If the slot width and the rail width are both what
+  // they were, the current position is still exactly right: leave it alone.
+  //
+  // Which drink to put back is read at the FIRST resize event of a burst, not
+  // when the re-park runs. Between the two the slots have already changed
+  // width while the rail kept its pixel position, so it is showing a different
+  // drink, and the scroll handler would dutifully make that one the active
+  // one. Reading `active` at re-park time restored the wrong drink on every
+  // switch between the five-up and three-up layouts (measured: one or two
+  // drinks over). The scroll handler stands down while a re-park is pending.
   let rz = null;
   window.addEventListener('resize', () => {
+    if (held < 0 && active >= 0) held = ((active % N) + N) % N;
     clearTimeout(rz);
-    rz = setTimeout(() => {
-      const keep = ((active % N) + N) % N;
-      stride = slides[1].offsetLeft - slides[0].offsetLeft;
-      if (!stride) return;
-      rail.scrollLeft = posOf(N + keep);
-      placeLight(COCKTAILS[keep], slides[N + keep]);
+    rz = setTimeout(function repark() {
+      if (touching) { rz = setTimeout(repark, 180); return; }
+      const keep = held;
+      held = -1;
+      const nextStride = slides[1].offsetLeft - slides[0].offsetLeft;
+      if (!nextStride || keep < 0) return;
+      if (nextStride === stride && rail.clientWidth === railW) return;
+      stride = nextStride;
+      railW = rail.clientWidth;
+      rail.scrollLeft = posOf(HOME + keep);
+      setActive(HOME + keep);
+      placeLight(COCKTAILS[keep], slides[HOME + keep]);
     }, 180);
   });
+
+  // Tracked so nothing ever repositions the rail under a finger. touchend is
+  // not the end of the gesture — momentum carries on — so the settle timer is
+  // still what decides when the rail has stopped; this only vetoes.
+  rail.addEventListener('touchstart', () => { touching = true; }, { passive: true });
+  const lift = () => {
+    touching = false;
+    // A finger lifted with the rail already at rest produces no further scroll
+    // events, so nothing else would give the fold its turn.
+    clearTimeout(idle);
+    idle = setTimeout(settle, SETTLE);
+  };
+  rail.addEventListener('touchend', lift, { passive: true });
+  rail.addEventListener('touchcancel', lift, { passive: true });
 
 })();

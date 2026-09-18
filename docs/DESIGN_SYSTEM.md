@@ -229,16 +229,22 @@ gap between neighbouring glasses from ~30px to ~100–135px, while keeping the s
 as wide on the page. Widening the slots instead would have pushed the outer pair off the
 edge of the container.
 
-**The name hangs off the drink, not off the top of the box.** This is the one worth
-understanding before changing anything here. Every slide has to be as tall as the tallest
-drink in the set (`--k-max`), so above a median glass there is a band of dead space —
-and the drinks vary a lot, from 111px drawn to 150px. Stacked above that band, the name
-sat anywhere from 29px to 67px clear of the glass depending on which drink was centred,
-and the gap visibly breathed as you scrolled. It now lives *inside* the band, positioned
-against the bar line plus the centred drink's own drawn height (`--k-active`, published by
-the script and registered as `<number>` so it eases rather than snaps). Measured across
-all seventeen drinks the gap is 13px, spread 0. It also reclaims the line's worth of
-height the name used to cost, since it no longer stacks.
+**The name sits at one fixed height — and the tallest drinks are capped to make that
+work.** This went back and forth, and the reasoning is worth keeping. Every slide has to
+be as tall as the tallest drink it may hold, so above a median glass there is a band of
+dead space, and the drinks vary a lot (111px to 150px drawn). Stacked above that band,
+the name sat 29–67px clear of the glass. The next version hung the name off the centred
+drink's own height — the name→glass gap became a constant 13px, but the name's distance
+from the *top of the section* then changed with every drink (25–66px on desktop, and on
+phones from −1px to 31px, i.e. sometimes poking out of the block). The client read that
+as inconsistent top padding, which is right: the eye anchors a label to the frame around
+it before it anchors it to the object under it.
+
+So the name is fixed, and `--k-cap: 1.12` limits how tall any drink is drawn. Four
+drinks have a `k` above that (Smokin' Hot, Pearfection, Peacock O'Clock, Spritz) and come
+out up to 12% smaller than the rest; in exchange the reserved band shrinks, so a fixed
+name still sits close over a median glass. Measured: the name is 28px from the section
+top on every drink on desktop and 26px on phones, and the name→glass gap is 10–32px.
 
 **Padding is weighted toward the top.** Roughly `0.45 / 0.4` of a `--section-v` rather
 than a full one each way. The top gets the larger share because the block's first line now
@@ -301,6 +307,19 @@ forced layout both class changes collapse into one style pass and the name fades
 nowhere instead of rising. Note also that the name's position and its animation live on
 two different elements (`.cocktail-caption` and `.cocktail-name`) — they both want the
 `transform` property, and one element cannot hold both.
+
+**Phones: nothing moves the rail except the visitor.** The slider used to jump on phones.
+The cause, reproduced on an emulated phone: phones fire `resize` every time the address
+bar slides in or out — so on nearly every vertical scroll of the page — and the resize
+handler answered each one by hard-setting the rail's position; a rail held between two
+drinks mid-swipe moved 58px on its own. It now re-parks only when the rail's own geometry
+changes (slot width or rail width), never under a finger, and the endless fold only
+happens when the rail is at rest *and* exactly on a drink — iOS honours a scroll write
+mid-snap and drops the snap, leaving the rail a third of a drink off. The list is laid
+out five times rather than three, so a hard fling has room to finish before the fold.
+A related bug fixed on the way: switching between the five-up and three-up layouts used
+to put back the wrong drink, because the drink was read after the slots had already
+changed width; it is now read at the first resize event.
 
 **Behaviour worth knowing about:**
 - **Endless in both directions**, done by laying the list out three times and silently

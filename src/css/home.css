@@ -232,11 +232,6 @@
    for the same reason the colours are registered as <color>: so it travels with
    the drink instead of jumping. */
 @property --nudge   { syntax: '<length>'; inherits: true; initial-value: 0px; }
-/* The centred drink's own size multiplier. The name hangs off this rather than
-   off the top of the box, so it sits the same distance above every glass —
-   registered as <number> so it eases from one drink to the next instead of
-   snapping. */
-@property --k-active { syntax: '<number>'; inherits: true; initial-value: 1; }
 
 .cocktails {
   --visible:  5;                              /* drinks on screen at once */
@@ -248,10 +243,18 @@
      a crowd. Shrinking the drinks rather than widening the slots keeps the
      shelf the same width on the page. */
   --img-h:    clamp(118px, 14vh, 156px);
-  --k-max:    1.271;                          /* the largest --k in the set (Smokin' Hot), so the tallest still fits */
+  /* The tallest any drink is allowed to be drawn, as a multiple of --img-h.
+     Four drinks have a --k above this (Smokin' Hot 1.271, Pearfection 1.233,
+     Peacock O'Clock 1.224, Spritz 1.148) and are drawn at this cap instead, so
+     their glasses come out up to 12% smaller than the rest. That is the trade
+     for the name sitting at one fixed height: every slide is as tall as the
+     cap, the name sits just above it, and the cap is what decides how much
+     empty space a median drink has above its rim. Uncapped (1.271) the gap
+     over a median glass was ~45px; at 1.12 it is ~28px. */
+  --k-cap:    1.12;
   --mirror-h: calc(var(--img-h) * 0.30);      /* how far the reflection runs before it is gone */
   /* Headroom inside the rail for the bloom above the tallest drink. Kept tight:
-     every slide has to be as tall as the tallest drink in the set (--k-max), so
+     every slide has to be as tall as the tallest drink allowed (--k-cap), so
      for a median drink this and that reserved height are the whole of the gap
      between the name and the glass — the one place this block wastes room. */
   --lift:     14px;
@@ -276,8 +279,7 @@
   transition: --haze 900ms var(--ease),
               --haze-hi 900ms var(--ease),
               --haze-lo 900ms var(--ease),
-              --nudge 700ms var(--ease),
-              --k-active 700ms var(--ease);
+              --nudge 700ms var(--ease);
 }
 
 /* A single wide wash of the drink's colour over the whole block, low enough to
@@ -299,13 +301,16 @@
    above it is already the serif, and two italic serif lines stacked read as
    one broken sentence. Caps and letterspacing put it in the same voice as the
    nav and the buttons — a label under an exhibit, not a second title. */
-/* Every slide has to be as tall as the tallest drink in the set, so above a
-   median glass sits a band of dead space — and stacking the name on top of that
-   band put it anywhere from 29px to 67px clear of the glass depending on which
-   drink was centred. It lives in the band instead, hung off the centred drink's
-   own height, so the distance is the same for all seventeen and the block loses
-   the line's worth of height it used to cost. --k-active travels, so the name
-   glides when a taller drink arrives rather than jumping.
+/* The name sits at ONE fixed height, just above the tallest a drink is allowed
+   to be drawn (--k-cap), inside the band every slide reserves for that height.
+
+   It used to follow the centred drink up and down so that it sat the same
+   distance above every glass. Measured, that was true — but it meant the gap
+   between the top of the section and the name changed with every drink, by
+   up to 38px, and the block's top padding read as inconsistent. The eye
+   anchors a label to the frame it sits in before it anchors it to the object
+   under it. Capping the tallest drinks (see --k-cap) is what keeps a fixed
+   name from floating far above the shorter glasses.
 
    Horizontally it sits over the drink's own mass rather than the centre of its
    bounding box — measured, the two are up to 14px apart and the gap changes
@@ -317,7 +322,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: calc(var(--mirror-h) + var(--img-h) * var(--k-active) + 13px);
+  bottom: calc(var(--mirror-h) + var(--img-h) * var(--k-cap) + 10px);
   z-index: 3;                    /* the rail is absolutely placed over the stage */
   pointer-events: none;          /* never in the way of a drag */
   transform: translateX(var(--nudge));
@@ -361,7 +366,7 @@
   width: calc(var(--slide-w) * var(--visible));
   max-width: 100%;
   margin: 0 auto;
-  height: calc(var(--lift) + var(--img-h) * var(--k-max) + var(--mirror-h));
+  height: calc(var(--lift) + var(--img-h) * var(--k-cap) + var(--mirror-h));
 }
 
 /* ── The haze ──────────────────────────────────────────────
@@ -485,7 +490,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  height: calc(var(--img-h) * var(--k-max) + var(--mirror-h));
+  height: calc(var(--img-h) * var(--k-cap) + var(--mirror-h));
   text-decoration: none;
   cursor: pointer;
   /* the rail's own drag has to win over the browser's link/image drag */
@@ -513,7 +518,7 @@
   width: auto;
   /* --k is set per drink by JS; the fallback keeps a sane size without it */
   height: var(--img-h);
-  height: calc(var(--img-h) * var(--k, 1));
+  height: calc(var(--img-h) * min(var(--k, 1), var(--k-cap)));
   /* a soft bloom in the drink's own colour, so the glass sits in the haze
      rather than on top of it */
   -webkit-user-drag: none;
@@ -537,7 +542,7 @@
 }
 .cocktail-mirror img {
   width: auto;
-  height: calc(var(--img-h) * var(--k, 1));
+  height: calc(var(--img-h) * min(var(--k, 1), var(--k-cap)));
   /* Read right to left, the way transforms apply: lift the image by its own
      height so it sits directly above the box, then flip it back down through
      the box's top edge, squashed to 78% as a reflection seen across a surface
@@ -613,7 +618,10 @@
     --img-h: clamp(86px, 13vh, 112px);
     --lift: 12px;
     --fade: 16px;
-    padding: calc(var(--section-v) * 0.46) 0 calc(var(--section-v) * 0.36);
+    /* --section-v drops to 48px on phones, so a pure fraction of it left the
+       name 2px from the top edge — nearly touching the mural. The fixed 24px
+       brings it to the same ~26px clearance it has on desktop. */
+    padding: calc(var(--section-v) * 0.46 + 24px) 0 calc(var(--section-v) * 0.36);
   }
   .cocktail-name { letter-spacing: 0.2em; }
 }
