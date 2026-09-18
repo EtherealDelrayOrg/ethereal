@@ -346,6 +346,56 @@ changed width; it is now read at the first resize event.
 
 ---
 
+## Homepage Gallery Band
+
+**Added Sep 2026, client-requested.** A single photograph of the room running full width
+directly under the hero mural, dimmed, with the word **Gallery** over it in the house
+display serif. The whole strip is a link through to `/gallery`.
+
+**What it is not: a second hero.** The mural above is the page's image; two photographs
+at full strength stacked on top of each other fight. Everything about this band is in
+service of staying subordinate — it is short (`clamp(240px, 30vw, 400px)`, and the ceiling
+matters more than the floor), heavily darkened, and carries one word and a hairline. If it
+ever needs to grow, take the height from the floor, not the ceiling.
+
+**The photograph is `the-bar-03`** — the client's third pick in the gallery's own running
+order. It was chosen over three other landscape candidates because it carries four of the
+things this design system names as the room's signature in one frame: the peacock mural,
+the mosaic clock, the carved bar, and the emerald-teal stools. It is also dark through the
+middle, which is where the word sits.
+
+**The asset is purpose-built, not the gallery JPEG.** `src/assets/images/gallery-band*.webp`
+is cropped to 2.4:1 from `src/assets/gallery/full/the-bar-03.jpg` (centred at 46% of its
+height) and served at three widths through `srcset` — 900 / 1200 / 1600, 78 / 122 / 190 KB.
+Serving the gallery's own 419 KB portrait-ish JPEG and cropping it in CSS would have cost a
+phone five times the bytes for a decorative strip. Regenerate all three together if the
+photograph ever changes.
+
+**Legibility was measured, not eyeballed** — the same ink-mask method the hero section
+describes. The heading is rendered in the real font at the real size to an offscreen
+canvas, the glyph pixels are isolated, and each is compared against what is actually
+behind it. At `brightness(0.6)` plus the central pool: **worst glyph pixel 5.7:1, median
+12.8:1**, with nothing under 3:1 (AA-Large, which is the applicable bar at 70px) or even
+under 4.5:1. The first pass sat at `brightness(0.52)` and measured 7.5:1 worst case — that
+headroom was spent making the photograph more visible rather than banked, which is the
+trade this band exists to make. **If the photograph changes, re-run the measurement**: a
+picture with a bright centre would eat all of it.
+
+**The edges feather into the ink at the top and bottom, and this is load-bearing.** A
+full-bleed photograph meeting a hard horizontal edge is the "broken black band" the hero
+copy was moved off in an earlier round. The first version had solid `--ink` at the very
+top row, which put a flat dark bar directly under a bright mural; it now starts at 0.88
+alpha and clears by 30%, so the seam reads as a shadow between two images rather than as a
+rule drawn across the page. Some separation is wanted — without it two dense photographs
+smear into each other — but it has to look like depth, not like a divider.
+
+**Motion:** the photograph rests at `scale(1.02)` so the hover can push to `1.06` without
+showing an edge, over 1200ms; the brass hairline grows from 44px to 96px. No colour flips,
+nothing under 400ms. Under `prefers-reduced-motion` the scale is dropped entirely but the
+brightness lift stays — a photograph getting lighter is not motion.
+
+---
+
 ## Coming-Soon Links (temporary, pre-launch)
 
 While a page isn't ready for visitors, every link/button pointing to it gets `class="is-coming-soon"` plus a `<span class="coming-soon-badge">Coming Soon</span>` child (see `globals.css`; `main.js` blocks the click and adds a 2.2s `.is-touched` state so tap devices get the same feedback as `:hover`). **Currently applied to: Menu, Reservations, Gallery, and About Us** — the nav, mobile overlay, and footer versions all live in `partials.js`, so the header/footer only ever need editing there. Real `href`s stay in the markup (direct URL access still works); un-gating a page when it launches is just deleting the class + badge span from its links.
