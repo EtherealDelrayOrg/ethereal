@@ -276,10 +276,28 @@
   padding: calc(var(--section-v) * 0.45) 0 calc(var(--section-v) * 0.4);
   text-align: center;
   background: var(--ink);
+  /* Nothing in this block may paint outside the page's width. The haze behind
+     the centred drink is deliberately wider than its stage (its washes are
+     inset up to -20% and then drift and scale), which on a 390px phone
+     reached ~458px — and iOS Safari does not reliably honour
+     body{overflow-x:hidden}, so the whole page could be panned sideways into
+     black. Clipped here, at the block, rather than by setting overflow on
+     <html>: that would stop body's overflow propagating to the viewport and
+     turn <body> into the page's scroller, breaking window scrolling site-wide.
+
+     clip rather than hidden: hidden on one axis forces the other to auto and
+     makes the section a scroll container; clip does neither. Browsers too old
+     for clip (iOS < 16) fall back to hidden on both axes, which costs at most
+     the faintest top edge of the glow. */
+  overflow: hidden;
   transition: --haze 900ms var(--ease),
               --haze-hi 900ms var(--ease),
               --haze-lo 900ms var(--ease),
               --nudge 700ms var(--ease);
+}
+
+@supports (overflow: clip) {
+  .cocktails { overflow: visible; overflow-x: clip; }
 }
 
 /* A single wide wash of the drink's colour over the whole block, low enough to
