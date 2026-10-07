@@ -12,15 +12,15 @@ A luxury, atmospheric web experience built around a cinematic opening sequence �
 |------|--------|-------|
 | `/` | Live | Opening sequence (AI video, AV1/VP9/h264) + hero. Hero CTAs go to Resy and the PDF menu |
 | `/gallery` | Built · nav shows "Coming Soon" | Filterable grid + lightbox. Complete on `dev` with 30 client photographs; `main` still has the placeholder |
-| `/about` | Built · nav shows "Coming Soon" | Client's verbatim story + team bios |
+| `/about` | Live | Client's verbatim story, founders photo + partner portraits |
 | `/menu` | Built · not in nav | Placeholder page. The real menu is the client's PDF, linked straight from the hero |
 | `/reservations` | Built · not in nav | Resy is live, but every Reserve CTA opens the widget directly, so this page is bypassed |
 | `/shop` | Built · not in nav | Coming-soon page with a mailto CTA |
 | `/careers` | Built · not in nav | Job listings + mailto application CTA |
 | `/contact` | Built · not in nav | Address, hours, map, mailto CTA |
 
-> **Nav scope:** the header, mobile menu and footer show **Gallery** (live), **About Us**
-> (behind a "Coming Soon" badge) and **Reserve**, which opens Resy. Everything else is
+> **Nav scope:** the header, mobile menu and footer show **Gallery**, **About Us** and
+> **Reserve**, which opens Resy. Everything else is
 > built and reachable by URL but not linked from the nav.
 
 > **URLs are clean.** Pages live in `/pages/` on disk but are served at `/gallery`,
