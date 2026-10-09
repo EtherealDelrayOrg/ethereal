@@ -18,7 +18,7 @@ build):
 python3 _reference/menu-originals/shrink_images_only.py <client.pdf> <out.pdf>
 ```
 
-Latest run: **16.68 MB → 1.24 MB (7%)**, text character-identical, every aspect ratio
+Latest run (Oct 2026): **22.65 MB → 1.90 MB (8%)**, text character-identical, every aspect ratio
 preserved.
 
 **Why that script and not `pymupdf.rewrite_images()` or Ghostscript:** an earlier attempt
