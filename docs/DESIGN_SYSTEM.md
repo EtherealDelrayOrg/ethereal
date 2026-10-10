@@ -306,6 +306,10 @@ every existing value to within 0.2; `swatch.py` samples the liquid for `mid` and
 `hi` (lifted to a 245 peak) and `lo` (≈ 0.34 × mid + 6), the relationship the original
 values follow. Check the swatches by eye anyway: a sample box that catches a garnish
 instead of the liquid gives the wrong light (Spice Girl's first sample hit the dahlia).
+**Replaced art needs a new file name** (e.g. `spice-girl-fall-edit-2026-10.webp`, with the
+slug to match): `/src/assets/cocktails/*` is cached `immutable` for a year, so overwriting
+a file in place leaves returning visitors on the old picture. That is exactly what
+happened to the first Spice Girl swap.
 Seasonal drinks carry their tag in `name`, as the menu does: "Spice Girl (Fall Edit)",
 "Dead Gorgeous (Halloween Edit)".
 

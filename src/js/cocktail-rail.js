@@ -75,7 +75,7 @@
       hi: '#f59f9e', mid: '#c67473', lo: '#462c2c' },
     { slug: 'banana-bread-old-fashioned', name: 'Banana Bread Old Fashioned', w: 283, h: 360, k: 0.997, cx: 0.1, page: 3, top: 2319,
       hi: '#dd9653', mid: '#995e27', lo: '#362412' },
-    { slug: 'spice-girl-fall-edit', name: 'Spice Girl (Fall Edit)', w: 261, h: 360, k: 1.012, cx: 2.7, page: 3, top: 2153,
+    { slug: 'spice-girl-fall-edit-2026-10', name: 'Spice Girl (Fall Edit)', w: 261, h: 360, k: 1.012, cx: 2.7, page: 3, top: 2153,
       hi: '#f59349', mid: '#a05322', lo: '#3c2212' },
     { slug: 'filthy-rich', name: 'Filthy Rich', w: 270, h: 360, k: 0.943, cx: -3.3, page: 3, top: 2466,
       hi: '#f1c98b', mid: '#a78653', lo: '#3b3121' },
@@ -166,6 +166,9 @@
       glass.className = 'cocktail-glass';
       glass.style.setProperty('--k', d.k);
 
+      // These are served `immutable` for a year (see _headers), so replaced art
+      // must ship under a NEW file name — overwriting the old one leaves every
+      // returning visitor on the old picture. Hence spice-girl-fall-edit-2026-10.
       const src = `/src/assets/cocktails/${d.slug}.webp`;
       // Only the ones that start on screen load up front. The rest are lazy:
       // nineteen drinks is ~560 KB, and plenty of visitors never reach this
