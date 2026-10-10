@@ -2,7 +2,7 @@
    COCKTAIL RAIL — the signature drinks as their own block,
    sitting under the hero mural on the homepage.
 
-   Seventeen cocktails on an endless rail: five on screen at a
+   Nineteen cocktails on an endless rail: five on screen at a
    time on desktop, three on smaller viewports, the centre one
    standing on a lit bar with its own reflection under it and a
    pool of haze behind it in its own colour. Nothing moves on
@@ -53,40 +53,45 @@
   'use strict';
 
   const COCKTAILS = [
-    { slug: 'arabelle-loves-violets', name: 'Arabelle Loves Violets', w: 322, h: 360, k: 0.957, cx: 7.6, page: 3, top: 241,
+    { slug: 'arabelle-loves-violets', name: 'Arabelle Loves Violets', w: 322, h: 360, k: 0.957, cx: 7.6, page: 3, top: 1111,
       hi: '#f580a4', mid: '#c75679', lo: '#492430' },
-    { slug: 'eden', name: 'Eden', w: 326, h: 360, k: 1.0, cx: 10.7, page: 3, top: 859,
+    { slug: 'eden', name: 'Eden', w: 326, h: 360, k: 1.0, cx: 10.7, page: 3, top: 540,
       hi: '#f5ef8d', mid: '#c2bd60', lo: '#454326' },
-    { slug: 'sex-and-the-city', name: 'Sex and the City', w: 353, h: 360, k: 0.954, cx: 13.1, page: 3, top: 1605,
+    { slug: 'dead-gorgeous-halloween-edit', name: 'Dead Gorgeous (Halloween Edit)', w: 258, h: 360, k: 1.095, cx: -1.1, page: 3, top: 228,
+      hi: '#f5c086', mid: '#bd8a57', lo: '#463524' },
+    { slug: 'sex-and-the-city', name: 'Sex and the City', w: 353, h: 360, k: 0.954, cx: 13.1, page: 3, top: 1730,
       hi: '#cc4540', mid: '#8d1f1a', lo: '#320f0e' },
-    { slug: 'cloud-9', name: 'Cloud 9', w: 272, h: 360, k: 0.974, cx: 1.4, page: 3, top: 1796,
+    { slug: 'cloud-9', name: 'Cloud 9', w: 272, h: 360, k: 0.974, cx: 1.4, page: 3, top: 1877,
       hi: '#f5e3a8', mid: '#c6b57c', lo: '#46412f' },
-    { slug: 'peacock-oclock', name: 'Peacock O’Clock', w: 323, h: 360, k: 1.224, cx: 7.7, page: 3, top: 398,
+    { slug: 'not-your-average-porn-star', name: 'Not Your Average Porn Star', w: 328, h: 360, k: 1.015, cx: 1.9, page: 3, top: 2779,
+      hi: '#f59c47', mid: '#d8792c', lo: '#4f2f15' },
+    { slug: 'peacock-oclock', name: 'Peacock O’Clock', w: 323, h: 360, k: 1.224, cx: 7.7, page: 3, top: 375,
       hi: '#69c6f5', mid: '#3b8fb9', lo: '#1a3542' },
-    { slug: 'smokin-hot', name: 'Smokin’ Hot', w: 285, h: 360, k: 1.271, cx: -2.3, page: 3, top: 1299,
+    { slug: 'italian-affair', name: 'Italian Affair', w: 325, h: 360, k: 1.018, cx: 0.2, page: 3, top: 688,
+      hi: '#f55647', mid: '#85231b', lo: '#33120f' },
+    { slug: 'smokin-hot', name: 'Smokin’ Hot', w: 285, h: 360, k: 1.271, cx: -2.3, page: 3, top: 1534,
       hi: '#f5ad5a', mid: '#c47f31', lo: '#463017' },
-    { slug: 'make-me-blush', name: 'Make Me Blush', w: 236, h: 360, k: 0.971, cx: 1.7, page: 3, top: 575,
+    { slug: 'make-me-blush', name: 'Make Me Blush', w: 236, h: 360, k: 0.971, cx: 1.7, page: 3, top: 853,
       hi: '#f59f9e', mid: '#c67473', lo: '#462c2c' },
-    { slug: 'banana-bread-old-fashioned', name: 'Banana Bread Old Fashioned', w: 283, h: 360, k: 0.997, cx: 0.1, page: 3, top: 2228,
+    { slug: 'banana-bread-old-fashioned', name: 'Banana Bread Old Fashioned', w: 283, h: 360, k: 0.997, cx: 0.1, page: 3, top: 2319,
       hi: '#dd9653', mid: '#995e27', lo: '#362412' },
-    { slug: 'spice-girl-fall-edit', name: 'Spice Girl', w: 235, h: 360, k: 1.018, cx: 0.1, page: 3, top: 2081,
-      hi: '#f5935f', mid: '#bb6233', lo: '#422617' },
-    { slug: 'filthy-rich', name: 'Filthy Rich', w: 270, h: 360, k: 0.943, cx: -3.3, page: 3, top: 2524,
+    { slug: 'spice-girl-fall-edit-2026-10', name: 'Spice Girl (Fall Edit)', w: 261, h: 360, k: 1.012, cx: 2.7, page: 3, top: 2153,
+      hi: '#f59349', mid: '#a05322', lo: '#3c2212' },
+    { slug: 'filthy-rich', name: 'Filthy Rich', w: 270, h: 360, k: 0.943, cx: -3.3, page: 3, top: 2466,
       hi: '#f1c98b', mid: '#a78653', lo: '#3b3121' },
-    { slug: 'passion-ash', name: 'Passion & Ash', w: 198, h: 360, k: 1.103, cx: -2.0, page: 3, top: 1010,
+    { slug: 'passion-ash', name: 'Passion & Ash', w: 198, h: 360, k: 1.103, cx: -2.0, page: 3, top: 982,
       hi: '#f06e64', mid: '#a63c33', lo: '#3b1916' },
-    { slug: 'vanilla-chanel', name: 'Vanilla & Chanel', w: 214, h: 360, k: 1.025, cx: -0.6, page: 3, top: 1948,
+    { slug: 'vanilla-chanel', name: 'Vanilla & Chanel', w: 214, h: 360, k: 1.025, cx: -0.6, page: 3, top: 2024,
       hi: '#f5b681', mid: '#b98051', lo: '#423021' },
-    { slug: 'palomas-give-you-wings', name: 'Palomas Give You Wings', w: 304, h: 360, k: 0.951, cx: 5.8, page: 3, top: 2671,
+    { slug: 'palomas-give-you-wings', name: 'Palomas Give You Wings', w: 304, h: 360, k: 0.951, cx: 5.8, page: 3, top: 2945,
       hi: '#f5b19a', mid: '#c7866f', lo: '#49332c' },
-    { slug: 'pearfection', name: 'Pearfection', w: 213, h: 360, k: 1.233, cx: 1.6, page: 3, top: 728,
+    { slug: 'pearfection', name: 'Pearfection', w: 213, h: 360, k: 1.233, cx: 1.6, page: 3, top: 1258,
       hi: '#f5b066', mid: '#c7853d', lo: '#47321b' },
-    { slug: 'tipsy-peach', name: 'Tipsy Peach', w: 316, h: 360, k: 1.003, cx: -0.6, page: 3, top: 1417,
+    { slug: 'tipsy-peach', name: 'Tipsy Peach', w: 316, h: 360, k: 1.003, cx: -0.6, page: 3, top: 1387,
       hi: '#f58a56', mid: '#b55729', lo: '#402214' },
-    { slug: 'spritz-me-im-fancy', name: 'Spritz Me, I’m Fancy', w: 270, h: 360, k: 1.148, cx: 12.9, page: 3, top: 2354,
+    { slug: 'spritz-me-im-fancy', name: 'Spritz Me, I’m Fancy', w: 270, h: 360, k: 1.148, cx: 12.9, page: 3, top: 2613,
       hi: '#f58861', mid: '#c55d38', lo: '#462519' },
-    { slug: 'what-happens-in-pineapple-grove', name: 'What Happens in Pineapple Grove…', w: 238, h: 360, k: 0.974, cx: -5.7, page: 3, top: 1163,
-      hi: '#f5bf70', mid: '#c79347', lo: '#48371e' },  ];
+  ];
 
   // Five copies, parked on the middle one. Three was not enough runway on a
   // phone: a hard fling across 116px slides can travel further than one copy
@@ -132,7 +137,8 @@
       const a = document.createElement('a');
       a.className = 'cocktail-slide';
       // PDF Open Parameters, to land on the drink's own entry rather than the
-      // top of a 2748pt page.
+      // top of a 3144pt page. `top` = the name's y on the page minus 70pt;
+      // re-measure every drink whenever the menu PDF is re-issued.
       //
       // `top` is measured DOWNWARD from the top of the page, which is not what
       // the Adobe spec says (it defines the coordinate in PDF user space, up
@@ -160,9 +166,12 @@
       glass.className = 'cocktail-glass';
       glass.style.setProperty('--k', d.k);
 
+      // These are served `immutable` for a year (see _headers), so replaced art
+      // must ship under a NEW file name — overwriting the old one leaves every
+      // returning visitor on the old picture. Hence spice-girl-fall-edit-2026-10.
       const src = `/src/assets/cocktails/${d.slug}.webp`;
       // Only the ones that start on screen load up front. The rest are lazy:
-      // seventeen drinks is ~520 KB, and plenty of visitors never reach this
+      // nineteen drinks is ~560 KB, and plenty of visitors never reach this
       // block at all — no reason to spend that on every homepage view.
       const global = c * N + k;
       const eager  = global >= HOME - 2 && global <= HOME + 2;
