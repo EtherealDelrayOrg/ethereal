@@ -189,7 +189,7 @@ This is a scoped exception, not a new site-wide direction — every other sectio
 
 ## Signature Cocktails Block
 
-**Added Sep 2026.** A rail of the seventeen signature drinks, sitting on the homepage as
+**Added Sep 2026.** A rail of the nineteen signature drinks, sitting on the homepage as
 its own section directly beneath the hero mural. Markup in `index.html`, styles under
 "SIGNATURE COCKTAILS" in `home.css`, everything else — the slides, the per-drink data and
 all the behaviour — in `src/js/cocktail-rail.js`.
@@ -288,6 +288,26 @@ even at its highest (a tall drink pulls the name up), the name stays 25px clear.
   wandering from drink to drink, which is exactly what it looks like — a name that never
   quite settles over what it is naming. With the nudge it is within 4px everywhere.
 - `hi`/`mid`/`lo` — the sampled colour described above.
+- `top` — where the drink's link lands in the PDF: the y of its name on page 3, measured
+  from the top of the page, minus 70pt. It goes stale every time the client re-issues
+  the menu, so re-measure all of them when the PDF changes, not just the new drinks.
+
+**Adding or re-shooting a drink when the menu changes (done Oct 2026: Dead Gorgeous,
+Italian Affair and Not Your Average Porn Star added, Spice Girl re-shot, What Happens in
+Pineapple Grove dropped with the menu).** The original seventeen were restyled in an
+external AI tool that cannot be re-run here. New art gets the same look from a colour grade *fitted
+to those seventeen before/after pairs*: a cubic RGB regression, which halves the colour
+error on a held-out drink (51 → 23 of 255) and lands exactly on the restyled set's mean
+brightness (0.50). What it cannot copy is the AI's re-rendered texture, which is why it is
+a grade and not a match. The tooling lives in `_reference/cocktails/tools/` (gitignored):
+`build.py` cuts a drink out of the client PDF, grades it and writes the 360px WebP at q82;
+`measure.py` gives `k` (= 0.925 ÷ the glass's share of the frame) and `cx`, reproducing
+every existing value to within 0.2; `swatch.py` samples the liquid for `mid` and derives
+`hi` (lifted to a 245 peak) and `lo` (≈ 0.34 × mid + 6), the relationship the original
+values follow. Check the swatches by eye anyway: a sample box that catches a garnish
+instead of the liquid gives the wrong light (Spice Girl's first sample hit the dahlia).
+Seasonal drinks carry their tag in `name`, as the menu does: "Spice Girl (Fall Edit)",
+"Dead Gorgeous (Halloween Edit)".
 
 **The name changes on its own small state machine**, and it is worth knowing why before
 simplifying it. Two conditions have to be true before the glyphs are allowed to change:
@@ -342,7 +362,7 @@ changed width; it is now read at the first resize event.
 - **The section is `hidden` in the markup** and unhidden by the script once the rail
   exists, so no-JS gets nothing at all rather than a heading over an empty shelf.
 - **Only the drinks that start on screen load up front**; the other twelve are lazy.
-  Seventeen drinks is ~520 KB and plenty of visitors never scroll this far.
+  Nineteen drinks is ~560 KB and plenty of visitors never scroll this far.
 
 ---
 

@@ -33,7 +33,7 @@ A luxury, atmospheric web experience built around a cinematic opening sequence �
 > `partials.js`. Collapsed it reads "Elegant Chic Dress Code" with a down arrow;
 > expanding drops the full policy over the page without shifting it.
 
-> **Signature cocktails block:** the homepage carries a scrolling rail of the seventeen
+> **Signature cocktails block:** the homepage carries a scrolling rail of the nineteen
 > signature drinks directly under the hero mural. Every slide is built by
 > `src/js/cocktail-rail.js` (which also holds the per-drink measurements and colours) and
 > deep-links into page 3 of the PDF menu. The section is `hidden` in the markup and only
@@ -94,7 +94,7 @@ ethereal/
 │   │   └── gallery.js           # Gallery filtering + lightbox
 │   └── assets/
 │       ├── images/         # logo-wordmark.webp (nav mark), bg-brand.webp (hero), clock art…
-│       ├── cocktails/      # 17 cut-out drink illustrations for the homepage rail
+│       ├── cocktails/      # 19 cut-out drink illustrations for the homepage rail
 │       ├── video/          # Opening sequence video
 │       └── fonts/
 ├── docs/                   # Project documentation
