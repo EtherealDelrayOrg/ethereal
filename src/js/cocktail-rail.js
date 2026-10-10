@@ -52,13 +52,15 @@
 (function () {
   'use strict';
 
+  // The first entry is the drink centred when the page loads. Dead Gorgeous
+  // leads for the Halloween season; move it back down the list afterwards.
   const COCKTAILS = [
+    { slug: 'dead-gorgeous-halloween-edit', name: 'Dead Gorgeous (Halloween Edit)', w: 258, h: 360, k: 1.095, cx: -1.1, page: 3, top: 228,
+      hi: '#f5c086', mid: '#bd8a57', lo: '#463524' },
     { slug: 'arabelle-loves-violets', name: 'Arabelle Loves Violets', w: 322, h: 360, k: 0.957, cx: 7.6, page: 3, top: 1111,
       hi: '#f580a4', mid: '#c75679', lo: '#492430' },
     { slug: 'eden', name: 'Eden', w: 326, h: 360, k: 1.0, cx: 10.7, page: 3, top: 540,
       hi: '#f5ef8d', mid: '#c2bd60', lo: '#454326' },
-    { slug: 'dead-gorgeous-halloween-edit', name: 'Dead Gorgeous (Halloween Edit)', w: 258, h: 360, k: 1.095, cx: -1.1, page: 3, top: 228,
-      hi: '#f5c086', mid: '#bd8a57', lo: '#463524' },
     { slug: 'sex-and-the-city', name: 'Sex and the City', w: 353, h: 360, k: 0.954, cx: 13.1, page: 3, top: 1730,
       hi: '#cc4540', mid: '#8d1f1a', lo: '#320f0e' },
     { slug: 'cloud-9', name: 'Cloud 9', w: 272, h: 360, k: 0.974, cx: 1.4, page: 3, top: 1877,
