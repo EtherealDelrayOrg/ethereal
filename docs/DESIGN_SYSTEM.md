@@ -189,7 +189,7 @@ This is a scoped exception, not a new site-wide direction — every other sectio
 
 ## Signature Cocktails Block
 
-**Added Sep 2026.** A rail of the nineteen signature drinks, sitting on the homepage as
+**Added Sep 2026.** A rail of the eighteen signature drinks, sitting on the homepage as
 its own section directly beneath the hero mural. Markup in `index.html`, styles under
 "SIGNATURE COCKTAILS" in `home.css`, everything else — the slides, the per-drink data and
 all the behaviour — in `src/js/cocktail-rail.js`.
@@ -366,7 +366,7 @@ changed width; it is now read at the first resize event.
 - **The section is `hidden` in the markup** and unhidden by the script once the rail
   exists, so no-JS gets nothing at all rather than a heading over an empty shelf.
 - **Only the drinks that start on screen load up front**; the other twelve are lazy.
-  Nineteen drinks is ~560 KB and plenty of visitors never scroll this far.
+  Eighteen drinks is ~520 KB and plenty of visitors never scroll this far.
 
 ---
 

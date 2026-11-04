@@ -2,7 +2,7 @@
    COCKTAIL RAIL — the signature drinks as their own block,
    sitting under the hero mural on the homepage.
 
-   Nineteen cocktails on an endless rail: five on screen at a
+   Eighteen cocktails on an endless rail: five on screen at a
    time on desktop, three on smaller viewports, the centre one
    standing on a lit bar with its own reflection under it and a
    pool of haze behind it in its own colour. Nothing moves on
@@ -52,11 +52,14 @@
 (function () {
   'use strict';
 
-  // The first entry is the drink centred when the page loads. Dead Gorgeous
-  // leads for the Halloween season; move it back down the list afterwards.
+  // The first entry is the drink centred when the page loads.
+  //
+  // Dead Gorgeous (Halloween Edit) is off the rail out of season; its art is
+  // still in src/assets/cocktails/. To bring it back, put this first in the
+  // list and re-check `top` against the menu of the day:
+  // { slug: 'dead-gorgeous-halloween-edit', name: 'Dead Gorgeous (Halloween Edit)', w: 258, h: 360, k: 1.095, cx: -1.1, page: 3, top: 228,
+  //   hi: '#f5c086', mid: '#bd8a57', lo: '#463524' },
   const COCKTAILS = [
-    { slug: 'dead-gorgeous-halloween-edit', name: 'Dead Gorgeous (Halloween Edit)', w: 258, h: 360, k: 1.095, cx: -1.1, page: 3, top: 228,
-      hi: '#f5c086', mid: '#bd8a57', lo: '#463524' },
     { slug: 'arabelle-loves-violets', name: 'Arabelle Loves Violets', w: 322, h: 360, k: 0.957, cx: 7.6, page: 3, top: 1111,
       hi: '#f580a4', mid: '#c75679', lo: '#492430' },
     { slug: 'eden', name: 'Eden', w: 326, h: 360, k: 1.0, cx: 10.7, page: 3, top: 540,
@@ -173,7 +176,7 @@
       // returning visitor on the old picture. Hence spice-girl-fall-edit-2026-10.
       const src = `/src/assets/cocktails/${d.slug}.webp`;
       // Only the ones that start on screen load up front. The rest are lazy:
-      // nineteen drinks is ~560 KB, and plenty of visitors never reach this
+      // eighteen drinks is ~520 KB, and plenty of visitors never reach this
       // block at all — no reason to spend that on every homepage view.
       const global = c * N + k;
       const eager  = global >= HOME - 2 && global <= HOME + 2;
