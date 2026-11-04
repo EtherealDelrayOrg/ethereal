@@ -244,7 +244,7 @@
      shelf the same width on the page. */
   --img-h:    clamp(118px, 14vh, 156px);
   /* The tallest any drink is allowed to be drawn, as a multiple of --img-h.
-     Four drinks have a --k above this (Smokin' Hot 1.271, Pearfection 1.233,
+     Four drinks have a --k above this (Smokin' Hot 1.247, Pearfection 1.233,
      Peacock O'Clock 1.224, Spritz 1.148) and are drawn at this cap instead, so
      their glasses come out up to 12% smaller than the rest. That is the trade
      for the name sitting at one fixed height: every slide is as tall as the

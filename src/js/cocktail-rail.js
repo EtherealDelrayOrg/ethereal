@@ -75,8 +75,8 @@
       hi: '#69c6f5', mid: '#3b8fb9', lo: '#1a3542' },
     { slug: 'italian-affair', name: 'Italian Affair', w: 325, h: 360, k: 1.018, cx: 0.2, page: 3, top: 393,
       hi: '#f55647', mid: '#85231b', lo: '#33120f' },
-    { slug: 'smokin-hot', name: 'Smokin’ Hot', w: 285, h: 360, k: 1.271, cx: -2.3, page: 3, top: 1405,
-      hi: '#f5ad5a', mid: '#c47f31', lo: '#463017' },
+    { slug: 'smokin-hot-2026-11', name: 'Smokin’ Hot', w: 276, h: 360, k: 1.247, cx: -2.5, page: 3, top: 1405,
+      hi: '#f58c2c', mid: '#c76116', lo: '#4a270d' },
     { slug: 'make-me-blush', name: 'Make Me Blush', w: 236, h: 360, k: 0.971, cx: 1.7, page: 3, top: 706,
       hi: '#f59f9e', mid: '#c67473', lo: '#462c2c' },
     { slug: 'banana-bread-old-fashioned', name: 'Banana Bread Old Fashioned', w: 283, h: 360, k: 0.997, cx: 0.1, page: 3, top: 2190,
@@ -174,7 +174,8 @@
 
       // These are served `immutable` for a year (see _headers), so replaced art
       // must ship under a NEW file name — overwriting the old one leaves every
-      // returning visitor on the old picture. Hence spice-girl-fall-edit-2026-10.
+      // returning visitor on the old picture. Hence spice-girl-fall-edit-2026-10
+      // and smokin-hot-2026-11.
       const src = `/src/assets/cocktails/${d.slug}.webp`;
       // Only the ones that start on screen load up front. The rest are lazy:
       // eighteen drinks is ~520 KB, and plenty of visitors never reach this

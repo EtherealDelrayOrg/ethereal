@@ -310,6 +310,12 @@ instead of the liquid gives the wrong light (Spice Girl's first sample hit the d
 slug to match): `/src/assets/cocktails/*` is cached `immutable` for a year, so overwriting
 a file in place leaves returning visitors on the old picture. That is exactly what
 happened to the first Spice Girl swap.
+**Measuring `k` on a glass with a see-through rim:** the rim detector reads the topmost
+row whose longest *opaque* run is half the widest, so a rim that is partly transparent
+in the cutout gets skipped and the reading lands too low. The Nov 2026 Smokin' Hot
+(clear ice sphere) read 1.399 that way; measured from the top of its salt rim it is
+1.247, against 1.271 for the old photo. It draws at `--k-cap` either way, but check
+the rim row by eye before trusting the number.
 Seasonal drinks carry their tag in `name`, as the menu does: "Spice Girl (Fall Edit)",
 "Dead Gorgeous (Halloween Edit)".
 
